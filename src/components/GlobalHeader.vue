@@ -32,10 +32,14 @@
 <script setup lang="ts">
 import { routes } from "../router/router";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import checkAccess from "../access/checkAccess";
+import AccessEnum from "../access/accessEnum";
 
 const router = useRouter();
+const store = useStore();
+const loginUser = store.state.user.loginUser;
 // 默认主页
 const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
@@ -49,20 +53,27 @@ router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];
 });
 
-const store = useStore();
-
 setTimeout(() => {
   store.dispatch("user/getLoginUser", {
     userName: "lemon",
-    role: "canAdmin",
+    userRole: AccessEnum.ADMIN,
   });
+  console.log(store.state.user.loginUser);
 }, 3000);
 
-const visibleRoutes = routes.filter((item, index) => {
-  if (item.meta?.hideInMenu) {
-    return false;
-  }
-  return true;
+const visibleRoutes = computed(() => {
+  return routes.filter((item, index) => {
+    if (item.meta?.hideInMenu) {
+      return false;
+    }
+    // 根据用户是否具有权限过滤菜单
+    if (
+      !checkAccess(store.state.user.loginUser, item?.meta?.access as string)
+    ) {
+      return false;
+    }
+    return true;
+  });
 });
 </script>
 

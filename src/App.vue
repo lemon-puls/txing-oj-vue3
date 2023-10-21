@@ -12,17 +12,16 @@
 import BasicLayout from "@/layouts/BasicLayout";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { onMounted } from "vue";
 
-const router = useRouter();
-const store = useStore();
-router.beforeEach((to, from, next) => {
-  // 跳转前判断一下当前用户是否有对应权限
-  if (to.meta?.access === "canAdmin") {
-    if (store.state.user.loginUser?.role !== "admin") {
-      next("/noAuth");
-      return;
-    }
-  }
-  next();
+/**
+ * 全局初始化函数，全局单次调用的代码 都可以在这里写
+ */
+const doInit = () => {
+  console.log("Txing, 与您同行！");
+};
+
+onMounted(() => {
+  doInit();
 });
 </script>
