@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 #basicLayout .header {
   /*background: red;*/
   /*margin-bottom: 16px;*/
@@ -24,9 +24,14 @@
 }
 
 #basicLayout .content {
-  background: linear-gradient(to right, #bbb, #fff);
+  /*background: linear-gradient(to right, #eee, #fff);*/
+  background: url("../assets/背景1.png") 0% 0% / 100% 100%;
+  /*filter: blur(10px);*/
   /*margin-bottom: 16px;*/
   padding: 20px;
+  /*自己加的*/
+  display: flex;
+  justify-content: center;
 }
 
 #basicLayout .footer {

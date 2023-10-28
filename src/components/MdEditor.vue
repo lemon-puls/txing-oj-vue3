@@ -1,5 +1,10 @@
 <template>
-  <Editor :value="value" :plugins="plugins" @change="handleChange" />
+  <Editor
+    :value="value"
+    :mode="mode"
+    :plugins="plugins"
+    @change="handleChange"
+  />
 </template>
 
 <script setup lang="ts">
@@ -21,6 +26,7 @@ const plugins = [
 interface Props {
   value: string;
   handleChange: (v: string) => void;
+  mode?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -28,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   handleChange: (v: string) => {
     console.log(v);
   },
+  mode: () => "split",
 });
 </script>
 
