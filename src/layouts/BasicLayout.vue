@@ -30,8 +30,8 @@
   /*margin-bottom: 16px;*/
   padding: 20px;
   /*自己加的*/
-  display: flex;
-  justify-content: center;
+  /*display: flex;*/
+  /*justify-content: center;*/
 }
 
 #basicLayout .footer {
