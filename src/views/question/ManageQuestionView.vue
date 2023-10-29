@@ -103,10 +103,6 @@ const columns = [
     dataIndex: "judgeCase",
   },
   {
-    title: "判题用例",
-    dataIndex: "judgeCase",
-  },
-  {
     title: "判题配置",
     dataIndex: "judgeConfig",
   },
