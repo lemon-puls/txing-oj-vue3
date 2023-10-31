@@ -1,14 +1,27 @@
 <template>
-  <div id="code-editor" ref="codeEditorRef" style="min-height: 400px" />
+  <div
+    id="code-editor"
+    ref="codeEditorRef"
+    style="min-height: 400px; height: 70vh; max-width: 600px"
+  />
 </template>
 
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { onMounted, ref, toRaw, withDefaults, defineProps } from "vue";
+import {
+  onMounted,
+  ref,
+  toRaw,
+  withDefaults,
+  defineProps,
+  watchEffect,
+  watch,
+} from "vue";
 
 interface Props {
   value: string;
   handleChange: (v: string) => void;
+  language?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -16,17 +29,30 @@ const props = withDefaults(defineProps<Props>(), {
   handleChange: (v: string) => {
     console.log(v);
   },
+  language: () => "java",
 });
 
 const codeEditorRef = ref();
 const codeEditor = ref();
 
-const fillValue = () => {
-  if (!codeEditor.value) {
-    return;
+// const fillValue = () => {
+//     if (!codeEditor.value) {
+//         return;
+//     }
+//     toRaw(codeEditor.value).setValue("新时代！");
+// };
+
+watch(
+  () => props.language,
+  () => {
+    if (codeEditor.value) {
+      monaco.editor.setModelLanguage(
+        toRaw(codeEditor.value).getModel(),
+        props.language
+      );
+    }
   }
-  toRaw(codeEditor.value).setValue("新时代！");
-};
+);
 
 onMounted(() => {
   if (!codeEditorRef.value) {
@@ -35,7 +61,7 @@ onMounted(() => {
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
     theme: "vs-dark", // 主题
     value: props.value, // 默认显示的值
-    language: "java",
+    language: props.language,
     // folding: true, // 是否折叠
     // foldingHighlight: true, // 折叠等高线
     // foldingStrategy: "indentation", // 折叠方式  auto | indentation

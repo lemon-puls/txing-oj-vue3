@@ -163,5 +163,6 @@ const toQuestionPage = (question: Question) => {
 #questionsView {
   max-width: 1280px;
   margin: 0 auto;
+  /*background: rgba(255, 255, 255, 0.8);*/
 }
 </style>

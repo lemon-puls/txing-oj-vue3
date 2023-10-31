@@ -1,26 +1,16 @@
 <template>
-  <Editor
-    :value="value"
-    :mode="mode"
-    re
-    :plugins="plugins"
-    @change="handleChange"
-  />
+  <Viewer :value="value" :plugins="plugins" />
 </template>
 
 <script setup lang="ts">
 import gfm from "@bytemd/plugin-gfm";
-import { Editor, Viewer } from "@bytemd/vue-next";
 import highlight from "@bytemd/plugin-highlight";
-import mediumZoom from "@bytemd/plugin-medium-zoom";
 import { defineProps, withDefaults } from "vue";
-import gemoji from "@bytemd/plugin-gemoji";
+import { Viewer } from "@bytemd/vue-next";
 
 const plugins = [
   gfm(),
   highlight(),
-  mediumZoom(),
-  gemoji(),
   // Add more plugins here
 ];
 
@@ -33,5 +23,4 @@ const props = withDefaults(defineProps<Props>(), {
 });
 </script>
 
-<style>
-</style>
+<style></style>
