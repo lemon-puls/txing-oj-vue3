@@ -5,10 +5,11 @@
       :data="dataList"
       :pagination="{
         pageSize: searchParams.pageSize,
-        current: searchParams.pageNum,
+        current: searchParams.current,
         total,
         showTotal: true,
       }"
+      @page-change="onPageChange"
     >
       <template #optional="{ record }">
         <a-space>
@@ -21,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { Question, QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
@@ -30,8 +31,8 @@ const show = ref(true);
 const dataList = ref([]);
 const total = ref(0);
 const searchParams = ref({
-  pageSize: 10,
-  pageNum: 1,
+  pageSize: 1,
+  current: 1,
 });
 
 const loadData = async () => {
@@ -119,6 +120,21 @@ const columns = [
     slotName: "optional",
   },
 ];
+
+/**
+ * 只要页号等变量发生改变时 就会触发loadData的调用 获取到当前页对应的数据
+ */
+watchEffect(() => {
+  loadData();
+});
+
+const onPageChange = (page: number) => {
+  searchParams.value = {
+    ...searchParams.value,
+    current: page,
+  };
+};
+
 /**
  * 删除题目
  * @param question
@@ -154,5 +170,7 @@ const doUpdate = (question: Question) => {
 
 <style scoped>
 #manageQuestionView {
+  max-width: 1280px;
+  margin: 0 auto;
 }
 </style>

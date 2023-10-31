@@ -5426,6 +5426,11 @@
   "resolved" "https://registry.npmjs.org/module-alias/-/module-alias-2.2.3.tgz"
   "version" "2.2.3"
 
+"moment@^2.29.4":
+  "integrity" "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w=="
+  "resolved" "https://registry.npmmirror.com/moment/-/moment-2.29.4.tgz"
+  "version" "2.29.4"
+
 "monaco-editor-webpack-plugin@^7.1.0":
   "integrity" "sha512-ZjnGINHN963JQkFqjjcBtn1XBtUATDZBMgNQhDQwd78w2ukRhFXAPNgWuacaQiDZsUr4h1rWv5Mv6eriKuOSzA=="
   "resolved" "https://registry.npmmirror.com/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-7.1.0.tgz"
