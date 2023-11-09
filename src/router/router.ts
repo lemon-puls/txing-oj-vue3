@@ -10,6 +10,7 @@ import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
+import MyselfView from "@/views/MyselfView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -93,13 +94,12 @@ export const routes: Array<RouteRecordRaw> = [
   //     access: ACCESS_ENUM.ADMIN,
   //   },
   // },
-  // {
-  //   path: "/about",
-  //   name: "关于我们",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  // },
+  {
+    path: "/myself",
+    name: "个人主页",
+    component: MyselfView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
 ];

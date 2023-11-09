@@ -18,13 +18,36 @@
         :selected-keys="selectedKeys"
         @menu-item-click="doMenuClick"
       >
-        <a-menu-item v-for="item in visibleRoutes" :key="item.path"
+        <a-menu-item
+          v-for="item in visibleRoutes"
+          :key="item.path"
+          style="font-size: 20px"
           >{{ item.name }}
         </a-menu-item>
       </a-menu>
     </a-col>
-    <a-col flex="100px">
-      <div>{{ store.state.user?.loginUser?.userName ?? "未登录" }}</div>
+    <a-col flex="200px" style="text-align: right">
+      <div style="font-size: 20px">
+        <a-popover>
+          <a-avatar>
+            <img
+              alt="avatar"
+              src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+            />
+          </a-avatar>
+          <template #content>
+            <a-space class="wrapper" direction="vertical">
+              <a-button type="primary" long @click="toMyselfPage"
+                >个人主页
+              </a-button>
+              <a-button type="primary" long>修改密码</a-button>
+              <a-button type="primary" long>修改信息</a-button>
+              <a-button type="primary" long>退出登录</a-button>
+            </a-space>
+          </template>
+        </a-popover>
+        {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+      </div>
     </a-col>
   </a-row>
 </template>
@@ -45,6 +68,12 @@ const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
   router.push({
     path: key,
+  });
+};
+// 进入个人主页
+const toMyselfPage = () => {
+  router.push({
+    path: "/myself",
   });
 };
 
