@@ -52,7 +52,11 @@
             </a-select>
           </a-form-item>
         </a-form>
-        <CodeEditor :value="form.code as string" :language="form.language" />
+        <CodeEditor
+          :value="form.code as string"
+          :language="form.language"
+          :handleChange="changeCode"
+        />
         <a-divider size="0" />
         <a-button type="primary" style="min-width: 200px" @click="doSubmit"
           >提交代码
@@ -81,13 +85,22 @@ const form = ref<QuestionSubmitAddRequest>({
   code: "",
 });
 
+const changeCode = (value: string) => {
+  form.value.code = value;
+};
+
 /**
  * 提交代码
  */
 const doSubmit = async () => {
-  const res = await QuestionControllerService.doQuestionSubmitUsingPost(
-    form.value
-  );
+  if (!question.value?.id) {
+    return;
+  }
+
+  const res = await QuestionControllerService.doQuestionSubmitUsingPost({
+    ...form.value,
+    questionId: question.value.id,
+  });
   if (res.code === 0) {
     message.success("提交成功");
   } else {
