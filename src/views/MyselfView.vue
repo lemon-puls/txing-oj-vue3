@@ -7,19 +7,23 @@
     <!--        src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"-->
     <!--      />-->
     <!--    </a-avatar>-->
-    <a-avatar
-      id="headImg"
-      :size="256"
-      :trigger-icon-style="{ color: '#3491FA' }"
-      :auto-fix-font-size="false"
-      @click="toast"
-      :style="{ backgroundColor: '#168CFF' }"
-    >
-      <img
-        alt="avatar"
-        src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
-      />
-    </a-avatar>
+
+    <a-upload action="/">
+      <template #upload-button>
+        <a-avatar
+          id="headImg"
+          :size="256"
+          :trigger-icon-style="{ color: '#3491FA' }"
+          :auto-fix-font-size="false"
+          :style="{ backgroundColor: '#168CFF' }"
+        >
+          <img
+            alt="avatar"
+            src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+          />
+        </a-avatar>
+      </template>
+    </a-upload>
 
     <div id="backgorupDiv">
       <div id="basicInfo">
@@ -41,6 +45,7 @@
       <!--      <div v-show="isOpen.value">-->
       <!--        <button>弹窗显示</button>-->
       <!--      </div>-->
+
       <div style="padding-top: 100px">
         <a-tabs size="large">
           <a-tab-pane key="1">
@@ -81,15 +86,10 @@
 
 <script setup lang="ts">
 import {
-  IconCamera,
-  IconEdit,
-  IconUser,
-  IconClockCircle,
-  IconStarFill,
   IconHeartFill,
   IconPenFill,
+  IconStarFill,
 } from "@arco-design/web-vue/es/icon";
-import message from "@arco-design/web-vue/es/message";
 import { ref } from "vue";
 
 let isOpen = ref<boolean>(false);
@@ -130,10 +130,10 @@ const handleChange = (value: string) => {
   console.log(value);
 };
 
-const toast = () => {
-  // TODO 更换头像
-  message.info("更换头像 待实现...");
-};
+// const toast = () => {
+//   // TODO 更换头像
+//   message.info("更换头像 待实现...");
+// };
 </script>
 
 <style>

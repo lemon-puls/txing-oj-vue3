@@ -3,10 +3,18 @@
     <h2>创建题目</h2>
     <a-form :model="form" label-align="left" auto-label-width>
       <a-form-item field="title" label="标题">
-        <a-input v-model="form.title" placeholder="请输入标题..." />
+        <a-input
+          v-model="form.title"
+          style="max-width: 600px"
+          placeholder="请输入标题..."
+        />
       </a-form-item>
       <a-form-item field="tags" label="标签">
-        <a-input-tag v-model="form.tags" />
+        <a-input-tag
+          style="max-width: 600px"
+          v-model="form.tags"
+          placeholder="请输入标签..."
+        />
       </a-form-item>
       <a-form-item field="answer" label="答案">
         <MdEditor :value="form.answer" :handle-change="onAnswerChange" />

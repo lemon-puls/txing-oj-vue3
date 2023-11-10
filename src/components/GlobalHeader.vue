@@ -41,7 +41,9 @@
                 >个人主页
               </a-button>
               <a-button type="primary" long>修改密码</a-button>
-              <a-button type="primary" long>修改信息</a-button>
+              <a-button type="primary" long @click="handleClick"
+                >修改信息
+              </a-button>
               <a-button type="primary" long>退出登录</a-button>
             </a-space>
           </template>
@@ -50,12 +52,69 @@
       </div>
     </a-col>
   </a-row>
+
+  <a-modal
+    v-model:visible="visible"
+    @ok="handleOk"
+    @cancel="handleCancel"
+    width="800px"
+    :footer="false"
+  >
+    <template #title> 修改个人信息</template>
+    <div id="modifyInfoModal">
+      <a-form
+        :model="form"
+        id="modifyInfoForm"
+        :style="{ width: '600px' }"
+        @submit="handleSubmit"
+      >
+        <a-form-item field="nickName" tooltip="不超过10个字符" label="昵称">
+          <a-input
+            v-model="form.name"
+            style="max-width: 400px"
+            placeholder="请输入昵称..."
+          />
+        </a-form-item>
+        <a-form-item field="school" label="大学">
+          <a-input
+            style="max-width: 400px"
+            v-model="form.school"
+            placeholder="请输入您的大学..."
+          />
+        </a-form-item>
+        <a-form-item field="profession" label="专业">
+          <a-input
+            style="max-width: 400px"
+            v-model="form.profession"
+            placeholder="请输入您的专业..."
+          />
+        </a-form-item>
+        <a-form-item field="signature" label="个性签名">
+          <a-textarea
+            style="max-width: 400px"
+            v-model="form.signature"
+            placeholder="请输入您的个性签名..."
+            :max-length="{ length: 100, errorOnly: true }"
+            allow-clear
+            show-word-limit
+          />
+        </a-form-item>
+
+        <a-form-item>
+          <!--          <a-button html-type="submit">Submit</a-button>-->
+          <a-button html-type="submit" type="primary" shape="round"
+            >确认</a-button
+          >
+        </a-form-item>
+      </a-form>
+    </div>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
 import { routes } from "../router/router";
 import { useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "../access/checkAccess";
 import AccessEnum from "../access/accessEnum";
@@ -75,6 +134,16 @@ const toMyselfPage = () => {
   router.push({
     path: "/myself",
   });
+};
+
+// 修改个人信息表单数据
+const form = reactive({
+  name: "",
+  post: "",
+});
+const handleSubmit = (data: any) => {
+  // console.log(data);
+  alert(data);
 };
 
 // 路由跳转后 更新选中的菜单
@@ -104,9 +173,21 @@ const visibleRoutes = computed(() => {
     return true;
   });
 });
+
+const visible = ref(false);
+
+const handleClick = () => {
+  visible.value = true;
+};
+const handleOk = () => {
+  visible.value = false;
+};
+const handleCancel = () => {
+  visible.value = false;
+};
 </script>
 
-<style scoped>
+<style>
 .title-bar {
   display: flex;
   align-items: center;
@@ -115,6 +196,16 @@ const visibleRoutes = computed(() => {
 
 .logo {
   height: 48px;
+}
+
+#modifyInfoModal {
+  /*text-align: center;*/
+  /*position: relative;*/
+  /*margin: 0 auto;*/
+}
+
+.arco-form {
+  margin: 0 auto;
 }
 
 /*.title {*/
