@@ -7,5 +7,11 @@ import store from "./store";
 import "@/plugins/axios";
 import "@/access";
 import "bytemd/dist/index.css";
+import JsonViewer from "vue3-json-viewer";
 
-createApp(App).use(ArcoVue).use(store).use(router).mount("#app");
+createApp(App)
+  .use(ArcoVue)
+  .use(JsonViewer)
+  .use(store)
+  .use(router)
+  .mount("#app");

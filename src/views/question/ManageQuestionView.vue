@@ -17,6 +17,26 @@
           <a-button status="danger" @click="doDelete(record)">删除</a-button>
         </a-space>
       </template>
+      <template #judgeCase="{ record }">
+        <json-viewer
+          :value="JSON.parse(record.judgeCase)"
+          style="width: 100%; min-width: 3.125rem"
+          :expand-depth="0"
+          copyable
+          boxed
+          sort
+        ></json-viewer>
+      </template>
+      <template #judgeConfig="{ record }">
+        <a-space direction="vertical">
+          <a-tag bordered color="orange"
+            >{{ JSON.parse(record.judgeConfig).timeLimit }} ms
+          </a-tag>
+          <a-tag bordered color="blue"
+            >{{ JSON.parse(record.judgeConfig).memoryLimit }} m
+          </a-tag>
+        </a-space>
+      </template>
     </a-table>
   </div>
 </template>
@@ -101,11 +121,11 @@ const columns = [
   },
   {
     title: "测试用例",
-    dataIndex: "judgeCase",
+    slotName: "judgeCase",
   },
   {
     title: "判题配置",
-    dataIndex: "judgeConfig",
+    slotName: "judgeConfig",
   },
   {
     title: "用户ID",

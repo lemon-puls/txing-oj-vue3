@@ -41,11 +41,6 @@
         </a-space>
         <p style="font-size: 20px">个性签名：不为失败找借口 只为成功找方法！</p>
       </div>
-      <!--      <button @click="modifyPwd">修改密码</button>-->
-      <!--      <div v-show="isOpen.value">-->
-      <!--        <button>弹窗显示</button>-->
-      <!--      </div>-->
-
       <div style="padding-top: 100px">
         <a-tabs size="large">
           <a-tab-pane key="1">
@@ -56,7 +51,14 @@
                 >提交记录</span
               >
             </template>
-            Content of Tab Panel 1
+            <a-table
+              id="submitRecordTable"
+              style="width: 90%; margin: 0 auto"
+              :bordered="false"
+              :show-header="false"
+              :columns="recordColumns"
+              :data="records"
+            />
           </a-tab-pane>
           <a-tab-pane key="2">
             <template #title>
@@ -90,13 +92,63 @@ import {
   IconPenFill,
   IconStarFill,
 } from "@arco-design/web-vue/es/icon";
-import { ref } from "vue";
+import { reactive } from "vue";
 
-let isOpen = ref<boolean>(false);
-const modifyPwd = () => {
-  isOpen.value = !isOpen.value;
-  alert("触发了" + isOpen.value);
-};
+const recordColumns = [
+  {
+    title: "Title",
+    dataIndex: "name",
+  },
+  {
+    title: "Salary",
+    dataIndex: "salary",
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+  },
+];
+const records = reactive([
+  {
+    key: "1",
+    name: "Jane Doe",
+    salary: 23000,
+    address: "32 Park Road, London",
+    email: "jane.doe@example.com",
+  },
+  {
+    key: "2",
+    name: "Alisa Ross",
+    salary: 25000,
+    address: "35 Park Road, London",
+    email: "alisa.ross@example.com",
+  },
+  {
+    key: "3",
+    name: "Kevin Sandra",
+    salary: 22000,
+    address: "31 Park Road, London",
+    email: "kevin.sandra@example.com",
+  },
+  {
+    key: "4",
+    name: "Ed Hellen",
+    salary: 17000,
+    address: "42 Park Road, London",
+    email: "ed.hellen@example.com",
+  },
+  {
+    key: "5",
+    name: "William Smith",
+    salary: 27000,
+    address: "62 Park Road, London",
+    email: "william.smith@example.com",
+  },
+]);
 
 const data = [
   {
@@ -129,11 +181,6 @@ const images = [
 const handleChange = (value: string) => {
   console.log(value);
 };
-
-// const toast = () => {
-//   // TODO 更换头像
-//   message.info("更换头像 待实现...");
-// };
 </script>
 
 <style>
@@ -173,5 +220,9 @@ td.arco-descriptions-item-label.arco-descriptions-item-label-block {
 
 .arco-tag-size-medium {
   font-size: 18px !important;
+}
+
+#submitRecordTable .arco-table-td {
+  background: rgba(255, 255, 255, 0);
 }
 </style>
