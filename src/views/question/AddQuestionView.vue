@@ -34,15 +34,15 @@
               min="0"
             />
           </a-form-item>
-          <a-form-item field="judgeConfig.stackLimit" label="堆栈限制">
-            <a-input-number
-              v-model="form.judgeConfig.stackLimit"
-              placeholder="请输入堆栈限制..."
-              mode="button"
-              size="large"
-              min="0"
-            />
-          </a-form-item>
+          <!--          <a-form-item field="judgeConfig.stackLimit" label="堆栈限制">-->
+          <!--            <a-input-number-->
+          <!--              v-model="form.judgeConfig.stackLimit"-->
+          <!--              placeholder="请输入堆栈限制..."-->
+          <!--              mode="button"-->
+          <!--              size="large"-->
+          <!--              min="0"-->
+          <!--            />-->
+          <!--          </a-form-item>-->
           <a-form-item field="judgeConfig.memoryLimit" label="内存限制">
             <a-input-number
               v-model="form.judgeConfig.memoryLimit"
@@ -123,7 +123,6 @@ let form = ref({
   ],
   judgeConfig: {
     memoryLimit: 1000,
-    stackLimit: 1000,
     timeLimit: 1000,
   },
   tags: [],
@@ -138,9 +137,7 @@ const loadData = async () => {
   if (!id) {
     return;
   }
-  const res = await QuestionControllerService.getQuestionByIdUsingGet(
-    id as any
-  );
+  const res = await QuestionControllerService.infoUsingGet1(id as any);
   if (res.code === 0) {
     form.value = res.data as any;
     if (!form.value.judgeCase) {
@@ -152,11 +149,11 @@ const loadData = async () => {
       ];
     } else {
       form.value.judgeCase = JSON.parse(form.value.judgeCase as any);
+      console.log("lallaa", form.value.judgeCase);
     }
     if (!form.value.judgeConfig) {
       form.value.judgeConfig = {
         memoryLimit: 1000,
-        stackLimit: 1000,
         timeLimit: 1000,
       };
     } else {

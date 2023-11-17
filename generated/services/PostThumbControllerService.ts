@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseResponse_int_ } from '../models/BaseResponse_int_';
 import type { PostThumbAddRequest } from '../models/PostThumbAddRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -14,13 +13,12 @@ export class PostThumbControllerService {
     /**
      * doThumb
      * @param postThumbAddRequest postThumbAddRequest
-     * @returns BaseResponse_int_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static doThumbUsingPost(
 postThumbAddRequest: PostThumbAddRequest,
-): CancelablePromise<BaseResponse_int_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post_thumb/',

@@ -8,7 +8,14 @@
     <!--      />-->
     <!--    </a-avatar>-->
 
-    <a-upload action="/">
+    <a-upload
+      action="http://localhost:8121/api/file/upload"
+      :data="appendData"
+      :file-list="fileList"
+      :show-file-list="false"
+      :with-credentials="true"
+      @change="handleChange1"
+    >
       <template #upload-button>
         <a-avatar
           id="headImg"
@@ -17,10 +24,7 @@
           :auto-fix-font-size="false"
           :style="{ backgroundColor: '#168CFF' }"
         >
-          <img
-            alt="avatar"
-            src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
-          />
+          <img alt="avatar" :src="totalData.userAvatar" />
         </a-avatar>
       </template>
     </a-upload>
@@ -92,7 +96,56 @@ import {
   IconPenFill,
   IconStarFill,
 } from "@arco-design/web-vue/es/icon";
-import { reactive } from "vue";
+import { onMounted, reactive, ref, toRaw } from "vue";
+import { FileItem } from "@arco-design/web-vue";
+import { UserControllerService } from "../../generated";
+import message from "@arco-design/web-vue/es/message";
+import store from "@/store";
+
+/**
+ * 初始化工作
+ */
+onMounted(() => {
+  totalData.value.userAvatar = store.state.user.loginUser.userAvatar;
+});
+
+/**
+ * 数据中心
+ */
+const totalData = ref({
+  userAvatar:
+    "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp",
+});
+
+/**
+ * 头像相关
+ */
+const appendData = {
+  biz: "user_avatar",
+};
+const fileList: any[] = [];
+const handleChange1 = async (info: any) => {
+  // console.log("first:", fileList[0]);
+  // console.log(toRaw(toRaw(info)[0]).response);
+  if (info.length == 2) {
+    info.splice(0, 1);
+    // console.log("删除成功：", info.length);
+  }
+  const response = toRaw(toRaw(info)[0]).response;
+  if (response != undefined && response.data != totalData.value.userAvatar) {
+    // 更新数据库
+    const res = await UserControllerService.updateMyUserUsingPost({
+      userAvatar: response.data,
+    });
+    if (res.code != 0) {
+      message.error("更换头像出错 请稍后重试！");
+      return;
+    }
+    store.state.user.loginUser.userAvatar = response.data;
+    totalData.value.userAvatar = response.data;
+    message.success("头像更换成功");
+  }
+};
 
 const recordColumns = [
   {

@@ -3,17 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type User = {
+export type QuestionComment = {
+    content?: string;
     createTime?: string;
+    favourNum?: number;
     id?: number;
     isDelete?: number;
-    mpOpenId?: string;
-    unionId?: string;
+    questionId?: number;
     updateTime?: string;
-    userAccount?: string;
-    userAvatar?: string;
-    userName?: string;
-    userPassword?: string;
-    userProfile?: string;
-    userRole?: string;
+    userId?: number;
 };

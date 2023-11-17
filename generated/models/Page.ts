@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type OrderItem = {
-    asc?: boolean;
-    column?: string;
+export type Page = {
+    current?: number;
+    pageSize?: number;
 };

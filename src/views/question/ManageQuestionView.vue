@@ -4,8 +4,8 @@
       :columns="columns"
       :data="dataList"
       :pagination="{
-        pageSize: searchParams.pageSize,
-        current: searchParams.current,
+        pageSize: searchParams.page.pageSize,
+        current: searchParams.page.current,
         total,
         showTotal: true,
       }"
@@ -43,24 +43,30 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
-import { Question, QuestionControllerService } from "../../../generated";
+import {
+  PageVO,
+  Question,
+  QuestionControllerService,
+} from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 
 const show = ref(true);
 const dataList = ref([]);
 const total = ref(0);
-const searchParams = ref({
-  pageSize: 1,
-  current: 1,
+const searchParams = ref<PageVO>({
+  page: {
+    current: 1,
+    pageSize: 10,
+  },
 });
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listQuestionByPageUsingPost(
+  const res = await QuestionControllerService.listForManagerUsingPost(
     searchParams.value
   );
   if (res.code === 0) {
-    dataList.value = res.data.records;
+    dataList.value = res.data.list;
     total.value = res.data.total;
   } else {
     message.error("加载题目数据失败:" + res.message);
@@ -151,7 +157,10 @@ watchEffect(() => {
 const onPageChange = (page: number) => {
   searchParams.value = {
     ...searchParams.value,
-    current: page,
+    page: {
+      current: page,
+      pageSize: 10,
+    },
   };
 };
 
@@ -160,9 +169,9 @@ const onPageChange = (page: number) => {
  * @param question
  */
 const doDelete = async (question: Question) => {
-  const res = await QuestionControllerService.deleteQuestionUsingPost({
-    id: question.id,
-  });
+  const res = await QuestionControllerService.deleteQuestionByIdsUsingPost([
+    question.id as number,
+  ]);
   if (res.code === 0) {
     message.success("删除成功");
     loadData();

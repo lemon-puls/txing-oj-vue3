@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type JudgeInfo = {
-    memory?: number;
-    message?: string;
-    time?: number;
+export type Sort = {
+    isAsc?: boolean;
+    sortName?: string;
 };

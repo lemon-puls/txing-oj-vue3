@@ -2,10 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
-import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
-import type { BaseResponse_Page_PostVO_ } from '../models/BaseResponse_Page_PostVO_';
-import type { BaseResponse_PostVO_ } from '../models/BaseResponse_PostVO_';
 import type { DeleteRequest } from '../models/DeleteRequest';
 import type { PostAddRequest } from '../models/PostAddRequest';
 import type { PostEditRequest } from '../models/PostEditRequest';
@@ -21,13 +17,12 @@ export class PostControllerService {
     /**
      * addPost
      * @param postAddRequest postAddRequest
-     * @returns BaseResponse_long_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static addPostUsingPost(
 postAddRequest: PostAddRequest,
-): CancelablePromise<BaseResponse_long_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/add',
@@ -43,13 +38,12 @@ postAddRequest: PostAddRequest,
     /**
      * deletePost
      * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static deletePostUsingPost(
 deleteRequest: DeleteRequest,
-): CancelablePromise<BaseResponse_boolean_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/delete',
@@ -65,13 +59,12 @@ deleteRequest: DeleteRequest,
     /**
      * editPost
      * @param postEditRequest postEditRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static editPostUsingPost(
 postEditRequest: PostEditRequest,
-): CancelablePromise<BaseResponse_boolean_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/edit',
@@ -87,12 +80,12 @@ postEditRequest: PostEditRequest,
     /**
      * getPostVOById
      * @param id id
-     * @returns BaseResponse_PostVO_ OK
+     * @returns any OK
      * @throws ApiError
      */
     public static getPostVoByIdUsingGet(
 id?: number,
-): CancelablePromise<BaseResponse_PostVO_> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/post/get/vo',
@@ -110,13 +103,12 @@ id?: number,
     /**
      * listPostVOByPage
      * @param postQueryRequest postQueryRequest
-     * @returns BaseResponse_Page_PostVO_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static listPostVoByPageUsingPost(
 postQueryRequest: PostQueryRequest,
-): CancelablePromise<BaseResponse_Page_PostVO_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/list/page/vo',
@@ -132,13 +124,12 @@ postQueryRequest: PostQueryRequest,
     /**
      * listMyPostVOByPage
      * @param postQueryRequest postQueryRequest
-     * @returns BaseResponse_Page_PostVO_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static listMyPostVoByPageUsingPost(
 postQueryRequest: PostQueryRequest,
-): CancelablePromise<BaseResponse_Page_PostVO_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/my/list/page/vo',
@@ -154,13 +145,12 @@ postQueryRequest: PostQueryRequest,
     /**
      * searchPostVOByPage
      * @param postQueryRequest postQueryRequest
-     * @returns BaseResponse_Page_PostVO_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static searchPostVoByPageUsingPost(
 postQueryRequest: PostQueryRequest,
-): CancelablePromise<BaseResponse_Page_PostVO_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/search/page/vo',
@@ -176,13 +166,12 @@ postQueryRequest: PostQueryRequest,
     /**
      * updatePost
      * @param postUpdateRequest postUpdateRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static updatePostUsingPost(
 postUpdateRequest: PostUpdateRequest,
-): CancelablePromise<BaseResponse_boolean_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/post/update',

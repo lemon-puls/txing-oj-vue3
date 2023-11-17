@@ -2,20 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
-import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
-import type { BaseResponse_Page_Question_ } from '../models/BaseResponse_Page_Question_';
-import type { BaseResponse_Page_QuestionSubmitVO_ } from '../models/BaseResponse_Page_QuestionSubmitVO_';
-import type { BaseResponse_Page_QuestionVO_ } from '../models/BaseResponse_Page_QuestionVO_';
-import type { BaseResponse_Question_ } from '../models/BaseResponse_Question_';
-import type { BaseResponse_QuestionVO_ } from '../models/BaseResponse_QuestionVO_';
-import type { DeleteRequest } from '../models/DeleteRequest';
+import type { PageVO } from '../models/PageVO';
+import type { Question } from '../models/Question';
 import type { QuestionAddRequest } from '../models/QuestionAddRequest';
-import type { QuestionEditRequest } from '../models/QuestionEditRequest';
-import type { QuestionQueryRequest } from '../models/QuestionQueryRequest';
-import type { QuestionSubmitAddRequest } from '../models/QuestionSubmitAddRequest';
-import type { QuestionSubmitQueryRequest } from '../models/QuestionSubmitQueryRequest';
 import type { QuestionUpdateRequest } from '../models/QuestionUpdateRequest';
+import type { QuestionVO } from '../models/QuestionVO';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -26,13 +17,12 @@ export class QuestionControllerService {
     /**
      * addQuestion
      * @param questionAddRequest questionAddRequest
-     * @returns BaseResponse_long_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static addQuestionUsingPost(
 questionAddRequest: QuestionAddRequest,
-): CancelablePromise<BaseResponse_long_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/question/add',
@@ -46,19 +36,18 @@ questionAddRequest: QuestionAddRequest,
     }
 
     /**
-     * deleteQuestion
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * deleteQuestionByIds
+     * @param ids ids
+     * @returns any OK
      * @throws ApiError
      */
-    public static deleteQuestionUsingPost(
-deleteRequest: DeleteRequest,
-): CancelablePromise<BaseResponse_boolean_ | any> {
+    public static deleteQuestionByIdsUsingPost(
+ids: Array<number>,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/question/delete',
-            body: deleteRequest,
+            body: ids,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -68,40 +57,18 @@ deleteRequest: DeleteRequest,
     }
 
     /**
-     * editQuestion
-     * @param questionEditRequest questionEditRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static editQuestionUsingPost(
-questionEditRequest: QuestionEditRequest,
-): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/edit',
-            body: questionEditRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * getQuestionById
+     * info
      * @param id id
-     * @returns BaseResponse_Question_ OK
+     * @returns any OK
      * @throws ApiError
      */
-    public static getQuestionByIdUsingGet(
-id?: number,
-): CancelablePromise<BaseResponse_Question_> {
+    public static infoUsingGet1(
+id: number,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/question/get',
-            query: {
+            url: '/api/question/info/{id}',
+            path: {
                 'id': id,
             },
             errors: {
@@ -113,20 +80,18 @@ id?: number,
     }
 
     /**
-     * getQuestionVOById
-     * @param id id
-     * @returns BaseResponse_QuestionVO_ OK
+     * list
+     * @param queryVo queryVO
+     * @returns any OK
      * @throws ApiError
      */
-    public static getQuestionVoByIdUsingGet(
-id?: number,
-): CancelablePromise<BaseResponse_QuestionVO_> {
+    public static listUsingPost1(
+queryVo: PageVO,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/question/get/vo',
-            query: {
-                'id': id,
-            },
+            method: 'POST',
+            url: '/api/question/list',
+            body: queryVo,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -136,19 +101,18 @@ id?: number,
     }
 
     /**
-     * listQuestionByPage
-     * @param questionQueryRequest questionQueryRequest
-     * @returns BaseResponse_Page_Question_ OK
-     * @returns any Created
+     * listForManager
+     * @param queryVo queryVO
+     * @returns any OK
      * @throws ApiError
      */
-    public static listQuestionByPageUsingPost(
-questionQueryRequest: QuestionQueryRequest,
-): CancelablePromise<BaseResponse_Page_Question_ | any> {
+    public static listForManagerUsingPost(
+queryVo: PageVO,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/list/page',
-            body: questionQueryRequest,
+            url: '/api/question/manager/list',
+            body: queryVo,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -158,19 +122,18 @@ questionQueryRequest: QuestionQueryRequest,
     }
 
     /**
-     * listQuestionVOByPage
-     * @param questionQueryRequest questionQueryRequest
-     * @returns BaseResponse_Page_QuestionVO_ OK
-     * @returns any Created
+     * save
+     * @param question question
+     * @returns any OK
      * @throws ApiError
      */
-    public static listQuestionVoByPageUsingPost(
-questionQueryRequest: QuestionQueryRequest,
-): CancelablePromise<BaseResponse_Page_QuestionVO_ | any> {
+    public static saveUsingPost1(
+question: Question,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/list/page/vo',
-            body: questionQueryRequest,
+            url: '/api/question/temp1',
+            body: question,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -180,63 +143,18 @@ questionQueryRequest: QuestionQueryRequest,
     }
 
     /**
-     * listMyQuestionVOByPage
-     * @param questionQueryRequest questionQueryRequest
-     * @returns BaseResponse_Page_QuestionVO_ OK
-     * @returns any Created
+     * save1
+     * @param questionVo questionVO
+     * @returns any OK
      * @throws ApiError
      */
-    public static listMyQuestionVoByPageUsingPost(
-questionQueryRequest: QuestionQueryRequest,
-): CancelablePromise<BaseResponse_Page_QuestionVO_ | any> {
+    public static save1UsingPost(
+questionVo: QuestionVO,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/my/list/page/vo',
-            body: questionQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * doQuestionSubmit
-     * @param questionSubmitAddRequest questionSubmitAddRequest
-     * @returns BaseResponse_long_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static doQuestionSubmitUsingPost(
-questionSubmitAddRequest: QuestionSubmitAddRequest,
-): CancelablePromise<BaseResponse_long_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/question_submit/do',
-            body: questionSubmitAddRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * listQuestionSubmitByPage
-     * @param questionSubmitQueryRequest questionSubmitQueryRequest
-     * @returns BaseResponse_Page_QuestionSubmitVO_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listQuestionSubmitByPageUsingPost(
-questionSubmitQueryRequest: QuestionSubmitQueryRequest,
-): CancelablePromise<BaseResponse_Page_QuestionSubmitVO_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/question_submit/list/page',
-            body: questionSubmitQueryRequest,
+            url: '/api/question/temp2',
+            body: questionVo,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -248,17 +166,39 @@ questionSubmitQueryRequest: QuestionSubmitQueryRequest,
     /**
      * updateQuestion
      * @param questionUpdateRequest questionUpdateRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * @returns any OK
      * @throws ApiError
      */
     public static updateQuestionUsingPost(
 questionUpdateRequest: QuestionUpdateRequest,
-): CancelablePromise<BaseResponse_boolean_ | any> {
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/question/update',
             body: questionUpdateRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getQuestionVoById
+     * @param id id
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getQuestionVoByIdUsingGet(
+id: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/question/vo/get/id',
+            query: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

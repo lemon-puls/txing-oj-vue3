@@ -32,7 +32,7 @@
           <a-avatar>
             <img
               alt="avatar"
-              src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+              :src="store.state.user?.loginUser?.userAvatar ?? ''"
             />
           </a-avatar>
           <template #content>
@@ -103,8 +103,8 @@
         <a-form-item>
           <!--          <a-button html-type="submit">Submit</a-button>-->
           <a-button html-type="submit" type="primary" shape="round"
-            >确认</a-button
-          >
+            >确认
+          </a-button>
         </a-form-item>
       </a-form>
     </div>

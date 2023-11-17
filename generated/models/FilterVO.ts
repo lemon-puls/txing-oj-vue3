@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type BaseResponse_long_ = {
-    code?: number;
-    data?: number;
-    message?: string;
+export type FilterVO = {
+    fieldName?: string;
+    queryType?: string;
+    value?: string;
 };

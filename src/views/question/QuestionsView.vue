@@ -60,7 +60,7 @@ import { onMounted, ref, watchEffect } from "vue";
 import {
   Question,
   QuestionControllerService,
-  QuestionQueryRequest,
+  PageVO,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
@@ -69,19 +69,37 @@ import moment from "moment";
 const show = ref(true);
 const dataList = ref([]);
 const total = ref(0);
-const searchParams = ref<QuestionQueryRequest>({
-  pageSize: 10,
-  current: 1,
-  title: "",
-  tags: [],
+const searchParams = ref<PageVO>({
+  // pageSize: 10,
+  // current: 1,
+  // title: "",
+  // tags: [],
+
+  // filter: [
+  //   {
+  //     fieldName: "tags",
+  //     queryType: "like",
+  //     value: "",
+  //   },
+  // ],
+  page: {
+    current: 1,
+    pageSize: 10,
+  },
+  // sorts: [
+  //   {
+  //     isAsc: true,
+  //     sortName: "",
+  //   },
+  // ],
 });
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listQuestionVoByPageUsingPost(
+  const res = await QuestionControllerService.listUsingPost1(
     searchParams.value
   );
   if (res.code === 0) {
-    dataList.value = res.data.records;
+    dataList.value = res.data.list;
     total.value = res.data.total;
   } else {
     message.error("加载题目数据失败:" + res.message);
@@ -131,7 +149,10 @@ watchEffect(() => {
 const onPageChange = (page: number) => {
   searchParams.value = {
     ...searchParams.value,
-    current: page,
+    page: {
+      current: page,
+      pageSize: 10,
+    },
   };
 };
 
@@ -142,7 +163,10 @@ const router = useRouter();
 const doSubmit = () => {
   searchParams.value = {
     ...searchParams.value,
-    current: 1,
+    page: {
+      current: 1,
+      pageSize: 10,
+    },
   };
   // 这行代码可以省略 因为只要修改searchParams的值后会触发刷新
   // loadData();

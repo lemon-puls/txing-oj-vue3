@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type BaseResponse_int_ = {
-    code?: number;
-    data?: number;
-    message?: string;
+export type QuestionSubmitDoRequest = {
+    code?: string;
+    language?: string;
+    questionId?: number;
 };

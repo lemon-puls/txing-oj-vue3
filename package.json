@@ -13,7 +13,7 @@
     "@bytemd/plugin-highlight": "^1.21.0",
     "@bytemd/plugin-medium-zoom": "^1.21.0",
     "@bytemd/vue-next": "^1.21.0",
-    "axios": "^1.5.1",
+    "axios": "^1.6.2",
     "clipboard": "^2.0.11",
     "core-js": "^3.8.3",
     "moment": "^2.29.4",
