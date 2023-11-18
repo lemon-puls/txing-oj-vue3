@@ -43,7 +43,9 @@
             </a-descriptions-item>
           </a-descriptions>
         </a-space>
-        <p style="font-size: 20px">个性签名：不为失败找借口 只为成功找方法！</p>
+        <p style="font-size: 20px">
+          个性签名：{{ store.state.user.loginUser.personSign }}
+        </p>
       </div>
       <div style="padding-top: 100px">
         <a-tabs size="large">
@@ -101,12 +103,13 @@ import {
   IconPenFill,
   IconStarFill,
 } from "@arco-design/web-vue/es/icon";
-import { onMounted, reactive, ref, toRaw } from "vue";
+import { onMounted, provide, reactive, ref, toRaw, watch } from "vue";
 import { FileItem } from "@arco-design/web-vue";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
 import store from "@/store";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
+import * as monaco from "monaco-editor";
 
 /**
  * 初始化工作
@@ -114,6 +117,13 @@ import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 onMounted(() => {
   totalData.value.userAvatar = store.state.user.loginUser.userAvatar;
 });
+
+// watch(
+//   () => store.state.user.loginUser,
+//   () => {
+//     data[1].value = store.state.user.loginUser.school;
+//   }
+// );
 
 /**
  * 数据中心
@@ -209,28 +219,28 @@ const records = reactive([
   },
 ]);
 
-const data = [
+const data = reactive([
   {
     label: "昵称",
-    value: "尽人事 听天命",
+    value: store.state.user.loginUser.userName,
   },
   {
     label: "大学",
-    value: "广东石油化工学院",
+    value: store.state.user.loginUser.school,
   },
   {
     label: "专业",
-    value: "网络工程",
+    value: store.state.user.loginUser.profession,
   },
   {
     label: "刷题数",
-    value: "300",
+    value: store.state.user.loginUser.questionCount,
   },
   {
     label: "通过率",
-    value: "75 %",
+    value: store.state.user.loginUser.acceptedRate,
   },
-];
+]);
 
 const images = [
   "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp",

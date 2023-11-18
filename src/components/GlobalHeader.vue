@@ -37,9 +37,9 @@
           </a-avatar>
           <template #content>
             <a-space class="wrapper" direction="vertical">
-              <a-button type="primary" long @click="toMyselfPage"
-                >个人主页
-              </a-button>
+              <!--              <a-button type="primary" long @click="toMyselfPage"-->
+              <!--                >个人主页-->
+              <!--              </a-button>-->
               <a-button type="primary" long>修改密码</a-button>
               <a-button type="primary" long @click="handleClick"
                 >修改信息
@@ -70,7 +70,7 @@
       >
         <a-form-item field="nickName" tooltip="不超过10个字符" label="昵称">
           <a-input
-            v-model="form.name"
+            v-model="form.userName"
             style="max-width: 400px"
             placeholder="请输入昵称..."
           />
@@ -92,7 +92,7 @@
         <a-form-item field="signature" label="个性签名">
           <a-textarea
             style="max-width: 400px"
-            v-model="form.signature"
+            v-model="form.personSign"
             placeholder="请输入您的个性签名..."
             :max-length="{ length: 100, errorOnly: true }"
             allow-clear
@@ -118,6 +118,8 @@ import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "../access/checkAccess";
 import AccessEnum from "../access/accessEnum";
+import { UserControllerService } from "../../generated";
+import message from "@arco-design/web-vue/es/message";
 
 const router = useRouter();
 const store = useStore();
@@ -137,13 +139,31 @@ const toMyselfPage = () => {
 };
 
 // 修改个人信息表单数据
-const form = reactive({
-  name: "",
-  post: "",
+const form = ref({
+  userName: "",
+  school: "",
+  profession: "",
+  personSign: "",
 });
-const handleSubmit = (data: any) => {
+const handleSubmit = async (data: any) => {
   // console.log(data);
-  alert(data);
+  updatePersonIfo();
+  // 更新用户数据
+  store.dispatch("user/getLoginUser", {
+    userName: "lemon",
+    userRole: AccessEnum.ADMIN,
+  });
+
+  visible.value = false;
+};
+// 更新个人信息
+const updatePersonIfo = async () => {
+  const res = await UserControllerService.updateMyUserUsingPost(form.value);
+  if (res.code != 0) {
+    message.error(res.msg);
+  } else {
+    message.success("更新成功");
+  }
 };
 
 // 路由跳转后 更新选中的菜单
@@ -175,8 +195,16 @@ const visibleRoutes = computed(() => {
 });
 
 const visible = ref(false);
-
-const handleClick = () => {
+// 修改个人信息
+const handleClick = async () => {
+  // 加载个人原信息
+  const res = await UserControllerService.getCurrentUserVoByIdUsingGet();
+  if (res.code != 0) {
+    message.error(res.msg);
+    return;
+  }
+  Object.assign(form.value, res.data);
+  // alert("获取成功" + form.value.userName);
   visible.value = true;
 };
 const handleOk = () => {

@@ -33,11 +33,11 @@ export const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-  {
-    path: "/",
-    name: "主页",
-    component: QuestionsView,
-  },
+  // {
+  //   path: "/",
+  //   name: "主页",
+  //   component: QuestionsView,
+  // },
   {
     path: "/questions",
     name: "题库中心",
@@ -96,10 +96,10 @@ export const routes: Array<RouteRecordRaw> = [
   // },
   {
     path: "/myself",
-    name: "个人主页",
+    name: "我的主页",
     component: MyselfView,
-    meta: {
-      hideInMenu: true,
-    },
+    // meta: {
+    //   hideInMenu: true,
+    // },
   },
 ];

@@ -38,6 +38,23 @@ userAddRequest: UserAddRequest,
     }
 
     /**
+     * getCurrentUserVOById
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getCurrentUserVoByIdUsingGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/user/current/get/vo',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * deleteUser
      * @param deleteRequest deleteRequest
      * @returns any OK
