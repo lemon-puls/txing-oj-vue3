@@ -1,6 +1,6 @@
 <template>
   <div id="ViewQuestionView">
-    <a-spin :loading="loading" tip="This may take a while...">
+    <a-spin :loading="loading" tip="判题中...">
       <a-row :gutter="[24, 24]">
         <a-col :md="12" :xs="24">
           <a-tabs
@@ -8,7 +8,7 @@
             :editable="true"
             @add="handleAdd"
             @delete="handleDelete"
-            show-add-button
+            :show-add-button="false"
             default-active-key="question"
             :active-key="activeKey"
             style="max-width: 100vh"
@@ -106,7 +106,7 @@
             </a-tab-pane>
             <a-tab-pane :closable="false" key="submitRecord" title="提交记录">
               <SubmitRecordView
-                :data="submitRecordData"
+                :question-id="props.id"
                 :click-row="clickSubmitRecord"
               ></SubmitRecordView>
             </a-tab-pane>
@@ -204,14 +204,15 @@ import SubmitDetailView from "@/components/question/SubmitDetailView.vue";
 
 const question = ref<QuestionVO>();
 onMounted(async () => {
+  console.log("ViewQuestionView.vue执行了");
   await loadData();
-  loadCommentData();
+  await loadCommentData();
 });
 
 /**
  * 提交记录详情
  */
-const submitRecordDetail = reactive({
+let submitRecordDetail = reactive({
   createTime: "2020-12-23",
   exceedPercent: 75,
   id: 0,
@@ -239,8 +240,14 @@ const submitRecordData = reactive([
   },
 ]);
 // 点击提交记录
-const clickSubmitRecord = (record: any) => {
+const clickSubmitRecord = async (record: any) => {
   // 向后端请求提交详细数据
+  const res = await QuestionSubmitControllerService.infoUsingGet2(record.id);
+  if (res.code != 0) {
+    message.error("数据请求失败 请稍后再试！");
+    return;
+  }
+  submitRecordDetail = res.data;
   // 添加新标签页（跳转）
   const newTab = {
     key: record.id,
@@ -351,31 +358,14 @@ const publishComment = async () => {
 let count = 5;
 let activeKey = ref<any>("question");
 const tabClick = (key: any) => {
+  // if (key === "submitRecord") {
+  //   // 向后端请求提交记录数据
+  //   QuestionSubmitControllerService.listUsingPost2()
+  // }
   activeKey.value = key;
 };
-let data = reactive([
-  // {
-  //   key: "1",
-  //   title: "Tab 1",
-  //   content: "Content of Tab Panel 1",
-  // },
-  {
-    key: "2",
-    title: "Tab 2",
-    // content: `<MdViewer :value="question.content || ''" />`,
-    component: SubmitDetailView,
-  },
-  // {
-  //   key: "3",
-  //   title: "Tab 3",
-  //   content: "Content of Tab Panel 3",
-  // },
-  // {
-  //   key: "4",
-  //   title: "Tab 4",
-  //   content: "Content of Tab Panel 4",
-  // },
-]);
+// 标签页元数据
+let data = reactive([]);
 
 // const getComponent = (item: any) => {
 //   return item; // 或者返回其他默认组件

@@ -55,14 +55,19 @@
                 >提交记录</span
               >
             </template>
-            <a-table
-              id="submitRecordTable"
-              style="width: 90%; margin: 0 auto"
-              :bordered="false"
-              :show-header="false"
-              :columns="recordColumns"
-              :data="records"
-            />
+            <!--            <a-table-->
+            <!--              id="submitRecordTable"-->
+            <!--              style="width: 90%; margin: 0 auto"-->
+            <!--              :bordered="false"-->
+            <!--              :show-header="false"-->
+            <!--              :columns="recordColumns"-->
+            <!--              :data="records"-->
+            <!--            />-->
+            <SubmitRecordView
+              :scroll-x="700"
+              :scroll-y="370"
+              style="min-width: 100%; margin: auto"
+            ></SubmitRecordView>
           </a-tab-pane>
           <a-tab-pane key="2">
             <template #title>
@@ -101,6 +106,7 @@ import { FileItem } from "@arco-design/web-vue";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
 import store from "@/store";
+import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 
 /**
  * 初始化工作

@@ -34,6 +34,29 @@ ids: Array<number>,
     }
 
     /**
+     * info
+     * @param id id
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static infoUsingGet2(
+id: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/question/submit/detail/vo/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * doQuestionSubmit
      * @param questionSubmitDoRequest questionSubmitDoRequest
      * @returns any OK
@@ -46,29 +69,6 @@ questionSubmitDoRequest: QuestionSubmitDoRequest,
             method: 'POST',
             url: '/api/question/submit/do',
             body: questionSubmitDoRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * info
-     * @param id id
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static infoUsingGet2(
-id: number,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/question/submit/info/{id}',
-            path: {
-                'id': id,
-            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
