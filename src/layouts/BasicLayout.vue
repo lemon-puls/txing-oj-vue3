@@ -28,9 +28,10 @@
   background: url("../assets/背景1.png") 0% 0% / 100% 100%;
   /*filter: blur(10px);*/
   /*margin-bottom: 16px;*/
-  padding: 20px;
+  /*padding: 20px;*/
   /*自己加的*/
-  /*display: flex;*/
+  display: flex;
+  flex-direction: column;
   /*justify-content: center;*/
 }
 

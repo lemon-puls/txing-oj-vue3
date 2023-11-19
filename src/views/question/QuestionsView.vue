@@ -1,5 +1,28 @@
 <template>
   <div id="questionsView">
+    <a-carousel
+      :autoPlay="true"
+      animation-name="card"
+      show-arrow="never"
+      indicator-position="outer"
+      :style="{
+        width: '100%',
+        height: '240px',
+      }"
+    >
+      <a-carousel-item
+        :key="image"
+        v-for="image in images"
+        :style="{ width: '60%' }"
+      >
+        <img
+          :src="image"
+          :style="{
+            width: '100%',
+          }"
+        />
+      </a-carousel-item>
+    </a-carousel>
     <a-form :model="searchParams" layout="inline">
       <a-form-item field="title" label="关键词" style="min-width: 240px">
         <a-input
@@ -181,12 +204,26 @@ const toQuestionPage = (question: Question) => {
     path: `/view/question/${question.id}`,
   });
 };
+
+/**
+ * 轮播图
+ */
+const images = [
+  "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp",
+  "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp",
+  "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp",
+  "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/24e0dd27418d2291b65db1b21aa62254.png~tplv-uwbnlip3yd-webp.webp",
+];
 </script>
 
 <style scoped>
 #questionsView {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
   /*background: rgba(255, 255, 255, 0.8);*/
+  background: rgba(255, 255, 255, 0.8);
+  /*height: 100%;*/
+  flex: 1;
+  width: 100%;
 }
 </style>

@@ -159,13 +159,18 @@
 
   <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
     <template #title> 执行结果</template>
-    <div>
+    <div id="execResultDiv">
       <a-descriptions
         style="margin-top: 20px"
         :data="resultData"
         :size="size"
         :column="1"
       />
+      <h2 v-if="resultData[2].value === 'Accepted'">
+        恭喜你 超越了
+        <span :style="{ color: 'red' }">{{ exceedPercent * 100 }}%</span>
+        的用户!
+      </h2>
     </div>
   </a-modal>
 </template>
@@ -413,18 +418,24 @@ const handleCancel = () => {
 
 const resultData = [
   {
-    label: "time",
+    label: "执行用时",
     value: "",
   },
   {
-    label: "memory",
+    label: "内存消耗",
     value: "",
   },
   {
-    label: "message",
+    label: "执行结果",
     value: "",
+  },
+  {
+    label: "通过用例",
+    value: 0,
   },
 ];
+// 超越了多少百分比的用户
+let exceedPercent = ref(0);
 
 const form = ref<QuestionSubmitDoRequest>({
   language: "java",
@@ -477,9 +488,11 @@ const timer = (sumbitId: number) => {
       clearInterval(intervalId);
       console.log("执行结果：", res.data);
       const data = JSON.parse(res.data);
-      resultData[0].value = data.time;
-      resultData[1].value = data.memory;
+      resultData[0].value = `${data.time} MS`;
+      resultData[1].value = `${(data.memory / (1024 * 1024)).toFixed(2)} MB`;
       resultData[2].value = data.message;
+      resultData[3].value = data.acceptedRate * 100 + "%";
+      exceedPercent = data.exceedPercent;
       loading.value = false;
       visible.value = true;
     }
@@ -552,5 +565,12 @@ const scrollTo = (num: number) => {
   bottom: 0;
   width: 100%;
   margin-top: 20px;
+}
+
+#execResultDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
