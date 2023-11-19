@@ -16,13 +16,20 @@
           placeholder="请输入标签..."
         />
       </a-form-item>
-      <a-form-item field="answer" label="答案">
-        <MdEditor :value="form.answer" :handle-change="onAnswerChange" />
-      </a-form-item>
       <a-form-item field="content" label="题目内容">
-        <MdEditor :value="form.content" :handle-change="onContentChange" />
+        <MdEditor
+          style="min-width: 50vw"
+          :value="form.content"
+          :handle-change="onContentChange"
+        />
       </a-form-item>
-
+      <a-form-item field="answer" label="答案">
+        <MdEditor
+          style="min-width: 50vw"
+          :value="form.answer"
+          :handle-change="onAnswerChange"
+        />
+      </a-form-item>
       <a-form-item label="题目配置" :content-flex="false" :merge-props="false">
         <a-space direction="vertical" style="min-width: 480px">
           <a-form-item field="judgeConfig.timeLimit" label="用时限制">

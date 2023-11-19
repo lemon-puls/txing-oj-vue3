@@ -31,6 +31,25 @@
 
     <div id="backgorupDiv">
       <div id="basicInfo">
+        <div id="updateInfoIcon">
+          <a-popover>
+            <div id="updateInfoIconSub">
+              <icon-settings :size="25" />
+              <span>设置</span>
+            </div>
+            <template #content>
+              <a-space class="wrapper" direction="vertical">
+                <!--              <a-button type="primary" long @click="toMyselfPage"-->
+                <!--                >个人主页-->
+                <!--              </a-button>-->
+                <a-button type="primary" long>修改密码</a-button>
+                <a-button type="primary" long @click="handleClick"
+                  >修改信息
+                </a-button>
+              </a-space>
+            </template>
+          </a-popover>
+        </div>
         <a-space direction="vertical" size="large" fill>
           <a-descriptions size="large" :column="3">
             <a-descriptions-item
@@ -43,9 +62,7 @@
             </a-descriptions-item>
           </a-descriptions>
         </a-space>
-        <p style="font-size: 20px">
-          个性签名：{{ store.state.user.loginUser.personSign }}
-        </p>
+        <p style="font-size: 20px">个性签名：{{ form.personSign }}</p>
       </div>
       <div style="padding-top: 100px">
         <a-tabs size="large">
@@ -95,6 +112,63 @@
       </div>
     </div>
   </div>
+
+  <a-modal
+    v-model:visible="visible"
+    @ok="handleOk"
+    @cancel="handleCancel"
+    width="800px"
+    :footer="false"
+  >
+    <template #title> 修改个人信息</template>
+    <div id="modifyInfoModal">
+      <a-form
+        :model="form"
+        id="modifyInfoForm"
+        :style="{ width: '600px' }"
+        @submit="handleSubmit"
+      >
+        <a-form-item field="nickName" tooltip="不超过10个字符" label="昵称">
+          <a-input
+            v-model="form.userName"
+            style="max-width: 400px"
+            placeholder="请输入昵称..."
+          />
+        </a-form-item>
+        <a-form-item field="school" label="大学">
+          <a-input
+            style="max-width: 400px"
+            v-model="form.school"
+            placeholder="请输入您的大学..."
+          />
+        </a-form-item>
+        <a-form-item field="profession" label="专业">
+          <a-input
+            style="max-width: 400px"
+            v-model="form.profession"
+            placeholder="请输入您的专业..."
+          />
+        </a-form-item>
+        <a-form-item field="signature" label="个性签名">
+          <a-textarea
+            style="max-width: 400px"
+            v-model="form.personSign"
+            placeholder="请输入您的个性签名..."
+            :max-length="{ length: 100, errorOnly: true }"
+            allow-clear
+            show-word-limit
+          />
+        </a-form-item>
+
+        <a-form-item>
+          <!--          <a-button html-type="submit">Submit</a-button>-->
+          <a-button html-type="submit" type="primary" shape="round"
+            >确认
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </div>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -102,21 +176,92 @@ import {
   IconHeartFill,
   IconPenFill,
   IconStarFill,
+  IconSettings,
 } from "@arco-design/web-vue/es/icon";
-import { onMounted, provide, reactive, ref, toRaw, watch } from "vue";
+import {
+  onBeforeMount,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  toRaw,
+  watch,
+} from "vue";
 import { FileItem } from "@arco-design/web-vue";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
 import store from "@/store";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import * as monaco from "monaco-editor";
+import AccessEnum from "@/access/accessEnum";
 
 /**
  * 初始化工作
  */
+onBeforeMount(() => {
+  loadUserPersonInfo();
+});
 onMounted(() => {
   totalData.value.userAvatar = store.state.user.loginUser.userAvatar;
 });
+
+/**
+ * 修改个人信息
+ */
+const visible = ref(false);
+// 修改个人信息
+const handleClick = async () => {
+  // alert("获取成功" + form.value.userName);
+  visible.value = true;
+};
+// 加载个人原信息
+const loadUserPersonInfo = async () => {
+  // 加载个人原信息
+  const res = await UserControllerService.getCurrentUserVoByIdUsingGet();
+  if (res.code != 0) {
+    message.error(res.msg);
+    return;
+  }
+  Object.assign(form.value, res.data);
+  data[0].value = form.value.userName;
+  data[1].value = form.value.school;
+  data[2].value = form.value.profession;
+};
+const handleOk = () => {
+  visible.value = false;
+};
+const handleCancel = () => {
+  visible.value = false;
+};
+// 修改个人信息表单数据
+const form = ref({
+  userName: "",
+  school: "",
+  profession: "",
+  personSign: "",
+});
+const handleSubmit = async (data: any) => {
+  // console.log(data);
+  updatePersonIfo();
+  // 更新用户数据
+  store.dispatch("user/getLoginUser", {
+    userName: "lemon",
+    userRole: AccessEnum.ADMIN,
+  });
+  visible.value = false;
+};
+// 更新个人信息
+const updatePersonIfo = async () => {
+  const res = await UserControllerService.updateMyUserUsingPost(form.value);
+  if (res.code != 0) {
+    message.error(res.msg);
+  } else {
+    message.success("更新成功");
+  }
+  data[0].value = form.value.userName;
+  data[1].value = form.value.school;
+  data[2].value = form.value.profession;
+};
 
 // watch(
 //   () => store.state.user.loginUser,
@@ -222,15 +367,15 @@ const records = reactive([
 const data = reactive([
   {
     label: "昵称",
-    value: store.state.user.loginUser.userName,
+    value: form.value.userName,
   },
   {
     label: "大学",
-    value: store.state.user.loginUser.school,
+    value: form.value.school,
   },
   {
     label: "专业",
-    value: store.state.user.loginUser.profession,
+    value: form.value.profession,
   },
   {
     label: "刷题数",
@@ -277,7 +422,7 @@ const handleChange = (value: string) => {
 }
 
 #basicInfo {
-  padding-top: 30px;
+  padding-top: 15px;
   margin-left: 400px;
 }
 
@@ -293,5 +438,19 @@ td.arco-descriptions-item-label.arco-descriptions-item-label-block {
 
 #submitRecordTable .arco-table-td {
   background: rgba(255, 255, 255, 0);
+}
+
+#updateInfoIcon {
+  margin-bottom: 10px;
+  text-align: right;
+  margin-right: 20px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+#updateInfoIconSub {
+  display: flex;
+  align-items: center;
 }
 </style>

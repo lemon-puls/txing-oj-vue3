@@ -45,7 +45,9 @@
             </a-tab-pane>
             <a-tab-pane :closable="false" key="commnet" title="评论">
               <div>
-                <a-scrollbar style="height: 56vh; overflow: auto">
+                <a-scrollbar
+                  style="height: 56vh; overflow: auto; margin: 0 15px"
+                >
                   <a-comment
                     v-for="(item, index) of commentData"
                     :key="item.id"
@@ -277,7 +279,15 @@ let commentData = ref([
     isFavour: true,
   },
 ]);
-const onLikeChange = (index: number) => {
+const onLikeChange = async (index: number) => {
+  const res =
+    await QuestionCommentControllerService.thumbQuestionCommentUsingGet(
+      commentData.value[index].id,
+      question.value?.id
+    );
+  if (res.code != 0) {
+    message.error(res.msg);
+  }
   commentData.value[index].isFavour = !commentData.value[index].isFavour;
   if (commentData.value[index].isFavour) {
     commentData.value[index].favourNum = commentData.value[index].favourNum + 1;

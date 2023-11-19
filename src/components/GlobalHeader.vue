@@ -37,14 +37,22 @@
           </a-avatar>
           <template #content>
             <a-space class="wrapper" direction="vertical">
-              <!--              <a-button type="primary" long @click="toMyselfPage"-->
-              <!--                >个人主页-->
-              <!--              </a-button>-->
-              <a-button type="primary" long>修改密码</a-button>
-              <a-button type="primary" long @click="handleClick"
-                >修改信息
+              <a-button
+                v-if="
+                  store.state.user.loginUser.userRole != AccessEnum.NOT_LOGIN
+                "
+                type="primary"
+                long
+                @click="handleLogout"
+                >退出登录
               </a-button>
-              <a-button type="primary" long>退出登录</a-button>
+              <a-button
+                v-else
+                type="primary"
+                long
+                @click="router.push({ path: '/user/login' })"
+                >立即登录
+              </a-button>
             </a-space>
           </template>
         </a-popover>
@@ -52,63 +60,6 @@
       </div>
     </a-col>
   </a-row>
-
-  <a-modal
-    v-model:visible="visible"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    width="800px"
-    :footer="false"
-  >
-    <template #title> 修改个人信息</template>
-    <div id="modifyInfoModal">
-      <a-form
-        :model="form"
-        id="modifyInfoForm"
-        :style="{ width: '600px' }"
-        @submit="handleSubmit"
-      >
-        <a-form-item field="nickName" tooltip="不超过10个字符" label="昵称">
-          <a-input
-            v-model="form.userName"
-            style="max-width: 400px"
-            placeholder="请输入昵称..."
-          />
-        </a-form-item>
-        <a-form-item field="school" label="大学">
-          <a-input
-            style="max-width: 400px"
-            v-model="form.school"
-            placeholder="请输入您的大学..."
-          />
-        </a-form-item>
-        <a-form-item field="profession" label="专业">
-          <a-input
-            style="max-width: 400px"
-            v-model="form.profession"
-            placeholder="请输入您的专业..."
-          />
-        </a-form-item>
-        <a-form-item field="signature" label="个性签名">
-          <a-textarea
-            style="max-width: 400px"
-            v-model="form.personSign"
-            placeholder="请输入您的个性签名..."
-            :max-length="{ length: 100, errorOnly: true }"
-            allow-clear
-            show-word-limit
-          />
-        </a-form-item>
-
-        <a-form-item>
-          <!--          <a-button html-type="submit">Submit</a-button>-->
-          <a-button html-type="submit" type="primary" shape="round"
-            >确认
-          </a-button>
-        </a-form-item>
-      </a-form>
-    </div>
-  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -136,34 +87,6 @@ const toMyselfPage = () => {
   router.push({
     path: "/myself",
   });
-};
-
-// 修改个人信息表单数据
-const form = ref({
-  userName: "",
-  school: "",
-  profession: "",
-  personSign: "",
-});
-const handleSubmit = async (data: any) => {
-  // console.log(data);
-  updatePersonIfo();
-  // 更新用户数据
-  store.dispatch("user/getLoginUser", {
-    userName: "lemon",
-    userRole: AccessEnum.ADMIN,
-  });
-
-  visible.value = false;
-};
-// 更新个人信息
-const updatePersonIfo = async () => {
-  const res = await UserControllerService.updateMyUserUsingPost(form.value);
-  if (res.code != 0) {
-    message.error(res.msg);
-  } else {
-    message.success("更新成功");
-  }
 };
 
 // 路由跳转后 更新选中的菜单
@@ -194,24 +117,20 @@ const visibleRoutes = computed(() => {
   });
 });
 
-const visible = ref(false);
-// 修改个人信息
-const handleClick = async () => {
-  // 加载个人原信息
-  const res = await UserControllerService.getCurrentUserVoByIdUsingGet();
+/**
+ * 退出登录
+ */
+const handleLogout = async () => {
+  const res = await UserControllerService.userLogoutUsingPost();
   if (res.code != 0) {
     message.error(res.msg);
-    return;
   }
-  Object.assign(form.value, res.data);
-  // alert("获取成功" + form.value.userName);
-  visible.value = true;
-};
-const handleOk = () => {
-  visible.value = false;
-};
-const handleCancel = () => {
-  visible.value = false;
+  // 更新本地登录用户数据
+  store.dispatch("user/getLoginUser", {});
+  // 重定向到登录页
+  router.push({
+    path: "/user/login",
+  });
 };
 </script>
 
