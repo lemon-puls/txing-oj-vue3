@@ -226,6 +226,9 @@ const loadUserPersonInfo = async () => {
   data[0].value = form.value.userName;
   data[1].value = form.value.school;
   data[2].value = form.value.profession;
+  data[3].value = res.data.questionCount;
+  data[4].value =
+    ((res.data.acceptedCount / res.data.submitCount) * 100).toFixed(2) + " %";
 };
 const handleOk = () => {
   visible.value = false;

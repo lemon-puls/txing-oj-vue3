@@ -21,16 +21,30 @@
                   :column="{ xs: 1, md: 2, lg: 3 }"
                 >
                   <a-descriptions-item label="时间限制">
-                    {{ question.judgeConfig.timeLimit ?? 0 }}
+                    {{ question.judgeConfig.timeLimit ?? 0 }} ms
                   </a-descriptions-item>
                   <a-descriptions-item label="内存限制">
-                    {{ question.judgeConfig.memoryLimit ?? 0 }}
+                    {{
+                      `${(
+                        question.judgeConfig.memoryLimit /
+                        (1024 * 1024)
+                      ).toFixed(2)} MB`
+                    }}
                   </a-descriptions-item>
-                  <a-descriptions-item label="堆栈限制">
-                    {{ question.judgeConfig.stackLimit ?? 0 }}
-                  </a-descriptions-item>
+                  <!--                  <a-descriptions-item label="堆栈限制">-->
+                  <!--                    {{ question.judgeConfig.stackLimit ?? 0 }}-->
+                  <!--                  </a-descriptions-item>-->
                 </a-descriptions>
                 <MdViewer :value="question.content || ''" />
+                <div id="questionFavourId">
+                  <icon-star-fill
+                    v-if="isFavour"
+                    size="30"
+                    @click="clickFavour"
+                  />
+                  <icon-star v-else size="30" @click="clickFavour"></icon-star>
+                  <span style="margin-left: 5px">收藏</span>
+                </div>
                 <template #extra>
                   <a-space wrap>
                     <a-tag
@@ -197,6 +211,7 @@ import {
   Question,
   QuestionCommentControllerService,
   QuestionControllerService,
+  QuestionFavourControllerService,
   QuestionSubmitControllerService,
   QuestionSubmitDoRequest,
   QuestionVO,
@@ -255,6 +270,9 @@ const clickSubmitRecord = async (record: any) => {
     return;
   }
   submitRecordDetail = res.data;
+  if (res.data.exceedPercent == null || res.data.exceedPercent < 0) {
+    submitRecordDetail.exceedPercent = -1;
+  }
   // 添加新标签页（跳转）
   const newTab = {
     key: record.id,
@@ -513,6 +531,7 @@ const loadData = async () => {
   );
   if (res.code === 0) {
     question.value = res.data;
+    isFavour.value = res.data.isFavour;
   } else {
     message.error("加载题目数据失败:" + res.message);
   }
@@ -528,6 +547,30 @@ watchEffect(() => {
 const scrollTo = (num: number) => {
   alert(num);
   console.log(num);
+};
+/**
+ * 点击收藏
+ */
+let isFavour = ref(false);
+const clickFavour = async () => {
+  if (question.value?.id) {
+    const res = await QuestionFavourControllerService.favourQuestionUsingGet(
+      question.value.id
+    );
+    if (res.code !== 0) {
+      message.error(res.msg);
+      return;
+    }
+    isFavour.value = !isFavour.value;
+    if (isFavour.value === true) {
+      message.success("收藏成功");
+    } else {
+      message.success("已取消收藏");
+    }
+  } else {
+    message.error("无法获取到当前题目信息 请刷新重试！");
+    return;
+  }
 };
 </script>
 
@@ -575,5 +618,16 @@ const scrollTo = (num: number) => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+#questionFavourId {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  font-weight: bold;
+}
+
+#questionFavourId > .arco-icon {
+  color: #ff7300;
 }
 </style>

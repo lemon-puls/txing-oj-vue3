@@ -89,7 +89,7 @@ const data = [
   },
   {
     label: "占用内存",
-    value: `${props.questionSubmitDatail.memory} KB`,
+    value: `${(props.questionSubmitDatail.memory / 1024 / 1024).toFixed(2)} MB`,
   },
   {
     label: "执行时间",
@@ -105,7 +105,10 @@ const data = [
   },
   {
     label: "排行",
-    value: `${props.questionSubmitDatail.exceedPercent} %`,
+    value: `${(props.questionSubmitDatail.exceedPercent == -1
+      ? 0
+      : props.questionSubmitDatail.exceedPercent * 100
+    ).toFixed(2)} %`,
   },
 ];
 

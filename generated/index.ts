@@ -43,6 +43,7 @@ export { PostFavourControllerService } from './services/PostFavourControllerServ
 export { PostThumbControllerService } from './services/PostThumbControllerService';
 export { QuestionCommentControllerService } from './services/QuestionCommentControllerService';
 export { QuestionControllerService } from './services/QuestionControllerService';
+export { QuestionFavourControllerService } from './services/QuestionFavourControllerService';
 export { QuestionSubmitControllerService } from './services/QuestionSubmitControllerService';
 export { UserControllerService } from './services/UserControllerService';
 export { WxMpControllerService } from './services/WxMpControllerService';

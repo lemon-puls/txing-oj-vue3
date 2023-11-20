@@ -150,7 +150,7 @@ const loadRecordData = async () => {
       },
     };
   }
-  const res = await QuestionSubmitControllerService.listUsingPost2(params);
+  const res = await QuestionSubmitControllerService.listUsingPost3(params);
   if (res.code != 0) {
     message.error("提交记录请求失败");
     return;
