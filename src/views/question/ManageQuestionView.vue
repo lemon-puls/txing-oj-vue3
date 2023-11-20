@@ -9,8 +9,21 @@
         total,
         showTotal: true,
       }"
+      :scroll="scrollPercent"
+      :scrollbar="true"
       @page-change="onPageChange"
     >
+      <template #createTime="{ record }">
+        {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:SS") }}
+      </template>
+      <template #content="{ record }">
+        <span v-if="record.content.length < 50">{{ record.content }}</span>
+        <span v-else>{{ record.content.substr(0, 50) + " ..." }}</span>
+      </template>
+      <template #answer="{ record }">
+        <span v-if="record.answer.length < 50">{{ record.answer }}</span>
+        <span v-else>{{ record.answer.substr(0, 50) + " ..." }}</span>
+      </template>
       <template #optional="{ record }">
         <a-space>
           <a-button type="primary" @click="doUpdate(record)">修改</a-button>
@@ -18,27 +31,62 @@
         </a-space>
       </template>
       <template #judgeCase="{ record }">
-        <json-viewer
-          :value="JSON.parse(record.judgeCase)"
-          style="width: 100%; min-width: 3.125rem"
-          :expand-depth="0"
-          copyable
-          boxed
-          sort
-        ></json-viewer>
+        <span
+          v-if="record.judgeCase"
+          style="color: #007bff"
+          @click="handleClick(record)"
+          >查看详情</span
+        >
       </template>
       <template #judgeConfig="{ record }">
-        <a-space direction="vertical">
+        <a-space size="small">
           <a-tag bordered color="orange"
-            >{{ JSON.parse(record.judgeConfig).timeLimit }} ms
+            >{{ record.judgeConfig.timeLimit }} ms
           </a-tag>
           <a-tag bordered color="blue"
-            >{{ JSON.parse(record.judgeConfig).memoryLimit }} m
+            >{{
+              `${(record.judgeConfig.memoryLimit / (1024 * 1024)).toFixed(
+                2
+              )} MB`
+            }}
+          </a-tag>
+        </a-space>
+      </template>
+      <template #acRate="{ record }">
+        {{
+          `${
+            record.submitNum
+              ? ((record.acceptedNum / record.submitNum) * 100).toFixed(2)
+              : "0"
+          }
+                    % (${record.acceptedNum}/${record.submitNum})`
+        }}
+      </template>
+      <template #tags="{ record }">
+        <a-space wrap direction="horizonta">
+          <a-tag v-for="(tag, index) of record.tags" :key="index" color="green"
+            >{{ tag }}
           </a-tag>
         </a-space>
       </template>
     </a-table>
   </div>
+
+  <a-modal v-model:visible="judgeCaseViewerVisible" draggable :footer="false">
+    <template #title> 测试用例</template>
+    <div>
+      <json-viewer
+        :value="currentJudgeCase"
+        style="width: 100%; min-width: 3.125rem"
+        :expand-depth="3"
+        copyable
+        boxed
+        sort
+        theme="my-awesome-json-theme"
+        :show-array-index="true"
+      ></json-viewer>
+    </div>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -50,6 +98,7 @@ import {
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
+import moment from "moment";
 
 const show = ref(true);
 const dataList = ref([]);
@@ -97,53 +146,82 @@ onMounted(() => {
 //     "isDelete": 0
 // }
 const columns = [
-  {
-    title: "id",
-    dataIndex: "id",
-  },
+  // {
+  //   title: "id",
+  //   dataIndex: "id",
+  //   fixed: "left",
+  // },
   {
     title: "标题",
     dataIndex: "title",
+    fixed: "left",
+    width: 150,
+    align: "center",
   },
   {
     title: "内容",
-    dataIndex: "content",
+    slotName: "content",
+    width: 300,
+    align: "center",
   },
   {
     title: "标签",
-    dataIndex: "tags",
+    slotName: "tags",
+    width: 320,
+    align: "center",
   },
   {
     title: "答案",
-    dataIndex: "answer",
-  },
-  {
-    title: "提交数",
-    dataIndex: "submitNum",
-  },
-  {
-    title: "通过数",
-    dataIndex: "acceptedNum",
+    slotName: "answer",
+    width: 300,
+    align: "center",
   },
   {
     title: "测试用例",
     slotName: "judgeCase",
+    align: "center",
   },
   {
     title: "判题配置",
     slotName: "judgeConfig",
+    width: 200,
+    align: "center",
   },
+  // {
+  //   title: "提交数",
+  //   dataIndex: "submitNum",
+  // },
   {
-    title: "用户ID",
-    dataIndex: "userId",
+    title: "通过率",
+    slotName: "acRate",
+    width: 150,
+    align: "center",
   },
+  // {
+  //   title: "通过数",
+  //   dataIndex: "acceptedNum",
+  // },
+  {
+    title: "收藏数",
+    dataIndex: "favourNum",
+    align: "center",
+  },
+  // {
+  //   title: "用户ID",
+  //   dataIndex: "userId",
+  // },
   {
     title: "创建时间",
-    dataIndex: "createTime",
+    slotName: "createTime",
+    align: "center",
+    width: 200,
   },
   {
     title: "操作",
     slotName: "optional",
+    fixed: "right",
+    width: 150,
+    align: "center",
   },
 ];
 
@@ -195,11 +273,36 @@ const doUpdate = (question: Question) => {
     },
   });
 };
+
+/**
+ * 表格滚动
+ */
+const scrollPercent = {
+  x: "160%",
+  // y: "100%",
+  // x: 2000,
+  y: "100%",
+};
+
+/**
+ * 测试用例查看对话框
+ */
+const judgeCaseViewerVisible = ref(false);
+let currentJudgeCase = ref();
+const handleClick = (record: any) => {
+  currentJudgeCase.value = record.judgeCase;
+  judgeCaseViewerVisible.value = true;
+};
 </script>
 
 <style scoped>
 #manageQuestionView {
+  /*max-width: 1280px;*/
   max-width: 1280px;
+  width: 90vw;
   margin: 0 auto;
+  padding: 20px 20px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.8);
 }
 </style>

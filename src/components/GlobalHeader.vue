@@ -28,7 +28,7 @@
     </a-col>
     <a-col flex="200px" style="text-align: right">
       <div style="font-size: 20px">
-        <a-popover>
+        <a-popover id="headDialogBox">
           <a-avatar>
             <img
               alt="avatar"
@@ -160,4 +160,7 @@ const handleLogout = async () => {
 /*  margin-left: 16px;*/
 /*  font-size: 16px;*/
 /*}*/
+#headDialogBox {
+  z-index: 5001 !important;
+}
 </style>

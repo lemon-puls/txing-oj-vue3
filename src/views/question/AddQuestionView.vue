@@ -1,7 +1,7 @@
 <template>
   <div id="addQuestionView">
     <h2>创建题目</h2>
-    <a-form :model="form" label-align="left" auto-label-width>
+    <a-form id="infoForm" :model="form" label-align="left" auto-label-width>
       <a-form-item field="title" label="标题">
         <a-input
           v-model="form.title"
@@ -18,14 +18,14 @@
       </a-form-item>
       <a-form-item field="content" label="题目内容">
         <MdEditor
-          style="min-width: 50vw"
+          style="max-width: 50vw; width: 80%"
           :value="form.content"
           :handle-change="onContentChange"
         />
       </a-form-item>
       <a-form-item field="answer" label="答案">
         <MdEditor
-          style="min-width: 50vw"
+          style="max-width: 50vw; width: 80%"
           :value="form.answer"
           :handle-change="onAnswerChange"
         />
@@ -208,7 +208,12 @@ const doSubmit = async () => {
       form.value
     );
     if (res.code === 0) {
-      message.success("更新成功");
+      message.success({
+        content: "更新成功",
+        // closable: true,
+        // position: "top",
+        // duration: 1000 * 600,
+      });
     } else {
       message.error("更新失败:" + res.message);
     }
@@ -237,13 +242,24 @@ const onAnswerChange = (value: string) => {
 #addQuestionView {
   background: rgba(255, 255, 255, 0.8);
   max-width: 1280px;
+  width: 90vw;
+  /*max-width: 90vw;*/
   /*min-width: 100%;*/
   margin: 0 auto;
-  padding-left: 100px;
-  padding-top: 10px;
+  padding-top: 20px;
+  flex: 1;
+  /*border-radius: 20px;*/
 }
 
 #addQuestionView h2 {
   text-align: center;
 }
+
+#addQuestionView[data-v-1a407f3d] > .arco-form {
+  margin-left: 60px;
+}
+
+/*.arco-message-success {*/
+/*  z-index: 10000 !important;*/
+/*}*/
 </style>

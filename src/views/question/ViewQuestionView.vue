@@ -46,7 +46,7 @@
             <a-tab-pane :closable="false" key="commnet" title="评论">
               <div>
                 <a-scrollbar
-                  style="height: 56vh; overflow: auto; margin: 0 15px"
+                  style="max-height: 55vh; overflow: auto; margin: 0 15px"
                 >
                   <a-comment
                     v-for="(item, index) of commentData"
@@ -533,11 +533,14 @@ const scrollTo = (num: number) => {
 
 <style>
 #ViewQuestionView {
-  max-width: 1400px;
+  max-width: 1280px;
+  width: 90vw;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.8);
-  padding-right: 10px;
-  padding-left: 10px;
+  /*padding-right: 10px;*/
+  /*padding-left: 10px;*/
+  padding: 20px 20px;
+  flex: 1;
 }
 
 #ViewQuestionView .arco-space-horizontal .arco-space-item {

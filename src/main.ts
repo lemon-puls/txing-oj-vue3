@@ -8,6 +8,7 @@ import "@/plugins/axios";
 import "@/access";
 import "bytemd/dist/index.css";
 import JsonViewer from "vue3-json-viewer";
+import "vue-json-viewer/style.css";
 
 createApp(App)
   .use(ArcoVue)

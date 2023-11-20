@@ -293,19 +293,25 @@ const handleChange1 = async (info: any) => {
     // console.log("删除成功：", info.length);
   }
   const response = toRaw(toRaw(info)[0]).response;
-  if (response != undefined && response.data != totalData.value.userAvatar) {
-    // 更新数据库
-    const res = await UserControllerService.updateMyUserUsingPost({
-      userAvatar: response.data,
-    });
-    if (res.code != 0) {
-      message.error("更换头像出错 请稍后重试！");
-      return;
-    }
-    store.state.user.loginUser.userAvatar = response.data;
-    totalData.value.userAvatar = response.data;
-    message.success("头像更换成功");
+  if (response == undefined || response.data == totalData.value.userAvatar) {
+    return;
   }
+  if (response.code !== 0) {
+    message.error(response.msg);
+    return;
+  }
+  // 更新数据库
+  const res = await UserControllerService.updateMyUserUsingPost({
+    userAvatar: response.data,
+  });
+  if (res.code != 0) {
+    message.error(res.msg);
+    return;
+  }
+  store.state.user.loginUser.userAvatar = response.data;
+  totalData.value.userAvatar = response.data;
+  message.success("头像更换成功");
+  return;
 };
 
 const recordColumns = [
@@ -400,11 +406,14 @@ const handleChange = (value: string) => {
 <style>
 #myselfView {
   max-width: 1280px;
+  width: 90vw;
   margin: 0 auto;
   /*padding-top: 200px;*/
   /*background: rgba(255, 255, 255, 0.8);*/
   /*padding-left: 100px;*/
   /*padding-top: 100px;*/
+  padding: 20px 20px;
+  flex: 1;
 }
 
 #headImg {

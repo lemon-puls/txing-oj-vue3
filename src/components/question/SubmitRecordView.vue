@@ -1,14 +1,16 @@
 <template>
-  <a-table
-    style="max-width: 90vh"
-    :pagination="false"
-    :columns="columns"
-    :data="data"
-    :row-key="id"
-    @rowClick="clickRow"
-    :scroll="scrollPercent"
-    :scrollbar="true"
-  />
+  <div id="submitRecordViewId">
+    <a-table
+      style="max-width: 90vw; height: 70vh"
+      :pagination="false"
+      :columns="columns"
+      :data="data"
+      :row-key="id"
+      @rowClick="clickRow"
+      :scroll="scrollPercent"
+      :scrollbar="true"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -47,7 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
     console.log("触发默认实现", record);
   },
   scrollX: () => "120%",
-  scrollY: () => 370,
+  scrollY: () => "100%",
 });
 
 /**
@@ -160,4 +162,7 @@ const loadRecordData = async () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#submitRecordViewId {
+}
+</style>
