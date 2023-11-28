@@ -5,7 +5,7 @@ import NoAuthView from "@/views/NoAuthView.vue";
 import ACCESS_ENUM from "@/access/accessEnum";
 import UserLayout from "@/layouts/UserLayout.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
-import UserRegisterView from "@/views/user/UserRegisterView.vue";
+import UserRegistView from "@/views/user/UserRegistView.vue";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
@@ -27,9 +27,9 @@ export const routes: Array<RouteRecordRaw> = [
         component: UserLoginView,
       },
       {
-        path: "/user/register",
+        path: "/user/regist",
         name: "用户注册",
-        component: UserRegisterView,
+        component: UserRegistView,
       },
     ],
   },
@@ -58,7 +58,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: "创建题目",
     component: AddQuestionView,
     meta: {
-      access: ACCESS_ENUM.USER,
+      access: ACCESS_ENUM.ADMIN,
     },
   },
   {
@@ -98,8 +98,9 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/myself",
     name: "我的主页",
     component: MyselfView,
-    // meta: {
-    //   hideInMenu: true,
-    // },
+    meta: {
+      // hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+    },
   },
 ];

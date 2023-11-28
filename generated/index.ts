@@ -31,6 +31,7 @@ export type { QuestionVO } from './models/QuestionVO';
 export type { Sort } from './models/Sort';
 export type { UserAddRequest } from './models/UserAddRequest';
 export type { UserLoginRequest } from './models/UserLoginRequest';
+export type { UserModifyPwdRequest } from './models/UserModifyPwdRequest';
 export type { UserQueryRequest } from './models/UserQueryRequest';
 export type { UserRegisterRequest } from './models/UserRegisterRequest';
 export type { UserUpdateMyRequest } from './models/UserUpdateMyRequest';

@@ -5,6 +5,7 @@
 import type { DeleteRequest } from '../models/DeleteRequest';
 import type { UserAddRequest } from '../models/UserAddRequest';
 import type { UserLoginRequest } from '../models/UserLoginRequest';
+import type { UserModifyPwdRequest } from '../models/UserModifyPwdRequest';
 import type { UserQueryRequest } from '../models/UserQueryRequest';
 import type { UserRegisterRequest } from '../models/UserRegisterRequest';
 import type { UserUpdateMyRequest } from '../models/UserUpdateMyRequest';
@@ -210,6 +211,27 @@ userLoginRequest: UserLoginRequest,
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/user/logout',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * modifyPwd
+     * @param userModifyPwdRequest userModifyPwdRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static modifyPwdUsingPost(
+userModifyPwdRequest: UserModifyPwdRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/user/pwd/modify',
+            body: userModifyPwdRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

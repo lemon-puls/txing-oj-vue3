@@ -42,7 +42,9 @@
                 <!--              <a-button type="primary" long @click="toMyselfPage"-->
                 <!--                >个人主页-->
                 <!--              </a-button>-->
-                <a-button type="primary" long>修改密码</a-button>
+                <a-button type="primary" long @click="handleClickModifyPwd"
+                  >修改密码
+                </a-button>
                 <a-button type="primary" long @click="handleClick"
                   >修改信息
                 </a-button>
@@ -51,7 +53,7 @@
           </a-popover>
         </div>
         <a-space direction="vertical" size="large" fill>
-          <a-descriptions size="large" :column="3">
+          <a-descriptions size="large" :column="{ xs: 1, sm: 1, md: 1, lg: 2 }">
             <a-descriptions-item
               :key="item"
               v-for="item of data"
@@ -65,7 +67,7 @@
         <p style="font-size: 20px">个性签名：{{ form.personSign }}</p>
       </div>
       <div style="padding-top: 100px">
-        <a-tabs size="large">
+        <a-tabs size="large" :lazy-load="true">
           <a-tab-pane key="1">
             <template #title>
               <icon-pen-fill size="28" />
@@ -83,9 +85,7 @@
             <!--              :data="records"-->
             <!--            />-->
             <SubmitRecordView
-              :scroll-x="700"
-              :scroll-y="370"
-              style="min-width: 100%; margin: auto"
+              :user-id="store.state.user.loginUser.id"
             ></SubmitRecordView>
           </a-tab-pane>
           <a-tab-pane key="2">
@@ -96,7 +96,7 @@
                 >我的收藏</span
               >
             </template>
-            Content of Tab Panel 2
+            <QuestionFavourRecordView />
           </a-tab-pane>
           <a-tab-pane key="3">
             <template #title>
@@ -113,6 +113,7 @@
     </div>
   </div>
 
+  <!--  更新信息-->
   <a-modal
     v-model:visible="visible"
     @ok="handleOk"
@@ -169,6 +170,52 @@
       </a-form>
     </div>
   </a-modal>
+  <!--  修改密码-->
+  <a-modal
+    v-model:visible="modifyPwdModalVisible"
+    @ok="handleOk"
+    @cancel="handleCancel"
+    width="800px"
+    :footer="false"
+  >
+    <template #title> 修改密码</template>
+    <div id="modifyPwdModal">
+      <a-form
+        :model="modifyPwdForm"
+        :style="{ width: '600px' }"
+        @submit="handleMpdifyPwdSubmit"
+      >
+        <a-form-item field="oldPassword" tooltip="不少于8个字符" label="原密码">
+          <a-input-password
+            v-model="modifyPwdForm.oldPassword"
+            style="max-width: 400px"
+            placeholder="请输入原密码..."
+          />
+        </a-form-item>
+        <a-form-item field="userPassword" label="新密码">
+          <a-input-password
+            style="max-width: 400px"
+            v-model="modifyPwdForm.userPassword"
+            placeholder="请输入新密码..."
+          />
+        </a-form-item>
+        <a-form-item field="checkPassword" label="再次确认">
+          <a-input-password
+            style="max-width: 400px"
+            v-model="modifyPwdForm.checkPassword"
+            placeholder="请再次输入..."
+          />
+        </a-form-item>
+
+        <a-form-item>
+          <!--          <a-button html-type="submit">Submit</a-button>-->
+          <a-button html-type="submit" type="primary" shape="round"
+            >确认
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </div>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -194,6 +241,10 @@ import store from "@/store";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import * as monaco from "monaco-editor";
 import AccessEnum from "@/access/accessEnum";
+import { useRouter } from "vue-router";
+import QuestionFavourRecordView from "@/components/question/QuestionFavourRecordView.vue";
+
+const router = useRouter();
 
 /**
  * 初始化工作
@@ -205,6 +256,31 @@ onMounted(() => {
   totalData.value.userAvatar = store.state.user.loginUser.userAvatar;
 });
 
+/**
+ * 修改密码
+ */
+const modifyPwdModalVisible = ref(false);
+const modifyPwdForm = ref({
+  oldPassword: "",
+  userPassword: "",
+  checkPassword: "",
+});
+const handleClickModifyPwd = () => {
+  modifyPwdModalVisible.value = true;
+};
+const handleMpdifyPwdSubmit = async () => {
+  const res = await UserControllerService.modifyPwdUsingPost(
+    modifyPwdForm.value
+  );
+  if (res.code !== 0) {
+    message.error(res.msg);
+    return;
+  } else {
+    message.success(res.msg);
+    modifyPwdModalVisible.value = false;
+    router.push({ path: "/user/login" });
+  }
+};
 /**
  * 修改个人信息
  */
@@ -228,7 +304,11 @@ const loadUserPersonInfo = async () => {
   data[2].value = form.value.profession;
   data[3].value = res.data.questionCount;
   data[4].value =
-    ((res.data.acceptedCount / res.data.submitCount) * 100).toFixed(2) + " %";
+    (
+      (res.data.submitCount === 0
+        ? 0
+        : res.data.acceptedCount / res.data.submitCount) * 100
+    ).toFixed(2) + " %";
 };
 const handleOk = () => {
   visible.value = false;
@@ -245,25 +325,29 @@ const form = ref({
 });
 const handleSubmit = async (data: any) => {
   // console.log(data);
-  updatePersonIfo();
-  // 更新用户数据
-  store.dispatch("user/getLoginUser", {
-    userName: "lemon",
-    userRole: AccessEnum.ADMIN,
-  });
-  visible.value = false;
+  const res = await updatePersonIfo();
+  if (res) {
+    // 更新用户数据
+    store.dispatch("user/getLoginUser", {
+      userName: "lemon",
+      userRole: AccessEnum.ADMIN,
+    });
+    visible.value = false;
+  }
 };
 // 更新个人信息
-const updatePersonIfo = async () => {
+const updatePersonIfo = async (): Promise<boolean> => {
   const res = await UserControllerService.updateMyUserUsingPost(form.value);
   if (res.code != 0) {
     message.error(res.msg);
+    return false;
   } else {
     message.success("更新成功");
   }
   data[0].value = form.value.userName;
   data[1].value = form.value.school;
   data[2].value = form.value.profession;
+  return true;
 };
 
 // watch(

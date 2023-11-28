@@ -123,6 +123,7 @@
             <a-tab-pane :closable="false" key="submitRecord" title="提交记录">
               <SubmitRecordView
                 :question-id="props.id"
+                :user-id="store.state.user.loginUser.id"
                 :click-row="clickSubmitRecord"
               ></SubmitRecordView>
             </a-tab-pane>
@@ -150,6 +151,7 @@
                 v-model="form.language"
                 :style="{ width: '320px' }"
                 placeholder="选择语言"
+                @change="onlanguagechange"
               >
                 <a-option>java</a-option>
                 <a-option>cpp</a-option>
@@ -223,6 +225,7 @@ import MdViewer from "@/components/MdViewer.vue";
 import moment from "moment/moment";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import SubmitDetailView from "@/components/question/SubmitDetailView.vue";
+import store from "@/store";
 
 const question = ref<QuestionVO>();
 onMounted(async () => {
@@ -509,7 +512,7 @@ const timer = (sumbitId: number) => {
       resultData[0].value = `${data.time} MS`;
       resultData[1].value = `${(data.memory / (1024 * 1024)).toFixed(2)} MB`;
       resultData[2].value = data.message;
-      resultData[3].value = data.acceptedRate * 100 + "%";
+      resultData[3].value = (data.acceptedRate * 100).toFixed(2) + "%";
       exceedPercent = data.exceedPercent;
       loading.value = false;
       visible.value = true;
@@ -570,6 +573,15 @@ const clickFavour = async () => {
   } else {
     message.error("无法获取到当前题目信息 请刷新重试！");
     return;
+  }
+};
+
+/**
+ * 编程语言选项值发生改变
+ */
+const onlanguagechange = (value: string) => {
+  if (value !== "java") {
+    message.info("目前判题系统仅支持Java语言 对其他语言的支持正在开发中...");
   }
 };
 </script>

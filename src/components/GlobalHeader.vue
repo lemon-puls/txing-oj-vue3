@@ -26,7 +26,7 @@
         </a-menu-item>
       </a-menu>
     </a-col>
-    <a-col flex="200px" style="text-align: right">
+    <a-col flex="400px" style="text-align: right">
       <div style="font-size: 20px">
         <a-popover id="headDialogBox">
           <a-avatar>

@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 export type UserVO = {
+    acceptedCount?: number;
     acceptedRate?: number;
     createTime?: string;
     id?: number;
@@ -11,6 +12,7 @@ export type UserVO = {
     profession?: string;
     questionCount?: number;
     school?: string;
+    submitCount?: number;
     userAvatar?: string;
     userName?: string;
     userProfile?: string;

@@ -1,5 +1,5 @@
 <template>
-  <a-descriptions style="max-width: 90vh">
+  <a-descriptions style="max-width: 80%" :column="{ xs: 1, md: 2, lg: 2 }">
     <a-descriptions-item
       v-for="item of data"
       :label="item.label"

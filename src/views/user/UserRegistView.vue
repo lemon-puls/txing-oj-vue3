@@ -1,8 +1,12 @@
 <template>
-  <div id="userLoginView">
-    <h2 style="margin-bottom: 16px">Txing 与你同行</h2>
+  <div id="userRegistView">
+    <h2 style="margin-bottom: 16px; text-align: center">Txing 与你同行</h2>
+    <div style="margin-bottom: 16px; text-align: center">
+      快来加入
+      <span style="color: #ff7300; font-size: 20px">Txing</span> 大家庭啦！
+    </div>
     <a-form
-      style="max-width: 400px; margin: 50px auto; max-height: 150px"
+      style="max-width: 400px; margin: 50px auto; max-height: 220px"
       label-align="left"
       auto-label-width
       :model="form"
@@ -18,27 +22,41 @@
             placeholder="请输入密码..."
           />
         </a-form-item>
+        <a-form-item
+          field="checkPassword"
+          tooltip="密码不少于8位"
+          label="确认密码"
+        >
+          <a-input-password
+            v-model="form.checkPassword"
+            placeholder="请再次确认密码..."
+          />
+        </a-form-item>
         <a-form-item id="loginDoId">
           <a-button
             id="loginButtonId"
             type="primary"
             html-type="submit"
             style="width: 120px"
-            >登录
+            >GO
           </a-button>
         </a-form-item>
       </a-space>
     </a-form>
     <div id="registerButtonId">
-      <span style="color: #095770" @click="clickRegist"
-        >还没有账号？立即去注册！</span
+      <span style="color: #095770" @click="clickLogin"
+        >已有账号？立即去登录！</span
       >
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { UserControllerService, UserLoginRequest } from "../../../generated";
+import {
+  UserControllerService,
+  UserLoginRequest,
+  UserRegisterRequest,
+} from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -46,10 +64,10 @@ import { useStore } from "vuex";
 const router = useRouter();
 const store = useStore();
 /**
- * 前往注册页
+ * 前往登录页
  */
-const clickRegist = () => {
-  router.push({ path: "/user/regist" });
+const clickLogin = () => {
+  router.push({ path: "/user/login" });
 };
 
 /**
@@ -58,36 +76,35 @@ const clickRegist = () => {
 const form = reactive({
   userAccount: "",
   userPassword: "",
-} as UserLoginRequest);
+  checkPassword: "",
+} as UserRegisterRequest);
 /**
  * 表单提交后 处理函数
  * @param data
  */
 const handleSubmit = async () => {
-  const res = await UserControllerService.userLoginUsingPost(form);
+  const res = await UserControllerService.userRegisterUsingPost(form);
   if (res.code === 0) {
-    // 等获取登录信息成功后 再跳转到主页
-    await store.dispatch("user/getLoginUser");
-    // alert("恭喜你！登录成功" + JSON.stringify(res.data));
+    message.success("注册成功 请登录！");
     router.push({
-      path: "/questions",
+      path: "/user/login",
       replace: true,
     });
   } else {
-    message.error("登录失败:" + res.msg);
+    message.error("注册失败:" + res.msg);
   }
 };
 </script>
 
 <style>
-#userLoginView {
+#userRegistView {
   background: rgba(255, 255, 255, 0.5);
   width: 480px;
   margin: 0 auto;
   padding-top: 16px;
   padding-bottom: 10px;
   border-radius: 20px;
-  height: 320px;
+  height: 420px;
 }
 
 #loginDoId {
@@ -102,6 +119,6 @@ const handleSubmit = async () => {
 #registerButtonId {
   /*justify-content: right;*/
   text-align: right;
-  margin-right: 30px;
+  margin-right: 20px;
 }
 </style>
