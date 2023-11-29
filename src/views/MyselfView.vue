@@ -98,16 +98,16 @@
             </template>
             <QuestionFavourRecordView />
           </a-tab-pane>
-          <a-tab-pane key="3">
-            <template #title>
-              <icon-heart-fill size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >我的粉丝</span
-              >
-            </template>
-            Content of Tab Panel 3
-          </a-tab-pane>
+          <!--          <a-tab-pane key="3">-->
+          <!--            <template #title>-->
+          <!--              <icon-heart-fill size="28" />-->
+          <!--              <span-->
+          <!--                style="font-size: 25px; font-weight: bold; margin-left: 10px"-->
+          <!--                >我的粉丝</span-->
+          <!--              >-->
+          <!--            </template>-->
+          <!--            Content of Tab Panel 3-->
+          <!--          </a-tab-pane>-->
         </a-tabs>
       </div>
     </div>
