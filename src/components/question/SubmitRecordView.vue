@@ -2,7 +2,7 @@
   <div id="submitRecordViewId">
     <a-table
       id="submitRecordTableId"
-      style="max-width: 90%; margin: 0 auto"
+      style="max-width: 100%; margin: 0 auto"
       :columns="columns"
       :data="data"
       :row-key="id"
@@ -14,7 +14,11 @@
         showTotal: true,
       }"
       @pageChange="onPageChange"
-    />
+    >
+      <template #exceedPercent="{ record }">
+        {{ `${record.exceedPercent * 100} %` }}
+      </template>
+    </a-table>
   </div>
 </template>
 
@@ -93,12 +97,12 @@ const columns = [
   },
   {
     title: "排行",
-    dataIndex: "exceedPercent",
+    slotName: "exceedPercent",
   },
   {
     title: "提交时间",
     dataIndex: "createTime",
-    width: 180,
+    width: 170,
   },
 ];
 // 分页查询参数

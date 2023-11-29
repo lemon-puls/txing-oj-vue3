@@ -13,6 +13,7 @@
             style="max-width: 100vh; min-width: 31vw"
             @tabClick="tabClick"
             :lazy-load="true"
+            :animation="true"
           >
             <a-tab-pane :closable="false" key="question" title="题目">
               <a-card v-if="question" :title="question.title">
@@ -64,10 +65,15 @@
                   :split="false"
                 >
                   <template #scroll-loading>
-                    <div v-if="bottom">
-                      已经到尽头啦 请发布一下自己的看法吧！
+                    <div v-if="bottom === 1">
+                      <span style="color: #7d7979"
+                        >已经到尽头啦 请发布一下自己的看法吧！</span
+                      >
                     </div>
-                    <a-spin v-else />
+                    <a-spin v-else-if="bottom === 0" />
+                    <div v-else-if="bottom === 2">
+                      <a-empty />
+                    </div>
                   </template>
                   <a-list-item
                     v-for="(item, index) of commentData"
@@ -298,6 +304,11 @@ const tabClick = (key: any) => {
 let data = reactive([]);
 const handleDelete = (key: number) => {
   data.splice(key, 1);
+  if (data.length > 0) {
+    activeKey.value = data.length - 1;
+  } else {
+    activeKey.value = "submitRecord";
+  }
 };
 
 /**
@@ -458,6 +469,10 @@ const publishComment = async () => {
     // loadCommentData();
     // 添加到数组头
     commentData.value.unshift(res.data);
+    // 如果原本没有评论数据 此时发表第一条评论 需要改变 bottom，以免显示 空状态
+    if (commentData.value.length === 1) {
+      bottom.value = 1;
+    }
   } else {
     message.error("评论发表失败 请稍后重试！");
   }
@@ -465,15 +480,22 @@ const publishComment = async () => {
 // 采用列表展示评论
 const current = ref(0);
 const pageCount = ref(-1);
-const bottom = ref(false);
+const bottom = ref(0);
 const scrollbar = ref(true);
 
 const fetchData = async () => {
   console.log("reach bottom!");
-  if (pageCount.value === -1 || current.value < pageCount.value) {
+  if (
+    (pageCount.value === -1 || current.value < pageCount.value) &&
+    bottom.value === 0
+  ) {
     current.value++;
     const res = await loadCommentData(current.value);
     if (res == null) {
+      return;
+    }
+    if (res.data.total === 0) {
+      bottom.value = 2;
       return;
     }
     // 剔除可能的重复评论
@@ -489,20 +511,23 @@ const fetchData = async () => {
     }
     commentData.value = commentData.value.concat(targetData);
     pageCount.value = res.data.pageCount;
-    console.log(
-      "总页数：",
-      pageCount.value,
-      "当前页：",
-      current.value,
-      "res:",
-      res.data.list,
-      "targetData:",
-      targetData,
-      "commentData:",
-      commentData.value
-    );
+    if (pageCount.value === current.value) {
+      bottom.value = 1;
+    }
+    // console.log(
+    //   "总页数：",
+    //   pageCount.value,
+    //   "当前页：",
+    //   current.value,
+    //   "res:",
+    //   res.data.list,
+    //   "targetData:",
+    //   targetData,
+    //   "commentData:",
+    //   commentData.value
+    // );
   } else {
-    bottom.value = true;
+    bottom.value = 1;
   }
 };
 const throttle = _.throttle(fetchData, 3000); //引入lodash功能
@@ -691,6 +716,11 @@ const timer = (sumbitId: number) => {
 
 #ViewQuestionView .arco-space-horizontal .arco-space-item {
   margin-bottom: 0 !important;
+}
+
+/*去除标签页边框*/
+#ViewQuestionView .arco-tabs-type-card-gutter > .arco-tabs-content {
+  border: 0;
 }
 
 .action {

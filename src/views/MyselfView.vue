@@ -85,6 +85,7 @@
             <!--              :data="records"-->
             <!--            />-->
             <SubmitRecordView
+              style="width: 90%; margin: 0 auto"
               :user-id="store.state.user.loginUser.id"
             ></SubmitRecordView>
           </a-tab-pane>
