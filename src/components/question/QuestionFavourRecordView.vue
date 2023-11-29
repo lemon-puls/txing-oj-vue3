@@ -34,10 +34,13 @@
       </template>
       <template #cancelFavour="{ record }">
         <a-popconfirm
+          style="z-index: 10"
           content="确认要取消收藏吗?"
           @ok="clickCancelFavour(record)"
         >
-          <a-button status="warning">cancel</a-button>
+          <a-button status="warning" style="z-index: 10" @click.stop
+            >cancel
+          </a-button>
         </a-popconfirm>
       </template>
     </a-table>
@@ -142,7 +145,7 @@ const searchParams = ref<PageVO>({
   // ],
   page: {
     current: 1,
-    pageSize: 1,
+    pageSize: 10,
   },
   // sorts: [
   //   {
@@ -176,7 +179,7 @@ const onPageChange = (page: number) => {
     ...searchParams.value,
     page: {
       current: page,
-      pageSize: 1,
+      pageSize: 10,
     },
   };
 };
@@ -184,8 +187,17 @@ const onPageChange = (page: number) => {
 /**
  * 取消收藏
  */
-const clickCancelFavour = (record: any) => {
+const clickCancelFavour = async (record: any) => {
   console.log(record);
+  const res = await QuestionFavourControllerService.favourQuestionUsingGet(
+    record.id
+  );
+  if (res.code !== 0) {
+    message.error(res.msg);
+  } else {
+    message.success("取消成功");
+    loadData();
+  }
 };
 </script>
 

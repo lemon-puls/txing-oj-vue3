@@ -161,25 +161,24 @@ const columns = [
   {
     title: "内容",
     slotName: "content",
-    width: 300,
     align: "center",
   },
   {
     title: "标签",
     slotName: "tags",
-    width: 320,
     align: "center",
   },
   {
     title: "答案",
     slotName: "answer",
-    width: 300,
+    // width: 300,
     align: "center",
   },
   {
     title: "测试用例",
     slotName: "judgeCase",
     align: "center",
+    width: 150,
   },
   {
     title: "判题配置",
@@ -194,7 +193,7 @@ const columns = [
   {
     title: "通过率",
     slotName: "acRate",
-    width: 150,
+    width: 200,
     align: "center",
   },
   // {
@@ -205,6 +204,7 @@ const columns = [
     title: "收藏数",
     dataIndex: "favourNum",
     align: "center",
+    width: 100,
   },
   // {
   //   title: "用户ID",
@@ -278,7 +278,7 @@ const doUpdate = (question: Question) => {
  * 表格滚动
  */
 const scrollPercent = {
-  x: "160%",
+  x: "180%",
   // y: "100%",
   // x: 2000,
   y: "100%",

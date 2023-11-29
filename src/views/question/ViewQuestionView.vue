@@ -1,18 +1,18 @@
 <template>
   <div id="ViewQuestionView">
-    <a-spin :loading="loading" tip="判题中...">
+    <a-spin :loading="loading" tip="判题中..." style="min-width: 100%">
       <a-row :gutter="[24, 24]">
         <a-col :md="12" :xs="24">
           <a-tabs
             type="card-gutter"
             :editable="true"
-            @add="handleAdd"
             @delete="handleDelete"
             :show-add-button="false"
             default-active-key="question"
             :active-key="activeKey"
-            style="max-width: 100vh"
+            style="max-width: 100vh; min-width: 31vw"
             @tabClick="tabClick"
+            :lazy-load="true"
           >
             <a-tab-pane :closable="false" key="question" title="题目">
               <a-card v-if="question" :title="question.title">
@@ -31,9 +31,6 @@
                       ).toFixed(2)} MB`
                     }}
                   </a-descriptions-item>
-                  <!--                  <a-descriptions-item label="堆栈限制">-->
-                  <!--                    {{ question.judgeConfig.stackLimit ?? 0 }}-->
-                  <!--                  </a-descriptions-item>-->
                 </a-descriptions>
                 <MdViewer :value="question.content || ''" />
                 <div id="questionFavourId">
@@ -59,50 +56,103 @@
             </a-tab-pane>
             <a-tab-pane :closable="false" key="commnet" title="评论">
               <div>
-                <a-scrollbar
-                  style="max-height: 55vh; overflow: auto; margin: 0 15px"
+                <a-list
+                  :max-height="300"
+                  @reach-bottom="throttle"
+                  :scrollbar="scrollbar"
+                  :bordered="false"
+                  :split="false"
                 >
-                  <a-comment
+                  <template #scroll-loading>
+                    <div v-if="bottom">
+                      已经到尽头啦 请发布一下自己的看法吧！
+                    </div>
+                    <a-spin v-else />
+                  </template>
+                  <a-list-item
                     v-for="(item, index) of commentData"
                     :key="item.id"
-                    :author="item.userName"
-                    :datetime="item.createTime"
-                    align="right"
                   >
-                    <template #actions>
-                      <span
-                        class="action"
-                        key="heart"
-                        @click="onLikeChange(index)"
-                      >
-                        <span v-if="item.isFavour">
-                          <IconHeartFill :style="{ color: '#f53f3f' }" />
+                    <a-comment
+                      :author="item.userName"
+                      :datetime="item.createTime"
+                      align="right"
+                    >
+                      <template #actions>
+                        <span
+                          class="action"
+                          key="heart"
+                          @click="onLikeChange(index)"
+                        >
+                          <span v-if="item.isFavour">
+                            <IconHeartFill :style="{ color: '#f53f3f' }" />
+                          </span>
+                          <span v-else>
+                            <IconHeart />
+                          </span>
+                          <!--                        {{ 83 + (like ? 1 : 0) }}-->
+                          {{ item.favourNum }}
                         </span>
-                        <span v-else>
-                          <IconHeart />
-                        </span>
-                        <!--                        {{ 83 + (like ? 1 : 0) }}-->
-                        {{ item.favourNum }}
-                      </span>
-                    </template>
-                    <template #avatar>
-                      <a-avatar>
-                        <img alt="avatar" :src="item.userAvatar" />
-                      </a-avatar>
-                    </template>
-                    <template #content>
-                      <div>
-                        {{ item.content }}
-                      </div>
-                    </template>
-                  </a-comment>
-                </a-scrollbar>
+                      </template>
+                      <template #avatar>
+                        <a-avatar>
+                          <img alt="avatar" :src="item.userAvatar" />
+                        </a-avatar>
+                      </template>
+                      <template #content>
+                        <div>
+                          {{ item.content }}
+                        </div>
+                      </template>
+                    </a-comment>
+                  </a-list-item>
+                </a-list>
+                <!--                <a-scrollbar-->
+                <!--                  style="max-height: 55vh; overflow: auto; margin: 0 15px"-->
+                <!--                >-->
+                <!--                  <a-comment-->
+                <!--                    v-for="(item, index) of commentData"-->
+                <!--                    :key="item.id"-->
+                <!--                    :author="item.userName"-->
+                <!--                    :datetime="item.createTime"-->
+                <!--                    align="right"-->
+                <!--                  >-->
+                <!--                    <template #actions>-->
+                <!--                      <span-->
+                <!--                        class="action"-->
+                <!--                        key="heart"-->
+                <!--                        @click="onLikeChange(index)"-->
+                <!--                      >-->
+                <!--                        <span v-if="item.isFavour">-->
+                <!--                          <IconHeartFill :style="{ color: '#f53f3f' }" />-->
+                <!--                        </span>-->
+                <!--                        <span v-else>-->
+                <!--                          <IconHeart />-->
+                <!--                        </span>-->
+                <!--                        &lt;!&ndash;                        {{ 83 + (like ? 1 : 0) }}&ndash;&gt;-->
+                <!--                        {{ item.favourNum }}-->
+                <!--                      </span>-->
+                <!--                    </template>-->
+                <!--                    <template #avatar>-->
+                <!--                      <a-avatar>-->
+                <!--                        <img alt="avatar" :src="item.userAvatar" />-->
+                <!--                      </a-avatar>-->
+                <!--                    </template>-->
+                <!--                    <template #content>-->
+                <!--                      <div>-->
+                <!--                        {{ item.content }}-->
+                <!--                      </div>-->
+                <!--                    </template>-->
+                <!--                  </a-comment>-->
+                <!--                </a-scrollbar>-->
                 <div id="commentInput">
                   <a-textarea
                     style="height: 100px"
                     placeholder="快来发表一下评论吧 注意要友好哦！"
                     allow-clear
                     v-model="commentText"
+                    :max-length="{ length: 200, errorOnly: false }"
+                    :show-word-limit="true"
                   />
                   <a-divider size="0" />
                   <a-button
@@ -120,7 +170,12 @@
                 <MdViewer :value="question.answer || ''" />
               </a-card>
             </a-tab-pane>
-            <a-tab-pane :closable="false" key="submitRecord" title="提交记录">
+            <a-tab-pane
+              :closable="false"
+              key="submitRecord"
+              title="提交记录"
+              :destroy-on-hide="true"
+            >
               <SubmitRecordView
                 :question-id="props.id"
                 :user-id="store.state.user.loginUser.id"
@@ -164,7 +219,7 @@
             :language="form.language"
             :handleChange="changeCode"
           />
-          <a-divider size="0" />
+          <a-divider :size="0" />
           <a-button type="primary" style="min-width: 200px" @click="doSubmit"
             >提交代码
           </a-button>
@@ -176,12 +231,7 @@
   <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
     <template #title> 执行结果</template>
     <div id="execResultDiv">
-      <a-descriptions
-        style="margin-top: 20px"
-        :data="resultData"
-        :size="size"
-        :column="1"
-      />
+      <a-descriptions style="margin-top: 20px" :data="resultData" :column="1" />
       <h2 v-if="resultData[2].value === 'Accepted'">
         恭喜你 超越了
         <span :style="{ color: 'red' }">{{ exceedPercent * 100 }}%</span>
@@ -226,84 +276,101 @@ import moment from "moment/moment";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import SubmitDetailView from "@/components/question/SubmitDetailView.vue";
 import store from "@/store";
+import _ from "lodash";
 
-const question = ref<QuestionVO>();
 onMounted(async () => {
-  console.log("ViewQuestionView.vue执行了");
   await loadData();
-  await loadCommentData();
+  // await loadCommentData();
 });
 
 /**
- * 提交记录详情
+ * 标签页相关
  */
-let submitRecordDetail = reactive({
-  createTime: "2020-12-23",
-  exceedPercent: 75,
-  id: 0,
-  times: 1000,
-  memory: 1000,
-  result: "成功",
-  status: "等待中",
-  code: "helloword",
-  language: "Java",
-  title: "数组求和",
-});
-
-/**
- * 提交记录相关
- */
-const submitRecordData = reactive([
-  {
-    createTime: "",
-    exceedPercent: 75,
-    id: 0,
-    times: 1000,
-    memory: 1000,
-    result: "成功",
-    status: "等待中",
-  },
-]);
-// 点击提交记录
-const clickSubmitRecord = async (record: any) => {
-  // 向后端请求提交详细数据
-  const res = await QuestionSubmitControllerService.infoUsingGet2(record.id);
-  if (res.code != 0) {
-    message.error("数据请求失败 请稍后再试！");
-    return;
-  }
-  submitRecordDetail = res.data;
-  if (res.data.exceedPercent == null || res.data.exceedPercent < 0) {
-    submitRecordDetail.exceedPercent = -1;
-  }
-  // 添加新标签页（跳转）
-  const newTab = {
-    key: record.id,
-    title: "提交",
-    component: SubmitDetailView,
-  };
-  if (data[0]?.title === "Tab 2") {
-    data.splice(0);
-  }
-  data.push(newTab);
-  activeKey.value = data.length - 1;
-  // 展示详细信息（包括代码等）
+// let count = 5;
+let activeKey = ref<any>("question");
+const tabClick = (key: any) => {
+  // if (key === "commnet") {
+  //   loadCommentData(1);
+  // }
+  activeKey.value = key;
+};
+// 标签页元数据
+let data = reactive([]);
+const handleDelete = (key: number) => {
+  data.splice(key, 1);
 };
 
 /**
- * 评论区相关
+ * 题目标签页
  */
-let commentData = ref([
-  {
-    id: 10,
-    userName: "lemon",
-    userAvatar:
-      "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp",
-    content: "nice",
-    favourNum: 10,
-    createTime: "1天前",
-    isFavour: true,
-  },
+const question = ref<QuestionVO>();
+
+interface Props {
+  id: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  id: () => "",
+});
+// 加载题目数据
+const loadData = async () => {
+  const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
+    props.id as any
+  );
+  if (res.code === 0) {
+    question.value = res.data;
+    isFavour.value = res.data.isFavour;
+  } else {
+    message.error("加载题目数据失败:" + res.message);
+  }
+};
+// 点击收藏题目
+let isFavour = ref(false);
+const clickFavour = async () => {
+  if (question.value?.id) {
+    const res = await QuestionFavourControllerService.favourQuestionUsingGet(
+      question.value.id
+    );
+    if (res.code !== 0) {
+      message.error(res.msg);
+      return;
+    }
+    isFavour.value = !isFavour.value;
+    if (isFavour.value === true) {
+      message.success("收藏成功");
+    } else {
+      message.success("已取消收藏");
+    }
+  } else {
+    message.error("无法获取到当前题目信息 请刷新重试！");
+    return;
+  }
+};
+
+/**
+ * 评论标签页相关
+ */
+interface commentEntity {
+  id: number;
+  userName: string;
+  userAvatar: string;
+  content: string;
+  favourNum: number;
+  createTime: string;
+  isFavour: boolean;
+}
+
+let commentData = ref<Array<commentEntity>>([
+  // {
+  //   id: 10,
+  //   userName: "lemon",
+  //   userAvatar:
+  //     "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp",
+  //   content: "nice",
+  //   favourNum: 10,
+  //   createTime: "1天前",
+  //   isFavour: true,
+  // },
 ]);
 const onLikeChange = async (index: number) => {
   const res =
@@ -332,7 +399,7 @@ const searchCommentParams = ref<PageVO>({
   ],
   page: {
     current: 1,
-    pageSize: 200,
+    pageSize: 10,
   },
   // sorts: [
   //   {
@@ -341,7 +408,7 @@ const searchCommentParams = ref<PageVO>({
   //   },
   // ],
 });
-const loadCommentData = async () => {
+const loadCommentData = async (current: number) => {
   console.log("加载评论数据");
   console.log(question.value?.id);
   const questionId = question.value?.id;
@@ -354,18 +421,24 @@ const loadCommentData = async () => {
         value: question.value?.id?.toString(),
       },
     ],
+    page: {
+      current: current,
+      pageSize: 10,
+    },
   });
   if (res.code == 0) {
-    const newArray = res.data.list.map((item: any) => {
-      item.createTime = moment(item.createTime).format("YYYY-MM-DD HH:mm:SS");
-      return item;
-    });
+    // const newArray = res.data.list.map((item: any) => {
+    //   console.log(item.createTime);
+    //   item.createTime = moment(item.createTime).format("yyyy-MM-dd HH:mm:ss");
+    //   return item;
+    // });
     // 先清空
-    commentData.value.splice(0);
-    commentData.value = commentData.value.concat(newArray);
-    console.log("加载成功，", res);
+    // commentData.value.splice(0);
+    // commentData.value = commentData.value.concat(newArray);
+    return res;
   } else {
     message.error("评论数据加载失败！");
+    return null;
   }
 };
 // 发表评论
@@ -382,42 +455,97 @@ const publishComment = async () => {
   if (res.code == 0) {
     message.info("评论发表成功");
     commentText.value = "";
-    loadCommentData();
+    // loadCommentData();
+    // 添加到数组头
+    commentData.value.unshift(res.data);
   } else {
     message.error("评论发表失败 请稍后重试！");
   }
 };
+// 采用列表展示评论
+const current = ref(0);
+const pageCount = ref(-1);
+const bottom = ref(false);
+const scrollbar = ref(true);
+
+const fetchData = async () => {
+  console.log("reach bottom!");
+  if (pageCount.value === -1 || current.value < pageCount.value) {
+    current.value++;
+    const res = await loadCommentData(current.value);
+    if (res == null) {
+      return;
+    }
+    // 剔除可能的重复评论
+    let targetData;
+    if (commentData.value.length !== 0) {
+      targetData = res.data.list.filter(
+        (item: any) =>
+          item.createTime <=
+          commentData.value[commentData.value.length - 1].createTime
+      );
+    } else {
+      targetData = res.data.list;
+    }
+    commentData.value = commentData.value.concat(targetData);
+    pageCount.value = res.data.pageCount;
+    console.log(
+      "总页数：",
+      pageCount.value,
+      "当前页：",
+      current.value,
+      "res:",
+      res.data.list,
+      "targetData:",
+      targetData,
+      "commentData:",
+      commentData.value
+    );
+  } else {
+    bottom.value = true;
+  }
+};
+const throttle = _.throttle(fetchData, 3000); //引入lodash功能
 
 /**
- * 标签页相关
+ * 提交记录标签页相关
  */
-let count = 5;
-let activeKey = ref<any>("question");
-const tabClick = (key: any) => {
-  // if (key === "submitRecord") {
-  //   // 向后端请求提交记录数据
-  //   QuestionSubmitControllerService.listUsingPost2()
-  // }
-  activeKey.value = key;
-};
-// 标签页元数据
-let data = reactive([]);
-
-// const getComponent = (item: any) => {
-//   return item; // 或者返回其他默认组件
-// };
-
-// const handleAdd = () => {
-//   const number = count++;
-//   data.value = data.value.concat({
-//     key: `${number}`,
-//     title: `New Tab ${number}`,
-//     content: `Content of New Tab Panel ${number}`,
-//   });
-// };
-const handleDelete = (key: number) => {
-  // data = data.filter((item) => item.key !== key);
-  data.splice(key, 1);
+let submitRecordDetail = reactive({
+  createTime: "2020-12-23",
+  exceedPercent: 75,
+  id: 0,
+  times: 1000,
+  memory: 1000,
+  result: "成功",
+  status: "等待中",
+  code: "helloword",
+  language: "Java",
+  title: "数组求和",
+});
+// 点击提交记录
+const clickSubmitRecord = async (record: any) => {
+  // 向后端请求提交详细数据
+  const res = await QuestionSubmitControllerService.infoUsingGet2(record.id);
+  if (res.code != 0) {
+    message.error("数据请求失败 请稍后再试！");
+    return;
+  }
+  submitRecordDetail = res.data;
+  if (res.data.exceedPercent == null || res.data.exceedPercent < 0) {
+    submitRecordDetail.exceedPercent = -1;
+  }
+  // 添加新标签页（跳转）
+  const newTab = {
+    key: record.id,
+    title: "提交",
+    component: SubmitDetailView,
+  };
+  if (data[0]?.title === "Tab 2") {
+    data.splice(0);
+  }
+  data.push(newTab);
+  activeKey.value = data.length - 1;
+  // 展示详细信息（包括代码等）
 };
 
 /**
@@ -436,7 +564,6 @@ const handleOk = () => {
 const handleCancel = () => {
   visible.value = false;
 };
-
 const resultData = [
   {
     label: "执行用时",
@@ -458,21 +585,18 @@ const resultData = [
 // 超越了多少百分比的用户
 let exceedPercent = ref(0);
 
+/**
+ * 提交代码相关
+ */
+var loading = ref<boolean>(false);
 const form = ref<QuestionSubmitDoRequest>({
   language: "java",
   code: "",
 });
-
 const changeCode = (value: string) => {
   console.log(value);
   form.value.code = value;
 };
-
-var loading = ref<boolean>(false);
-
-/**
- * 提交代码
- */
 const doSubmit = async () => {
   loading.value = true;
   if (!question.value?.id) {
@@ -490,9 +614,13 @@ const doSubmit = async () => {
   }
   timer(res.data);
 };
-
+// 编程语言选项值发生改变
+const onlanguagechange = (value: string) => {
+  if (value !== "java") {
+    message.info("目前判题系统仅支持Java语言 对其他语言的支持正在开发中...");
+  }
+};
 let execResult = ref<JudgeConfig>({});
-
 // 定时器 查询代码执行结果
 const timer = (sumbitId: number) => {
   let i = 0;
@@ -520,70 +648,28 @@ const timer = (sumbitId: number) => {
   }, 1000); // 每秒执行一次，间隔时间为 1000 毫秒
 };
 
-interface Props {
-  id: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  id: () => "",
-});
-
-const loadData = async () => {
-  const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
-    props.id as any
-  );
-  if (res.code === 0) {
-    question.value = res.data;
-    isFavour.value = res.data.isFavour;
-  } else {
-    message.error("加载题目数据失败:" + res.message);
-  }
-};
+// const scrollTo = (num: number) => {
+//   alert(num);
+//   console.log(num);
+// };
 
 /**
  * 只要页号等变量发生改变时 就会触发loadData的调用 获取到当前页对应的数据
  */
-watchEffect(() => {
-  loadData();
-});
-
-const scrollTo = (num: number) => {
-  alert(num);
-  console.log(num);
-};
-/**
- * 点击收藏
- */
-let isFavour = ref(false);
-const clickFavour = async () => {
-  if (question.value?.id) {
-    const res = await QuestionFavourControllerService.favourQuestionUsingGet(
-      question.value.id
-    );
-    if (res.code !== 0) {
-      message.error(res.msg);
-      return;
-    }
-    isFavour.value = !isFavour.value;
-    if (isFavour.value === true) {
-      message.success("收藏成功");
-    } else {
-      message.success("已取消收藏");
-    }
-  } else {
-    message.error("无法获取到当前题目信息 请刷新重试！");
-    return;
-  }
-};
-
-/**
- * 编程语言选项值发生改变
- */
-const onlanguagechange = (value: string) => {
-  if (value !== "java") {
-    message.info("目前判题系统仅支持Java语言 对其他语言的支持正在开发中...");
-  }
-};
+// watchEffect(() => {
+//   loadData();
+// });
+// const submitRecordData = reactive([
+//   {
+//     createTime: "",
+//     exceedPercent: 75,
+//     id: 0,
+//     times: 1000,
+//     memory: 1000,
+//     result: "成功",
+//     status: "等待中",
+//   },
+// ]);
 </script>
 
 <style>
@@ -597,6 +683,11 @@ const onlanguagechange = (value: string) => {
   padding: 20px 20px;
   flex: 1;
 }
+
+/*#ViewQuestionView .arco-list-wrapper {*/
+/*  overflow: hidden;*/
+/*  height: 30vw;*/
+/*}*/
 
 #ViewQuestionView .arco-space-horizontal .arco-space-item {
   margin-bottom: 0 !important;
