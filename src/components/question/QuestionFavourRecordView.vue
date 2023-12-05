@@ -157,7 +157,7 @@ const searchParams = ref<PageVO>({
 
 // 加载当前用户收藏记录
 const loadData = async () => {
-  const res = await QuestionFavourControllerService.listUsingPost2(
+  const res = await QuestionFavourControllerService.listUsingPost3(
     searchParams.value
   );
   if (res.code === 0) {

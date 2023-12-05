@@ -59,6 +59,8 @@
 #userLayout {
   text-align: center;
   background: url("../assets/背景1.png") 0% 0% / 100% 100%;
+  background-size: cover;
+  background-attachment: fixed;
 }
 </style>
 <script></script>

@@ -184,4 +184,27 @@ postUpdateRequest: PostUpdateRequest,
         });
     }
 
+    /**
+     * getPostUpdateVO
+     * @param id id
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getPostUpdateVoUsingGet(
+id: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/post/update/vo/get',
+            query: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
 }

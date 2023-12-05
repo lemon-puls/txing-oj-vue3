@@ -10,7 +10,7 @@
             :show-add-button="false"
             default-active-key="question"
             :active-key="activeKey"
-            style="max-width: 100vh; min-width: 31vw"
+            style="max-width: 100vh"
             @tabClick="tabClick"
             :lazy-load="true"
             :animation="true"
@@ -64,17 +64,6 @@
                   :bordered="false"
                   :split="false"
                 >
-                  <template #scroll-loading>
-                    <div v-if="bottom === 1">
-                      <span style="color: #7d7979"
-                        >已经到尽头啦 请发布一下自己的看法吧！</span
-                      >
-                    </div>
-                    <a-spin v-else-if="bottom === 0" />
-                    <div v-else-if="bottom === 2">
-                      <a-empty />
-                    </div>
-                  </template>
                   <a-list-item
                     v-for="(item, index) of commentData"
                     :key="item.id"
@@ -113,44 +102,6 @@
                     </a-comment>
                   </a-list-item>
                 </a-list>
-                <!--                <a-scrollbar-->
-                <!--                  style="max-height: 55vh; overflow: auto; margin: 0 15px"-->
-                <!--                >-->
-                <!--                  <a-comment-->
-                <!--                    v-for="(item, index) of commentData"-->
-                <!--                    :key="item.id"-->
-                <!--                    :author="item.userName"-->
-                <!--                    :datetime="item.createTime"-->
-                <!--                    align="right"-->
-                <!--                  >-->
-                <!--                    <template #actions>-->
-                <!--                      <span-->
-                <!--                        class="action"-->
-                <!--                        key="heart"-->
-                <!--                        @click="onLikeChange(index)"-->
-                <!--                      >-->
-                <!--                        <span v-if="item.isFavour">-->
-                <!--                          <IconHeartFill :style="{ color: '#f53f3f' }" />-->
-                <!--                        </span>-->
-                <!--                        <span v-else>-->
-                <!--                          <IconHeart />-->
-                <!--                        </span>-->
-                <!--                        &lt;!&ndash;                        {{ 83 + (like ? 1 : 0) }}&ndash;&gt;-->
-                <!--                        {{ item.favourNum }}-->
-                <!--                      </span>-->
-                <!--                    </template>-->
-                <!--                    <template #avatar>-->
-                <!--                      <a-avatar>-->
-                <!--                        <img alt="avatar" :src="item.userAvatar" />-->
-                <!--                      </a-avatar>-->
-                <!--                    </template>-->
-                <!--                    <template #content>-->
-                <!--                      <div>-->
-                <!--                        {{ item.content }}-->
-                <!--                      </div>-->
-                <!--                    </template>-->
-                <!--                  </a-comment>-->
-                <!--                </a-scrollbar>-->
                 <div id="commentInput">
                   <a-textarea
                     style="height: 100px"
@@ -423,7 +374,7 @@ const loadCommentData = async (current: number) => {
   console.log("加载评论数据");
   console.log(question.value?.id);
   const questionId = question.value?.id;
-  const res = await QuestionCommentControllerService.listUsingPost({
+  const res = await QuestionCommentControllerService.listUsingPost1({
     ...searchCommentParams.value,
     filter: [
       {

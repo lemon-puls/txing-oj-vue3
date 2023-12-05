@@ -8,6 +8,7 @@ export type PostQueryRequest = {
     current?: number;
     favourUserId?: number;
     id?: number;
+    intro?: string;
     notId?: number;
     orTags?: Array<string>;
     pageSize?: number;

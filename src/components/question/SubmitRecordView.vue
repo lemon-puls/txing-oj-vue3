@@ -123,7 +123,7 @@ const searchParams = ref<PageVO>({
 
 // 加载提交记录
 const loadData = async () => {
-  const res = await QuestionSubmitControllerService.listUsingPost3(
+  const res = await QuestionSubmitControllerService.listUsingPost4(
     searchParams.value
   );
   if (res.code !== 0) {

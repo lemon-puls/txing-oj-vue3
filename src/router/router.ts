@@ -11,6 +11,10 @@ import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
 import MyselfView from "@/views/MyselfView.vue";
+import AddPostView from "@/views/post/AddPostView.vue";
+import ViewPostView from "@/views/post/ViewPostView.vue";
+import PostSearchView from "@/views/post/PostSearchView.vue";
+import CeshiView from "@/views/CeshiView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -44,6 +48,11 @@ export const routes: Array<RouteRecordRaw> = [
     component: QuestionsView,
   },
   {
+    path: "/post/search",
+    name: "技术文章",
+    component: PostSearchView,
+  },
+  {
     path: "/view/question/:id",
     name: "做题",
     component: ViewQuestionView,
@@ -59,6 +68,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: AddQuestionView,
     meta: {
       access: ACCESS_ENUM.ADMIN,
+      hideInMenu: true,
     },
   },
   {
@@ -76,6 +86,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: ManageQuestionView,
     meta: {
       access: ACCESS_ENUM.ADMIN,
+      hideInMenu: true,
     },
   },
   {
@@ -101,6 +112,31 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       // hideInMenu: true,
       access: ACCESS_ENUM.USER,
+    },
+  },
+  {
+    path: "/post/add",
+    name: "写文章",
+    component: AddPostView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/post/update",
+    name: "更新文章",
+    component: AddPostView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/post/view/:id",
+    name: "看文章",
+    props: true,
+    component: ViewPostView,
+    meta: {
+      hideInMenu: true,
     },
   },
 ];

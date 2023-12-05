@@ -24,39 +24,81 @@
           style="font-size: 20px"
           >{{ item.name }}
         </a-menu-item>
+        <a-menu-item key="adminCenter">
+          <a-dropdown
+            @select="doMenuClick"
+            :popup-max-height="false"
+            style="z-index: 10000"
+          >
+            <a-button style="font-size: 20px"
+              >管理中心
+              <icon-down />
+            </a-button>
+            <template #content>
+              <div>
+                <a-doption style="font-size: 20px">
+                  <a-button type="primary">创建题目</a-button>
+                </a-doption>
+                <a-divider
+                  style="margin: 5px 0; padding: 0px; width: 100%"
+                ></a-divider>
+                <a-doption style="font-size: 20px">
+                  <a-button type="primary">管理题目</a-button>
+                </a-doption>
+              </div>
+            </template>
+          </a-dropdown>
+        </a-menu-item>
       </a-menu>
     </a-col>
     <a-col flex="400px" style="text-align: right">
-      <div style="font-size: 20px">
-        <a-popover id="headDialogBox">
-          <a-avatar>
-            <img
-              alt="avatar"
-              :src="store.state.user?.loginUser?.userAvatar ?? ''"
-            />
-          </a-avatar>
-          <template #content>
-            <a-space class="wrapper" direction="vertical">
-              <a-button
-                v-if="
-                  store.state.user.loginUser.userRole != AccessEnum.NOT_LOGIN
-                "
-                type="primary"
-                long
-                @click="handleLogout"
-                >退出登录
-              </a-button>
-              <a-button
-                v-else
-                type="primary"
-                long
-                @click="router.push({ path: '/user/login' })"
-                >立即登录
-              </a-button>
-            </a-space>
-          </template>
-        </a-popover>
-        {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+      <div
+        style="
+          font-size: 20px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+        "
+      >
+        <a-button
+          type="primary"
+          size="large"
+          style="font-size: 20px; border-radius: 20px"
+          @click="doMenuClick('/post/add')"
+          >我要创作
+          <icon-edit style="margin-left: 10px" />
+        </a-button>
+        <div>
+          <a-popover id="headDialogBox">
+            <a-avatar>
+              <img
+                alt="avatar"
+                :src="store.state.user?.loginUser?.userAvatar ?? ''"
+              />
+            </a-avatar>
+            <template #content>
+              <a-space class="wrapper" direction="vertical">
+                <a-button
+                  v-if="
+                    store.state.user.loginUser.userRole != AccessEnum.NOT_LOGIN
+                  "
+                  type="primary"
+                  long
+                  @click="handleLogout"
+                  >退出登录
+                </a-button>
+                <a-button
+                  v-else
+                  type="primary"
+                  long
+                  @click="router.push({ path: '/user/login' })"
+                  >立即登录
+                </a-button>
+              </a-space>
+            </template>
+          </a-popover>
+          {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+        </div>
       </div>
     </a-col>
   </a-row>
@@ -71,6 +113,7 @@ import checkAccess from "../access/checkAccess";
 import AccessEnum from "../access/accessEnum";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
+import { IconDown, IconEdit } from "@arco-design/web-vue/es/icon";
 
 const router = useRouter();
 const store = useStore();
@@ -78,6 +121,15 @@ const loginUser = store.state.user.loginUser;
 // 默认主页
 const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
+  if ("adminCenter" === key) {
+    return;
+  }
+  if ("创建题目" === key) {
+    key = "/add/question";
+  }
+  if ("管理题目" === key) {
+    key = "/manage/question";
+  }
   router.push({
     path: key,
   });
@@ -132,6 +184,13 @@ const handleLogout = async () => {
     path: "/user/login",
   });
 };
+
+/**
+ * 管理中心
+ */
+const handleSelect = (key: any) => {
+  alert(key);
+};
 </script>
 
 <style>
@@ -162,5 +221,9 @@ const handleLogout = async () => {
 /*}*/
 #headDialogBox {
   z-index: 5001 !important;
+}
+
+#globalHeader .arco-btn-secondary {
+  background: rgba(255, 255, 255, 0);
 }
 </style>

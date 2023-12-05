@@ -3,11 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PostUpdateRequest = {
+export type PostCommentAddRequest = {
     content?: string;
-    coverImg?: string;
-    id?: any;
-    intro?: string;
-    tags?: Array<string>;
-    title?: string;
+    postId?: number;
 };

@@ -14,6 +14,7 @@ export type { JudgeConfig } from './models/JudgeConfig';
 export type { Page } from './models/Page';
 export type { PageVO } from './models/PageVO';
 export type { PostAddRequest } from './models/PostAddRequest';
+export type { PostCommentAddRequest } from './models/PostCommentAddRequest';
 export type { PostEditRequest } from './models/PostEditRequest';
 export type { PostFavourAddRequest } from './models/PostFavourAddRequest';
 export type { PostFavourQueryRequest } from './models/PostFavourQueryRequest';
@@ -39,6 +40,7 @@ export type { UserUpdateRequest } from './models/UserUpdateRequest';
 export type { UserVO } from './models/UserVO';
 
 export { FileControllerService } from './services/FileControllerService';
+export { PostCommentControllerService } from './services/PostCommentControllerService';
 export { PostControllerService } from './services/PostControllerService';
 export { PostFavourControllerService } from './services/PostFavourControllerService';
 export { PostThumbControllerService } from './services/PostThumbControllerService';

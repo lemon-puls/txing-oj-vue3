@@ -66,7 +66,7 @@
         </a-space>
         <p style="font-size: 20px">个性签名：{{ form.personSign }}</p>
       </div>
-      <div style="padding-top: 100px">
+      <div style="padding-top: 50px">
         <a-tabs size="large" :lazy-load="true">
           <a-tab-pane key="1">
             <template #title>
@@ -94,21 +94,31 @@
               <icon-star-fill size="28" />
               <span
                 style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >我的收藏</span
+                >题目收藏</span
               >
             </template>
             <QuestionFavourRecordView />
           </a-tab-pane>
-          <!--          <a-tab-pane key="3">-->
-          <!--            <template #title>-->
-          <!--              <icon-heart-fill size="28" />-->
-          <!--              <span-->
-          <!--                style="font-size: 25px; font-weight: bold; margin-left: 10px"-->
-          <!--                >我的粉丝</span-->
-          <!--              >-->
-          <!--            </template>-->
-          <!--            Content of Tab Panel 3-->
-          <!--          </a-tab-pane>-->
+          <a-tab-pane key="3">
+            <template #title>
+              <icon-book size="28" />
+              <span
+                style="font-size: 25px; font-weight: bold; margin-left: 10px"
+                >我的文章</span
+              >
+            </template>
+            <PostView />
+          </a-tab-pane>
+          <a-tab-pane key="4">
+            <template #title>
+              <icon-bookmark size="28" />
+              <span
+                style="font-size: 25px; font-weight: bold; margin-left: 10px"
+                >文章收藏</span
+              >
+            </template>
+            <PostFavourView />
+          </a-tab-pane>
         </a-tabs>
       </div>
     </div>
@@ -225,6 +235,8 @@ import {
   IconPenFill,
   IconStarFill,
   IconSettings,
+  IconBook,
+  IconBookmark,
 } from "@arco-design/web-vue/es/icon";
 import {
   onBeforeMount,
@@ -244,6 +256,8 @@ import * as monaco from "monaco-editor";
 import AccessEnum from "@/access/accessEnum";
 import { useRouter } from "vue-router";
 import QuestionFavourRecordView from "@/components/question/QuestionFavourRecordView.vue";
+import PostView from "@/components/post/PostView.vue";
+import PostFavourView from "@/components/post/PostFavourView.vue";
 
 const router = useRouter();
 
