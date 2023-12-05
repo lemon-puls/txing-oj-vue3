@@ -51,7 +51,7 @@
         </a-menu-item>
       </a-menu>
     </a-col>
-    <a-col flex="400px" style="text-align: right">
+    <a-col flex="500px" style="text-align: right">
       <div
         style="
           font-size: 20px;
@@ -60,6 +60,24 @@
           align-items: center;
         "
       >
+        <a-popover style="z-index: 10000">
+          <span style="font-size: 20px; display: flex; align-items: center"
+            ><icon-google :size="25" style="color: #ff3700" />源码</span
+          >
+          <template #content>
+            <a-link
+              href="https://gitee.com/lemon_plus/txing-oj"
+              style="display: block; font-size: 15px"
+              >前端地址
+            </a-link>
+            <a-link
+              href="https://gitee.com/lemon_plus/txing-oj-backend"
+              style="display: block; font-size: 15px"
+              >后端地址
+            </a-link>
+          </template>
+        </a-popover>
+
         <a-button
           type="primary"
           size="large"
@@ -113,7 +131,7 @@ import checkAccess from "../access/checkAccess";
 import AccessEnum from "../access/accessEnum";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
-import { IconDown, IconEdit } from "@arco-design/web-vue/es/icon";
+import { IconDown, IconEdit, IconGoogle } from "@arco-design/web-vue/es/icon";
 
 const router = useRouter();
 const store = useStore();
