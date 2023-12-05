@@ -25,6 +25,7 @@
                   @change="onChange"
                   @progress="onProgress"
                   :data="appendData"
+                  with-credentials
                 >
                   <template #upload-button>
                     <div
@@ -139,13 +140,21 @@ const loadPostOldData = async () => {
   }
 };
 
+let form = ref({
+  content: "",
+  title: "",
+  coverImg: "",
+  intro: "",
+});
+
 /**
  * 上传封面图
  */
 const file = ref();
-const appendData = {
+let appendData = ref({
   biz: "post_cover",
-};
+  oldImg: "",
+});
 // const onChange = (_: any, currentFile: any) => {
 //   file.value = {
 //     ...currentFile,
@@ -166,6 +175,12 @@ const onChange = async (_: any, currentFile: any) => {
     return;
   }
   form.value.coverImg = response.data;
+  appendData.value.oldImg = response.data;
+  console.log(
+    "form.value.coverImg",
+    form.value.coverImg,
+    appendData.value.oldImg
+  );
   file.value = {
     ...currentFile,
     url: response.data,
@@ -177,13 +192,6 @@ const onChange = async (_: any, currentFile: any) => {
 const onProgress = (currentFile: any) => {
   file.value = currentFile;
 };
-
-let form = ref({
-  content: "",
-  title: "",
-  coverImg: "",
-  intro: "",
-});
 
 /**
  * 提交

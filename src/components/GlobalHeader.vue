@@ -7,7 +7,7 @@
     :wrap="false"
   >
     <a-col flex="100px">
-      <div class="title-bar">
+      <div class="title-bar" @click="router.push({ path: '/questions' })">
         <img class="logo" src="../assets/txing-oj.png" />
         <!--          <div class="title">Txing OJ</div>-->
       </div>
@@ -86,7 +86,13 @@
           >我要创作
           <icon-edit style="margin-left: 10px" />
         </a-button>
-        <div>
+        <div
+          @click="
+            router.push({
+              path: '/myself',
+            })
+          "
+        >
           <a-popover id="headDialogBox">
             <a-avatar>
               <img

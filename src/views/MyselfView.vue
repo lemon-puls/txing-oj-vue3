@@ -383,9 +383,10 @@ const totalData = ref({
 /**
  * 头像相关
  */
-const appendData = {
-  biz: "user_avatar",
-};
+let appendData = ref({
+  biz: "post_cover",
+  oldImg: "",
+});
 const fileList: any[] = [];
 const handleChange1 = async (info: any) => {
   // console.log("first:", fileList[0]);
@@ -412,6 +413,7 @@ const handleChange1 = async (info: any) => {
   }
   store.state.user.loginUser.userAvatar = response.data;
   totalData.value.userAvatar = response.data;
+  appendData.value.oldImg = response.data;
   message.success("头像更换成功");
   return;
 };
