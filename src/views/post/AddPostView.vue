@@ -96,6 +96,7 @@
           style="max-width: 100vw; width: 100%"
           :value="form.content"
           :handle-change="onContentChange"
+          :post-id="route.query.id"
         />
       </a-form-item>
     </a-form>

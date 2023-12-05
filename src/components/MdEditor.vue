@@ -53,6 +53,7 @@ interface Props {
   value: string;
   handleChange: (v: string) => void;
   mode?: string;
+  postId: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -61,12 +62,14 @@ const props = withDefaults(defineProps<Props>(), {
     console.log(v);
   },
   mode: () => "split",
+  postId: () => "-1",
 });
 // 上传图片
 const uploadImage = async (files: any) => {
   console.log("files", files);
   const res = await FileControllerService.uploadFileUsingPost(
     "post_content_img",
+    props.postId,
     files[0]
   );
   if (res.code !== 0) {
