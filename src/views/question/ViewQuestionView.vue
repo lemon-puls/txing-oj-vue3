@@ -714,4 +714,9 @@ const timer = (sumbitId: number) => {
 #questionFavourId > .arco-icon {
   color: #ff7300;
 }
+
+/*改变 加载中 图标位置*/
+#ViewQuestionView .arco-spin-mask-icon {
+  top: 50vh;
+}
 </style>

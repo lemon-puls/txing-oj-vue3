@@ -16,7 +16,7 @@
       @pageChange="onPageChange"
     >
       <template #exceedPercent="{ record }">
-        {{ `${record.exceedPercent * 100} %` }}
+        {{ `${(record.exceedPercent * 100).toFixed(2)} %` }}
       </template>
     </a-table>
   </div>
