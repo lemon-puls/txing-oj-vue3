@@ -65,7 +65,7 @@
               />
             </div>
           </template>
-          <a-list-item-meta>
+          <a-list-item-meta style="margin-right: 20px">
             <template #title>
               <h2 v-html="item.title" style="margin: 0 0"></h2>
             </template>
@@ -152,7 +152,7 @@ const onPageChange = (page: number) => {
 // 点击文章跳转到详情页
 const clickPostHandle = (id: number) => {
   router.push({
-    path: "/post/view/" + id,
+    path: "/txing/post/view/" + id,
   });
 };
 
@@ -161,7 +161,7 @@ const handlePostOps = async (id: any, key: any) => {
   console.log(id, key);
   if ("编辑文章" === key) {
     router.push({
-      path: "/post/update",
+      path: "/txing/post/update",
       query: {
         id: id,
       },
@@ -174,9 +174,10 @@ const handlePostOps = async (id: any, key: any) => {
     if (res.code !== 0) {
       message.error("删除失败：", res.msg);
       return;
+    } else {
+      loadMyPostData();
+      message.success("删除成功");
     }
-    loadMyPostData();
-    message.success("删除成功");
   }
 };
 </script>

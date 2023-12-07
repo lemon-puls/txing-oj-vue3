@@ -2,9 +2,9 @@
   <div id="app">
     <template
       v-if="
-        route.path.startsWith('/user') ||
-        route.path.startsWith('/post/add') ||
-        route.path.startsWith('/post/update')
+        route.path.startsWith('/txing/user') ||
+        route.path.startsWith('/txing/post/add') ||
+        route.path.startsWith('/txing/post/update')
       "
     >
       <router-view />

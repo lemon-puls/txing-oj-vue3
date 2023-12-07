@@ -9,7 +9,7 @@
     <!--    </a-avatar>-->
 
     <a-upload
-      action="http://localhost:8121/api/file/upload"
+      action="http://124.71.1.148:8121/api/file/upload"
       :data="appendData"
       :file-list="fileList"
       :show-file-list="false"
@@ -68,6 +68,26 @@
       </div>
       <div style="padding-top: 50px">
         <a-tabs size="large" :lazy-load="true">
+          <a-tab-pane key="3">
+            <template #title>
+              <icon-book size="28" />
+              <span
+                style="font-size: 25px; font-weight: bold; margin-left: 10px"
+                >我的文章</span
+              >
+            </template>
+            <PostView />
+          </a-tab-pane>
+          <a-tab-pane key="2">
+            <template #title>
+              <icon-star-fill size="28" />
+              <span
+                style="font-size: 25px; font-weight: bold; margin-left: 10px"
+                >题目收藏</span
+              >
+            </template>
+            <QuestionFavourRecordView />
+          </a-tab-pane>
           <a-tab-pane key="1">
             <template #title>
               <icon-pen-fill size="28" />
@@ -88,26 +108,6 @@
               style="width: 90%; margin: 0 auto"
               :user-id="store.state.user.loginUser.id"
             ></SubmitRecordView>
-          </a-tab-pane>
-          <a-tab-pane key="2">
-            <template #title>
-              <icon-star-fill size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >题目收藏</span
-              >
-            </template>
-            <QuestionFavourRecordView />
-          </a-tab-pane>
-          <a-tab-pane key="3">
-            <template #title>
-              <icon-book size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >我的文章</span
-              >
-            </template>
-            <PostView />
           </a-tab-pane>
           <a-tab-pane key="4">
             <template #title>
@@ -293,7 +293,7 @@ const handleMpdifyPwdSubmit = async () => {
   } else {
     message.success(res.msg);
     modifyPwdModalVisible.value = false;
-    router.push({ path: "/user/login" });
+    router.push({ path: "/txing/user/login" });
   }
 };
 /**

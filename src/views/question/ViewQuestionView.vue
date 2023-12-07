@@ -229,7 +229,7 @@ import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
-import moment from "moment/moment";
+import moment, { now } from "moment/moment";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import SubmitDetailView from "@/components/question/SubmitDetailView.vue";
 import store from "@/store";
@@ -336,7 +336,7 @@ let commentData = ref<Array<commentEntity>>([
 ]);
 const onLikeChange = async (index: number) => {
   const res =
-    await QuestionCommentControllerService.thumbQuestionCommentUsingGet(
+    await QuestionCommentControllerService.thumbQuestionCommentUsingGet1(
       commentData.value[index].id,
       question.value?.id
     );
@@ -410,7 +410,7 @@ const publishComment = async () => {
     message.info("请输入评论内容");
     return;
   }
-  const res = await QuestionCommentControllerService.saveUsingPost({
+  const res = await QuestionCommentControllerService.saveUsingPost1({
     content: commentText.value,
     questionId: question.value?.id,
   });
@@ -567,7 +567,24 @@ let exceedPercent = ref(0);
 var loading = ref<boolean>(false);
 const form = ref<QuestionSubmitDoRequest>({
   language: "java",
-  code: "",
+  code:
+    "import java.util.*;\n" +
+    "/**\n" +
+    " * @author " +
+    store.state.user.loginUser.userName +
+    "\n" +
+    " * @date " +
+    moment(now()).format("YYYY-MM-DD HH:mm:ss") +
+    "\n" +
+    " */\n" +
+    "public class Main {\n" +
+    "\n" +
+    "    public static void main(String[] args) {\n" +
+    "        // 请开始您的作答\n" +
+    "        Scanner scanner = new Scanner(System.in);\n" +
+    "    \n" +
+    "    }\n" +
+    "}",
 });
 const changeCode = (value: string) => {
   console.log(value);

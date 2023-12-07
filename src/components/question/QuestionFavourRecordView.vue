@@ -86,14 +86,14 @@ onMounted(() => {
 //   clickRow: (record: any) => {
 //     console.log("触发默认实现", record);
 //     const router = useRouter();
-//     router.push({ path: `/view/question/${record.id}` });
+//     router.push({ path: `/txing/view/question/${record.id}` });
 //   },
 // });
 /**
  * 前往题目详情页
  */
 const clickRow = (record: any) => {
-  router.push({ path: `/view/question/${record.id}` });
+  router.push({ path: `/txing/view/question/${record.id}` });
 };
 
 let data = ref([]);

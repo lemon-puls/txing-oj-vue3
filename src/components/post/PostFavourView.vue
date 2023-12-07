@@ -57,7 +57,7 @@
               />
             </div>
           </template>
-          <a-list-item-meta>
+          <a-list-item-meta style="margin-right: 20px">
             <template #title>
               <h2 v-html="item.title" style="margin: 0 0"></h2>
             </template>
@@ -143,7 +143,7 @@ const onPageChange = (page: number) => {
 // 点击文章跳转到详情页
 const clickPostHandle = (id: number) => {
   router.push({
-    path: "/post/view/" + id,
+    path: "/txing/post/view/" + id,
   });
 };
 // 取消收藏

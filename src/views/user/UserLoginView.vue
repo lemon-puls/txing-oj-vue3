@@ -49,15 +49,15 @@ const store = useStore();
  * 前往注册页
  */
 const clickRegist = () => {
-  router.push({ path: "/user/regist" });
+  router.push({ path: "/txing/user/regist" });
 };
 
 /**
  * 登录表单信息
  */
 const form = reactive({
-  userAccount: "",
-  userPassword: "",
+  userAccount: "lemon",
+  userPassword: "12345678",
 } as UserLoginRequest);
 /**
  * 表单提交后 处理函数
@@ -70,7 +70,7 @@ const handleSubmit = async () => {
     await store.dispatch("user/getLoginUser");
     // alert("恭喜你！登录成功" + JSON.stringify(res.data));
     router.push({
-      path: "/questions",
+      path: "/txing",
       replace: true,
     });
   } else {

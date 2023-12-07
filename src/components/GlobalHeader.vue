@@ -7,7 +7,7 @@
     :wrap="false"
   >
     <a-col flex="100px">
-      <div class="title-bar" @click="router.push({ path: '/questions' })">
+      <div class="title-bar" @click="router.push({ path: '/txing' })">
         <img class="logo" src="../assets/txing-oj.png" />
         <!--          <div class="title">Txing OJ</div>-->
       </div>
@@ -24,7 +24,10 @@
           style="font-size: 20px"
           >{{ item.name }}
         </a-menu-item>
-        <a-menu-item key="adminCenter">
+        <a-menu-item
+          key="adminCenter"
+          v-if="checkAccess(store.state.user.loginUser, AccessEnum.ADMIN)"
+        >
           <a-dropdown
             @select="doMenuClick"
             :popup-max-height="false"
@@ -82,14 +85,14 @@
           type="primary"
           size="large"
           style="font-size: 20px; border-radius: 20px"
-          @click="doMenuClick('/post/add')"
+          @click="doMenuClick('/txing/post/add')"
           >我要创作
           <icon-edit style="margin-left: 10px" />
         </a-button>
         <div
           @click="
             router.push({
-              path: '/myself',
+              path: '/txing/myself',
             })
           "
         >
@@ -115,7 +118,7 @@
                   v-else
                   type="primary"
                   long
-                  @click="router.push({ path: '/user/login' })"
+                  @click="router.push({ path: '/txing/user/login' })"
                   >立即登录
                 </a-button>
               </a-space>
@@ -149,10 +152,10 @@ const doMenuClick = (key: string) => {
     return;
   }
   if ("创建题目" === key) {
-    key = "/add/question";
+    key = "/txing/add/question";
   }
   if ("管理题目" === key) {
-    key = "/manage/question";
+    key = "/txing/manage/question";
   }
   router.push({
     path: key,
@@ -161,7 +164,7 @@ const doMenuClick = (key: string) => {
 // 进入个人主页
 const toMyselfPage = () => {
   router.push({
-    path: "/myself",
+    path: "/txing/myself",
   });
 };
 
@@ -205,7 +208,7 @@ const handleLogout = async () => {
   store.dispatch("user/getLoginUser", {});
   // 重定向到登录页
   router.push({
-    path: "/user/login",
+    path: "/txing/user/login",
   });
 };
 

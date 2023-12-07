@@ -31,13 +31,12 @@ import mermaidLocale from "@bytemd/plugin-mermaid/locales/zh_Hans.json";
 const plugins = [
   gfm(),
   highlight(),
-  mediumZoom(),
   gemoji(),
   breaks(),
   frontmatter(),
   math(),
-  mediumZoom(),
   mermaid(),
+  mediumZoom(),
   // highlightssr(),
   // mathssr(),
   // Add more plugins here
@@ -52,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 </script>
 
-<style scoped>
+<style>
 /*.viewer {*/
 /*  overflow-wrap: break-word !important;*/
 /*}*/
@@ -61,4 +60,8 @@ const props = withDefaults(defineProps<Props>(), {
 /*  width: auto;*/
 /*  max-width: 100%;*/
 /*}*/
+.medium-zoom-overlay {
+  opacity: 0.6 !important;
+  background: black !important;
+}
 </style>

@@ -234,7 +234,7 @@ const doSubmit = () => {
  */
 const toQuestionPage = (question: Question) => {
   router.push({
-    path: `/view/question/${question.id}`,
+    path: `/txing/view/question/${question.id}`,
   });
 };
 
@@ -312,11 +312,11 @@ const questionTagData = reactive([
     checked: false,
     name: "栈",
   },
-  {
-    color: "magenta",
-    checked: false,
-    name: "其他",
-  },
+  // {
+  //   color: "magenta",
+  //   checked: false,
+  //   name: "其他",
+  // },
 ]);
 const clickQuestionTag = (item: any) => {
   item.checked = !item.checked;

@@ -22,14 +22,14 @@ router.beforeEach(async (to, from, next) => {
       !loginUser.userRole ||
       loginUser.userRole === ACCESS_ENUM.NOT_LOGIN
     ) {
-      next(`/user/login?redirect=${to.fullPath}`);
+      next(`/txing/user/login?redirect=${to.fullPath}`);
       message.info("请先登录！");
       return;
     }
     // 已经登录 但是没有对应权限
     if (!checkAccess(loginUser, needAccess)) {
       message.info("权限不足");
-      next("/noAuth");
+      next("/txing/noAuth");
       return;
     }
   }

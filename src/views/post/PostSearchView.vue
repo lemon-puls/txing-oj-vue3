@@ -211,7 +211,7 @@ const handleScroll = () => {
 // 点击文章跳转到详情页
 const clickPostHandle = (id: number) => {
   router.push({
-    path: "/post/view/" + id,
+    path: "/txing/post/view/" + id,
   });
 };
 </script>

@@ -9,7 +9,7 @@
             v-model="form.title"
             placeholder="请输入标题..."
             @blur="onBlur"
-            :max-length="30"
+            :max-length="40"
           />
           <a-popover title="发布文章" :trigger="'click'">
             <a-button id="submitButtonId" type="primary" style="min-width: 60px"
@@ -19,7 +19,7 @@
               <div id="publishDialogId">
                 <p>添加封面图</p>
                 <a-upload
-                  action="http://localhost:8121/api/file/upload"
+                  action="http://124.71.1.148:8121/api/file/upload"
                   :fileList="file ? [file] : []"
                   :show-file-list="false"
                   @change="onChange"
@@ -97,6 +97,7 @@
           :value="form.content"
           :handle-change="onContentChange"
           :post-id="route.query.id"
+          biz="post_content_img"
         />
       </a-form-item>
     </a-form>
@@ -215,7 +216,7 @@ const doSubmit = async () => {
     if (res.code === 0) {
       message.success("更新成功");
       router.push({
-        path: "/post/view/" + route.query.id,
+        path: "/txing/post/view/" + route.query.id,
       });
     } else {
       message.error("更新失败:" + res.message);
@@ -229,7 +230,7 @@ const doSubmit = async () => {
     if (res.code === 0) {
       message.success("发表成功");
       router.push({
-        path: "/post/view/" + res.data,
+        path: "/txing/post/view/" + res.data,
       });
     } else {
       message.error("发表失败:" + res.message);

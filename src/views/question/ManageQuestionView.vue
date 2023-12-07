@@ -267,7 +267,7 @@ const router = useRouter();
 const doUpdate = (question: Question) => {
   console.log(question);
   router.push({
-    path: "/update/question",
+    path: "/txing/update/question",
     query: {
       id: question.id,
     },

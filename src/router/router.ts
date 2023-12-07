@@ -18,7 +18,7 @@ import CeshiView from "@/views/CeshiView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
-    path: "/user",
+    path: "/txing/user",
     name: "用户",
     component: UserLayout,
     meta: {
@@ -26,12 +26,12 @@ export const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: "/user/login",
+        path: "/txing/user/login",
         name: "用户登录",
         component: UserLoginView,
       },
       {
-        path: "/user/regist",
+        path: "/txing/user/regist",
         name: "用户注册",
         component: UserRegistView,
       },
@@ -42,18 +42,34 @@ export const routes: Array<RouteRecordRaw> = [
   //   name: "主页",
   //   component: QuestionsView,
   // },
+  // {
+  //   path: "/txing",
+  //   name: "题库中心",
+  //   component: QuestionsView,
+  // },
   {
-    path: "/questions",
+    path: "/txing",
     name: "题库中心",
     component: QuestionsView,
+    // meta: {
+    //   hideInMenu: true,
+    // },
   },
+  // {
+  //   path: "/",
+  //   name: "题库中心",
+  //   component: QuestionsView,
+  //   meta: {
+  //     hideInMenu: true,
+  //   },
+  // },
   {
-    path: "/post/search",
+    path: "/txing/post/search",
     name: "技术文章",
     component: PostSearchView,
   },
   {
-    path: "/view/question/:id",
+    path: "/txing/view/question/:id",
     name: "做题",
     component: ViewQuestionView,
     props: true,
@@ -63,7 +79,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/add/question",
+    path: "/txing/add/question",
     name: "创建题目",
     component: AddQuestionView,
     meta: {
@@ -72,7 +88,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/update/question",
+    path: "/txing/update/question",
     name: "更新题目",
     component: AddQuestionView,
     meta: {
@@ -81,7 +97,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/manage/question",
+    path: "/txing/manage/question",
     name: "管理题目",
     component: ManageQuestionView,
     meta: {
@@ -90,7 +106,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/noAuth",
+    path: "/txing/noAuth",
     name: "权限不足",
     component: NoAuthView,
     meta: {
@@ -106,7 +122,7 @@ export const routes: Array<RouteRecordRaw> = [
   //   },
   // },
   {
-    path: "/myself",
+    path: "/txing/myself",
     name: "我的主页",
     component: MyselfView,
     meta: {
@@ -115,7 +131,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/post/add",
+    path: "/txing/post/add",
     name: "写文章",
     component: AddPostView,
     meta: {
@@ -123,7 +139,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/post/update",
+    path: "/txing/post/update",
     name: "更新文章",
     component: AddPostView,
     meta: {
@@ -131,7 +147,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/post/view/:id",
+    path: "/txing/post/view/:id",
     name: "看文章",
     props: true,
     component: ViewPostView,

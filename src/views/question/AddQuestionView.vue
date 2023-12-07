@@ -238,7 +238,7 @@ const onAnswerChange = (value: string) => {
   form.value.answer = value;
 };
 </script>
-<style scoped>
+<style>
 #addQuestionView {
   background: rgba(255, 255, 255, 0.8);
   max-width: 1280px;
@@ -255,8 +255,8 @@ const onAnswerChange = (value: string) => {
   text-align: center;
 }
 
-#addQuestionView[data-v-1a407f3d] > .arco-form {
-  margin-left: 60px;
+#addQuestionView .arco-form {
+  margin-left: 60px !important;
 }
 
 /*.arco-message-success {*/

@@ -88,7 +88,7 @@ queryVo: PageVO,
      */
     public static thumbQuestionCommentUsingGet(
 commentId: number,
-postId: number,
+postId: string,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',

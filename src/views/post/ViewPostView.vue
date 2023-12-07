@@ -483,12 +483,29 @@ const clickThumb = async () => {
     return;
   }
 };
+
+// 文章评论点赞
+const onLikeChange = async (index: number) => {
+  const res = await PostCommentControllerService.thumbQuestionCommentUsingGet(
+    commentData.value[index].id,
+    props.id
+  );
+  if (res.code != 0) {
+    message.error(res.msg);
+  }
+  commentData.value[index].isFavour = !commentData.value[index].isFavour;
+  if (commentData.value[index].isFavour) {
+    commentData.value[index].favourNum = commentData.value[index].favourNum + 1;
+  } else {
+    commentData.value[index].favourNum = commentData.value[index].favourNum - 1;
+  }
+};
 </script>
 
 <style>
 #viewPostView {
   max-width: 1280px;
-  width: 60vw;
+  width: 70vw;
   margin: 0 auto;
   background: rgba(255, 255, 255, 1);
   /*padding-right: 10px;*/
@@ -499,7 +516,7 @@ const clickThumb = async () => {
 
 #postContentId {
   width: 80% !important;
-  margin: 0 auto;
+  margin: 0 8% 0 12%;
 }
 
 #leftBar {
@@ -507,7 +524,7 @@ const clickThumb = async () => {
   height: 200px;
   position: fixed;
   /*left: 100;*/
-  margin-left: 10px;
+  margin-left: 1%;
   margin-top: 100px;
   display: flex;
   flex-direction: column;

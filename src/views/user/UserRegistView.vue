@@ -67,7 +67,7 @@ const store = useStore();
  * 前往登录页
  */
 const clickLogin = () => {
-  router.push({ path: "/user/login" });
+  router.push({ path: "/txing/user/login" });
 };
 
 /**
@@ -87,7 +87,7 @@ const handleSubmit = async () => {
   if (res.code === 0) {
     message.success("注册成功 请登录！");
     router.push({
-      path: "/user/login",
+      path: "/txing/user/login",
       replace: true,
     });
   } else {
