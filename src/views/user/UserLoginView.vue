@@ -41,10 +41,9 @@ import { reactive, ref } from "vue";
 import { UserControllerService, UserLoginRequest } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { useUserStore } from "@/store/user";
 
 const router = useRouter();
-const store = useStore();
 /**
  * 前往注册页
  */
@@ -67,7 +66,7 @@ const handleSubmit = async () => {
   const res = await UserControllerService.userLoginUsingPost(form);
   if (res.code === 0) {
     // 等获取登录信息成功后 再跳转到主页
-    await store.dispatch("user/getLoginUser");
+    await useUserStore().getLoginUser();
     // alert("恭喜你！登录成功" + JSON.stringify(res.data));
     router.push({
       path: "/txing",

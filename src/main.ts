@@ -8,6 +8,7 @@ import "@/access";
 import "bytemd/dist/index.css";
 import JsonViewer from "vue3-json-viewer";
 import "vue-json-viewer/style.css";
+import "animate.css";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 

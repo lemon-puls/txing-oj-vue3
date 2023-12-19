@@ -8,7 +8,8 @@
   >
     <a-col flex="100px">
       <div class="title-bar" @click="router.push({ path: '/txing' })">
-        <img class="logo" src="../assets/txing-oj.png" />
+        <img ref="boxElem" class="logo" src="../assets/txing-oj.png" />
+
         <!--          <div class="title">Txing OJ</div>-->
       </div>
     </a-col>
@@ -26,7 +27,7 @@
         </a-menu-item>
         <a-menu-item
           key="adminCenter"
-          v-if="checkAccess(useUser, AccessEnum.ADMIN)"
+          v-if="checkAccess(useUserStore().loginUser, AccessEnum.ADMIN)"
         >
           <a-dropdown
             @select="doMenuClick"
@@ -80,6 +81,13 @@
             </a-link>
           </template>
         </a-popover>
+
+        <a-badge :count="9" dot :offset="[2, -2]">
+          <IconNotification
+            @click="openChatBox"
+            :style="{ color: '#888', fontSize: '25px', verticalAlign: '-3px' }"
+          />
+        </a-badge>
 
         <a-button
           type="primary"
@@ -140,7 +148,13 @@ import checkAccess from "../access/checkAccess";
 import AccessEnum from "../access/accessEnum";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
-import { IconDown, IconEdit, IconGoogle } from "@arco-design/web-vue/es/icon";
+import {
+  IconDown,
+  IconEdit,
+  IconGoogle,
+  IconNotification,
+} from "@arco-design/web-vue/es/icon";
+import { useChatStore } from "@/store/chat";
 
 const router = useRouter();
 const loginUser = useUserStore().loginUser;
@@ -211,6 +225,26 @@ const handleLogout = async () => {
 const handleSelect = (key: any) => {
   alert(key);
 };
+
+/**
+ * 聊天
+ */
+// 打开聊天框
+const openChatBox = () => {
+  useChatStore().showModal = true;
+  console.log("打开聊天框", useChatStore().showModal);
+};
+
+/**
+ * logo的动画效果
+ */
+const boxElem = ref<HTMLElement | null>();
+setInterval(function () {
+  boxElem.value?.classList.add("animate__animated", "animate__bounce"); // 添加动画效果
+  setTimeout(function () {
+    boxElem.value?.classList.remove("animate__animated", "animate__bounce"); // 移除动画效果
+  }, 1000); // 1 秒后移除动画效果
+}, 10000); // 每 10 秒触发一次添加动画效果的操作
 </script>
 
 <style>

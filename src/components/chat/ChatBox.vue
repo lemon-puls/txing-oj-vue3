@@ -1,43 +1,54 @@
 <template>
-  <div class="overlay" v-if="showModal" @click="handleClickOutside"></div>
-  <div id="chatBoxId" v-if="showModal">
-    <a-row class="grid-demo">
-      <a-col style="background-color: yellow" :span="1">
-        <div>6 - 25%</div>
-      </a-col>
-      <a-col style="background-color: green" :span="5">
-        <div>6 - 25%</div>
-      </a-col>
-      <a-col style="background-color: blue" :span="14">
-        <div>6 - 25%</div>
-      </a-col>
-      <a-col style="background-color: black" :span="4">
-        <div>6 - 25%</div>
-      </a-col>
-    </a-row>
-  </div>
+  <div
+    class="overlay"
+    v-if="useChatStore().showModal"
+    @click="handleClickOutside"
+  ></div>
+  <transition
+    enter-active-class="animate__animated animate__backInLeft"
+    leave-active-class="animate__animated animate__backOutRight"
+  >
+    <div id="chatBoxId" v-if="useChatStore().showModal">
+      <a-row class="grid-demo">
+        <a-col style="background-color: yellow" :span="1">
+          <div>6 - 25%</div>
+        </a-col>
+        <a-col style="background-color: green" :span="5">
+          <div>6 - 25%</div>
+        </a-col>
+        <a-col style="background-color: blue" :span="14">
+          <div>6 - 25%</div>
+        </a-col>
+        <a-col style="background-color: black" :span="4">
+          <div>6 - 25%</div>
+        </a-col>
+      </a-row>
+    </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
-// 聊天框显隐
 import { ref } from "vue";
-
-const showModal = ref(true);
+import { useChatStore } from "@/store/chat";
+// 聊天框显隐
 const handleClickOutside = () => {
-  showModal.value = false;
+  useChatStore().showModal = false;
 };
 </script>
 
 <style scoped>
 /*聊天框*/
 #chatBoxId {
-  width: 80vw;
-  height: 40vw;
+  --width: 80vw;
+  --hight: 40vw;
+  width: var(--width);
+  height: var(--hight);
   background-color: white;
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  left: calc(50% - var(--width) / 2);
+  top: calc(50% - var(--hight) / 2);
+  /*transform: translateX(-50%);*/
+  /*transform: translateX(-50%);*/
   z-index: 10001;
   border-radius: 20px;
 }
