@@ -106,7 +106,7 @@
             <!--            />-->
             <SubmitRecordView
               style="width: 90%; margin: 0 auto"
-              :user-id="store.state.user.loginUser.id"
+              :user-id="useUserStore().loginUser.id"
             ></SubmitRecordView>
           </a-tab-pane>
           <a-tab-pane key="4">
@@ -250,7 +250,7 @@ import {
 import { FileItem } from "@arco-design/web-vue";
 import { UserControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
-import store from "@/store";
+import { useUserStore } from "@/store/user";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import * as monaco from "monaco-editor";
 import AccessEnum from "@/access/accessEnum";
@@ -268,7 +268,7 @@ onBeforeMount(() => {
   loadUserPersonInfo();
 });
 onMounted(() => {
-  totalData.value.userAvatar = store.state.user.loginUser.userAvatar;
+  totalData.value.userAvatar = useUserStore().loginUser.userAvatar;
 });
 
 /**
@@ -343,10 +343,7 @@ const handleSubmit = async (data: any) => {
   const res = await updatePersonIfo();
   if (res) {
     // 更新用户数据
-    store.dispatch("user/getLoginUser", {
-      userName: "lemon",
-      userRole: AccessEnum.ADMIN,
-    });
+    useUserStore().loginUser;
     visible.value = false;
   }
 };
@@ -366,9 +363,9 @@ const updatePersonIfo = async (): Promise<boolean> => {
 };
 
 // watch(
-//   () => store.state.user.loginUser,
+//   () => useUserStore().loginUser,
 //   () => {
-//     data[1].value = store.state.user.loginUser.school;
+//     data[1].value = useUserStore().loginUser.school;
 //   }
 // );
 
@@ -411,7 +408,7 @@ const handleChange1 = async (info: any) => {
     message.error(res.msg);
     return;
   }
-  store.state.user.loginUser.userAvatar = response.data;
+  useUserStore().loginUser.userAvatar = response.data;
   totalData.value.userAvatar = response.data;
   appendData.value.oldImg = response.data;
   message.success("头像更换成功");
@@ -489,11 +486,11 @@ const data = reactive([
   },
   {
     label: "刷题数",
-    value: store.state.user.loginUser.questionCount,
+    value: useUserStore().loginUser.questionCount,
   },
   {
     label: "通过率",
-    value: store.state.user.loginUser.acceptedRate,
+    value: useUserStore().loginUser.acceptedRate,
   },
 ]);
 

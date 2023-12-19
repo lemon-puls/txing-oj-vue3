@@ -14,7 +14,7 @@ import MyselfView from "@/views/MyselfView.vue";
 import AddPostView from "@/views/post/AddPostView.vue";
 import ViewPostView from "@/views/post/ViewPostView.vue";
 import PostSearchView from "@/views/post/PostSearchView.vue";
-import CeshiView from "@/views/CeshiView.vue";
+import VirtualListTest from "@/views/test/VirtualListTest.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -154,5 +154,10 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       hideInMenu: true,
     },
+  },
+  {
+    path: "/txing/virtualList/test",
+    name: "虚拟列表",
+    component: VirtualListTest,
   },
 ];

@@ -13,11 +13,13 @@
       <!--        </a>-->
       <!--      </a-layout-footer>-->
     </a-layout>
+    <chat-box></chat-box>
   </div>
 </template>
 <script setup lang="ts">
 import GlobalHeader from "@/components/GlobalHeader";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import ChatBox from "@/components/chat/ChatBox.vue";
 
 const handleScroll = () => {
   if (window.pageYOffset > 300) {

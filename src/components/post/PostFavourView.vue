@@ -87,7 +87,7 @@ import {
   PostQueryRequest,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import store from "@/store";
+import store from "@/store/index.ts-old";
 import {
   IconStar,
   IconMessage,

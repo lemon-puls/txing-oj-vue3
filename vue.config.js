@@ -5,4 +5,10 @@ module.exports = defineConfig({
   chainWebpack(config) {
     config.plugin("monaco").use(new MonacoWebpackPlugin());
   },
+  pluginOptions: {
+    "style-resources-loader": {
+      preProcessor: "scss",
+      patterns: [],
+    },
+  },
 });

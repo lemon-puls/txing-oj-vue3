@@ -94,7 +94,6 @@ import {
   PostQueryRequest,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import store from "@/store";
 import {
   IconStar,
   IconMessage,
@@ -103,6 +102,7 @@ import {
   IconDelete,
 } from "@arco-design/web-vue/es/icon";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/user";
 
 const router = useRouter();
 
@@ -120,7 +120,7 @@ const paginationProps = reactive({
 const searchMyPostParams = ref<PostQueryRequest>({
   current: 1,
   pageSize: 5,
-  userId: store.state.user.loginUser.id,
+  userId: useUserStore().loginUser.id,
 });
 const loadMyPostData = async () => {
   const res = await PostControllerService.searchPostVoByPageUsingPost(

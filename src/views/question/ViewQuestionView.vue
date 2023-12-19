@@ -135,7 +135,7 @@
             >
               <SubmitRecordView
                 :question-id="props.id"
-                :user-id="store.state.user.loginUser.id"
+                :user-id="useUserStore().loginUser.id"
                 :click-row="clickSubmitRecord"
               ></SubmitRecordView>
             </a-tab-pane>
@@ -232,8 +232,8 @@ import MdViewer from "@/components/MdViewer.vue";
 import moment, { now } from "moment/moment";
 import SubmitRecordView from "@/components/question/SubmitRecordView.vue";
 import SubmitDetailView from "@/components/question/SubmitDetailView.vue";
-import store from "@/store";
 import _ from "lodash";
+import { useUserStore } from "@/store/user";
 
 onMounted(async () => {
   await loadData();
@@ -571,7 +571,7 @@ const form = ref<QuestionSubmitDoRequest>({
     "import java.util.*;\n" +
     "/**\n" +
     " * @author " +
-    store.state.user.loginUser.userName +
+    useUserStore().loginUser.userName +
     "\n" +
     " * @date " +
     moment(now()).format("YYYY-MM-DD HH:mm:ss") +

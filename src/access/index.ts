@@ -1,17 +1,18 @@
 import router from "@/router";
-import store from "@/store";
 import ACCESS_ENUM from "@/access/accessEnum";
 import checkAccess from "@/access/checkAccess";
 import message from "@arco-design/web-vue/es/message";
+import { useUserStore } from "@/store/user";
 
 router.beforeEach(async (to, from, next) => {
   // console.log("登录用户信息：", store.state.user.loginUser);
-  let loginUser = store.state.user.loginUser;
+  const userStore = useUserStore();
+  let loginUser = userStore.loginUser;
   // 没登录就自动登录
   if (!loginUser || !loginUser.userRole) {
     // await可以使得用户登录成功之后 再执行后续的代码
-    await store.dispatch("user/getLoginUser");
-    loginUser = store.state.user.loginUser;
+    await userStore.getLoginUser();
+    loginUser = userStore.loginUser;
   }
   const needAccess = (to.meta?.access as string) ?? ACCESS_ENUM.NOT_LOGIN;
   if (needAccess !== ACCESS_ENUM.NOT_LOGIN) {

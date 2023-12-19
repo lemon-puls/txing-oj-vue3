@@ -26,7 +26,7 @@
         </a-menu-item>
         <a-menu-item
           key="adminCenter"
-          v-if="checkAccess(store.state.user.loginUser, AccessEnum.ADMIN)"
+          v-if="checkAccess(useUser, AccessEnum.ADMIN)"
         >
           <a-dropdown
             @select="doMenuClick"
@@ -100,14 +100,14 @@
             <a-avatar>
               <img
                 alt="avatar"
-                :src="store.state.user?.loginUser?.userAvatar ?? ''"
+                :src="useUserStore().loginUser?.userAvatar ?? ''"
               />
             </a-avatar>
             <template #content>
               <a-space class="wrapper" direction="vertical">
                 <a-button
                   v-if="
-                    store.state.user.loginUser.userRole != AccessEnum.NOT_LOGIN
+                    useUserStore().loginUser.userRole != AccessEnum.NOT_LOGIN
                   "
                   type="primary"
                   long
@@ -124,7 +124,7 @@
               </a-space>
             </template>
           </a-popover>
-          {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+          {{ useUserStore().loginUser?.userName ?? "未登录" }}
         </div>
       </div>
     </a-col>
@@ -135,7 +135,7 @@
 import { routes } from "../router/router";
 import { useRouter } from "vue-router";
 import { computed, reactive, ref } from "vue";
-import { useStore } from "vuex";
+import { useUserStore } from "@/store/user";
 import checkAccess from "../access/checkAccess";
 import AccessEnum from "../access/accessEnum";
 import { UserControllerService } from "../../generated";
@@ -143,8 +143,7 @@ import message from "@arco-design/web-vue/es/message";
 import { IconDown, IconEdit, IconGoogle } from "@arco-design/web-vue/es/icon";
 
 const router = useRouter();
-const store = useStore();
-const loginUser = store.state.user.loginUser;
+const loginUser = useUserStore().loginUser;
 // 默认主页
 const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
@@ -174,11 +173,7 @@ router.afterEach((to, from, failure) => {
 });
 
 setTimeout(() => {
-  store.dispatch("user/getLoginUser", {
-    userName: "lemon",
-    userRole: AccessEnum.ADMIN,
-  });
-  console.log(store.state.user.loginUser);
+  useUserStore().getLoginUser();
 }, 3000);
 
 const visibleRoutes = computed(() => {
@@ -187,9 +182,7 @@ const visibleRoutes = computed(() => {
       return false;
     }
     // 根据用户是否具有权限过滤菜单
-    if (
-      !checkAccess(store.state.user.loginUser, item?.meta?.access as string)
-    ) {
+    if (!checkAccess(useUserStore().loginUser, item?.meta?.access as string)) {
       return false;
     }
     return true;
@@ -205,7 +198,7 @@ const handleLogout = async () => {
     message.error(res.msg);
   }
   // 更新本地登录用户数据
-  store.dispatch("user/getLoginUser", {});
+  useUserStore().getLoginUser();
   // 重定向到登录页
   router.push({
     path: "/txing/user/login",
