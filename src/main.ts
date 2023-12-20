@@ -11,6 +11,8 @@ import "vue-json-viewer/style.css";
 import "animate.css";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import ElementPlus from "element-plus"; //全局引入
+import "element-plus/dist/index.css";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate); // 数据持久化
@@ -19,4 +21,5 @@ createApp(App)
   .use(ArcoVue)
   .use(JsonViewer)
   .use(router)
+  .use(ElementPlus)
   .mount("#app");

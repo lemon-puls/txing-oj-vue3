@@ -9,32 +9,11 @@
     leave-active-class="animate__animated animate__backOutRight"
   >
     <div id="chatBoxId" v-if="useChatStore().showModal">
-      <a-row class="grid-demo">
-        <a-col style="background-color: yellow" :span="1">
-          <div>6 - 25%</div>
-        </a-col>
-        <a-col style="background-color: green" :span="5">
-          <div>6 - 25%</div>
-        </a-col>
-        <a-col style="background-color: blue" :span="14">
-          <div>6 - 25%</div>
-        </a-col>
-        <a-col style="background-color: black" :span="4">
-          <div>6 - 25%</div>
-        </a-col>
-      </a-row>
+      <tool-bar />
+      <ChatView />
     </div>
   </transition>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import { useChatStore } from "@/store/chat";
-// 聊天框显隐
-const handleClickOutside = () => {
-  useChatStore().showModal = false;
-};
-</script>
 
 <style scoped>
 /*聊天框*/
@@ -51,6 +30,9 @@ const handleClickOutside = () => {
   /*transform: translateX(-50%);*/
   z-index: 10001;
   border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .overlay {
@@ -63,3 +45,14 @@ const handleClickOutside = () => {
   z-index: 10000;
 }
 </style>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { useChatStore } from "@/store/chat";
+import ToolBar from "@/components/chat/ toolbar/ToolBar";
+import ChatView from "@/components/chat/chat/ChatView.vue";
+// 聊天框显隐
+const handleClickOutside = () => {
+  useChatStore().showModal = false;
+};
+</script>

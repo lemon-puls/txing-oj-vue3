@@ -146,20 +146,21 @@ const getKey = (item: any) => item.id;
 </script>
 
 <style scoped lang="scss">
-#virtualListTestId {
-  max-width: 1280px;
-  width: 90vw;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.8);
-  /*padding-right: 10px;*/
-  /*padding-left: 10px;*/
-  padding: 20px 20px;
-  height: 500px;
-}
+//#virtualListTestId {
+//  max-width: 1280px;
+//  width: 90vw;
+//  margin: 0 auto;
+//  background: rgba(255, 255, 255, 0.8);
+//  /*padding-right: 10px;*/
+//  /*padding-left: 10px;*/
+//  padding: 20px 20px;
+//  height: 500px;
+//}
 
 .virtual-list {
+  box-sizing: border-box;
   position: relative;
-  width: 70%;
+  width: 100%;
   height: 99%;
   margin: 0 auto;
   /// / 100 % 时谷歌浏览器会出现无法滚动问题
