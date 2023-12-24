@@ -1,18 +1,24 @@
 <template>
   <div id="virtualListTestId">
-    <VirtualList
-      ref="virtualListRef"
-      class="virtual-list scroll-hover"
-      dataPropName="data"
-      :data="chatMessageList"
-      :data-key="getKey"
-      :item="MsgItem"
-      :size="20"
-      @totop="onToTop"
-      @scroll="onScroll"
-      @ok="goToBottom"
-      @tobottom="tobottom"
-    />
+    <!--    <VirtualList-->
+    <!--      ref="virtualListRef"-->
+    <!--      class="virtual-list scroll-hover"-->
+    <!--      dataPropName="data"-->
+    <!--      :data="chatMessageList"-->
+    <!--      :data-key="getKey"-->
+    <!--      :item="MsgItem"-->
+    <!--      :size="20"-->
+    <!--      @totop="onToTop"-->
+    <!--      @scroll="onScroll"-->
+    <!--      @ok="goToBottom"-->
+    <!--      @tobottom="tobottom"-->
+    <!--    />-->
+    <svg style="width = 40px; height: 40px">
+      <!-- use绑定id -->
+      <use xlink:href="#icon-coffee" fill="pink" />
+    </svg>
+    aSssadasD
+    <SvgIcon icon="lock" />
   </div>
 </template>
 
@@ -21,6 +27,7 @@ import VirtualList from "@/components/VirtualList";
 import { provide, ref } from "vue";
 import { throttle } from "lodash";
 import MsgItem from "@/views/test/MsgItem.vue";
+import SvgIcon from "@/icons/SvgIcon";
 
 const chatMessageList = ref([
   {
@@ -146,16 +153,16 @@ const getKey = (item: any) => item.id;
 </script>
 
 <style scoped lang="scss">
-//#virtualListTestId {
-//  max-width: 1280px;
-//  width: 90vw;
-//  margin: 0 auto;
-//  background: rgba(255, 255, 255, 0.8);
-//  /*padding-right: 10px;*/
-//  /*padding-left: 10px;*/
-//  padding: 20px 20px;
-//  height: 500px;
-//}
+#virtualListTestId {
+  max-width: 1280px;
+  width: 90vw;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.8);
+  /*padding-right: 10px;*/
+  /*padding-left: 10px;*/
+  padding: 20px 20px;
+  height: 500px;
+}
 
 .virtual-list {
   box-sizing: border-box;

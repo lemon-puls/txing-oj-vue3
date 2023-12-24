@@ -57,6 +57,7 @@
     "openapi-typescript-codegen": "^0.25.0",
     "prettier": "^2.4.1",
     "sass-loader": "^13.3.2",
+    "svg-sprite-loader": "^6.0.11",
     "typescript": "~4.5.5"
   }
 }

@@ -15,6 +15,11 @@ import ElementPlus from "element-plus"; //全局引入
 import "element-plus/dist/index.css";
 import "@/style/main.css";
 
+const requireAll = (requireContext: any) =>
+  requireContext.keys().map(requireContext);
+const req = require.context("@/icons/svg", false, /\.svg$/);
+requireAll(req);
+
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate); // 数据持久化
 createApp(App)
