@@ -13,21 +13,49 @@
       />
     </a-avatar>
     <div class="navs">
-      <router-link exact-active-class="nav-selected" to="/">
+      <!--      <router-link exact-active-class="nav-selected" to="/">-->
+      <!--      </router-link>-->
+      <div @click="chatStore.navFlag = 0">
         <a-badge :count="2" :max-count="99">
-          <icon-message class="nav-icon" :size="40" />
+          <div class="nav-icon-div">
+            <icon-message
+              :class="['nav-icon', { selected: chatStore.navFlag === 0 }]"
+              :size="35"
+            />
+          </div>
         </a-badge>
-      </router-link>
-      <router-link exact-active-class="nav-selected" to="/">
+      </div>
+      <div @click="chatStore.navFlag = 1">
         <a-badge :count="10" :max-count="99">
-          <icon-user-group class="nav-icon" :size="40" />
+          <div class="nav-icon-div">
+            <icon-user-group
+              :class="['nav-icon', { selected: chatStore.navFlag === 1 }]"
+              :size="35"
+            />
+          </div>
         </a-badge>
-      </router-link>
+      </div>
+      <!--      <router-link exact-active-class="nav-selected" to="/">-->
+
+      <!--      </router-link>-->
+      <!--      <a-tabs-->
+      <!--        type="card-gutter"-->
+      <!--        direction="vertical"-->
+      <!--        :editable="false"-->
+      <!--        auto-switch-->
+      <!--      >-->
+      <!--        <template #title>-->
+      <!--          <a-badge :count="2" :max-count="99">-->
+      <!--            <icon-message class="nav-icon" :size="40" />-->
+      <!--          </a-badge>-->
+      <!--        </template>-->
+      <!--        <a-tab-pane> aaaa </a-tab-pane>-->
+      <!--      </a-tabs>-->
     </div>
   </aside>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 #ToolBar {
   display: flex;
   flex-direction: column;
@@ -40,16 +68,38 @@
   .navs {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
-    row-gap: 15px;
-  }
+    margin-top: 40px;
+    row-gap: 25px;
 
-  .nav-icon {
-    color: #f5f5f5;
+    .arco-badge-number {
+      //max-width: 10px;
+      //max-height: 10px;
+      //text-align: center;
+      //margin: auto auto;
+    }
+
+    .nav-icon-div {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .nav-icon {
+        color: #f5f5f5;
+      }
+
+      .selected {
+        color: #fcf743;
+      }
+    }
   }
 }
 </style>
 
 <script setup lang="ts">
 import { IconMessage, IconUserGroup } from "@arco-design/web-vue/es/icon";
+import { useChatStore } from "@/store/chat";
+
+const chatStore = useChatStore();
 </script>

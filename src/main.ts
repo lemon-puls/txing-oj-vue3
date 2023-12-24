@@ -13,6 +13,7 @@ import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import ElementPlus from "element-plus"; //全局引入
 import "element-plus/dist/index.css";
+import "@/style/main.css";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate); // 数据持久化

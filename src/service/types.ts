@@ -162,3 +162,39 @@ export type MessageShow = {
    */
   loading: boolean;
 };
+
+/**
+ * 好友请求
+ */
+export type RequestFriend = {
+  /**
+   * 申请id
+   */
+  id: number;
+  /**
+   * 申请内容
+   */
+  content: string;
+  /**
+   * 申请状态
+   */
+  status: RequestFriendStatus;
+  /**
+   * 申请人
+   */
+  // ap
+};
+
+/**
+ * 好友请求通过状态
+ */
+export enum RequestFriendStatus {
+  /**
+   * 待通过
+   */
+  WAITTING,
+  /**
+   * 已通过
+   */
+  AGREE,
+}

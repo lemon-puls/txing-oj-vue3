@@ -23,49 +23,151 @@
     <a-split
       :style="{
         height: '100%',
-        width: '80%',
-        minWidth: '500px',
-        borderRight: '1px solid var(--color-border)',
+        width: '100%',
       }"
-      :default-size="0.3"
+      :default-size="0.25"
     >
       <template #first>
         <SessionList />
       </template>
       <template #second>
-        <div>
-          <a-split
-            direction="vertical"
-            :style="{ height: '40vw' }"
-            :default-size="0.7"
-          >
-            <template #first>
-              <VirtualListTest />
-            </template>
-            <template #second>
-              <SendBar />
-            </template>
-          </a-split>
-        </div>
+        <a-split
+          :style="{
+            height: '100%',
+            width: '100%',
+          }"
+          class="message-list-and-member-list"
+          :default-size="0.8"
+        >
+          <template #first>
+            <div>
+              <a-split
+                direction="vertical"
+                :style="{ height: '40vw' }"
+                :default-size="0.7"
+              >
+                <template #first>
+                  <MessageList></MessageList>
+                </template>
+                <template #second>
+                  <SendBar />
+                </template>
+              </a-split>
+            </div>
+          </template>
+          <template #second>
+            <SessionMemberList />
+          </template>
+        </a-split>
       </template>
     </a-split>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 #ChatView {
   flex: 1;
   background-color: #f5f5f5;
+  border-radius: 0px 20px 20px 0;
 }
 </style>
 
-<script setup lang="ts"></script>
-<script>
+<script setup lang="ts">
 import SessionList from "@/components/chat/chat/sessionlist/SessionList";
 import SendBar from "@/components/chat/chat/sendbar/SendBar";
 import VirtualListTest from "@/views/test/VirtualListTest";
+import MessageItem from "@/components/chat/chat/messageList/MessageItem";
+import {
+  Message,
+  MessageTypeEnum,
+  MessageUser,
+  TextMsgBody,
+} from "@/service/types";
+import { ref } from "vue";
+import MessageList from "@/components/chat/chat/messageList/MessageList.vue";
+import SessionMemberList from "@/components/chat/chat/sessionmemberlist/SessionMemberList.vue";
 
-export default {
-  components: { VirtualListTest, SendBar, SessionList },
-};
+// 测试数据
+const msg = ref([
+  {
+    fromUser: {
+      userId: 1,
+      userName: "lemon",
+      avatar:
+        "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
+    },
+    message: {
+      id: 1,
+      roomId: 1,
+      type: 0,
+      body: {
+        content: "今天刷算法题",
+      },
+      sendTime: 1234567890,
+    },
+    sendTime: "18:30",
+    timeNode: "08:30",
+    loading: false,
+  },
+  {
+    fromUser: {
+      userId: 1,
+      userName: "lemon",
+      avatar:
+        "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
+    },
+    message: {
+      id: 1,
+      roomId: 1,
+      type: 0,
+      body: {
+        content: "今天刷算法题",
+      },
+      sendTime: 1234567890,
+    },
+    sendTime: "18:30",
+    timeNode: "08:30",
+    loading: false,
+  },
+  {
+    fromUser: {
+      userId: 1,
+      userName: "lemon",
+      avatar:
+        "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
+    },
+    message: {
+      id: 1,
+      roomId: 1,
+      type: 0,
+      body: {
+        content: "今天刷算法题",
+      },
+      sendTime: 1234567890,
+    },
+    sendTime: "18:30",
+    timeNode: "08:30",
+    loading: false,
+  },
+  {
+    fromUser: {
+      userId: 1,
+      userName: "lemon",
+      avatar:
+        "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
+    },
+    message: {
+      id: 1,
+      roomId: 1,
+      type: 0,
+      body: {
+        content: "今天刷算法题",
+      },
+      sendTime: 1234567890,
+    },
+    sendTime: "18:30",
+    timeNode: "08:30",
+    loading: false,
+  },
+]);
 </script>

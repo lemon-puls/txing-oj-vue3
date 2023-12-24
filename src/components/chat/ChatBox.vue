@@ -10,7 +10,8 @@
   >
     <div id="chatBoxId" v-if="useChatStore().showModal">
       <tool-bar />
-      <ChatView />
+      <ChatView v-if="useChatStore().navFlag === 0" />
+      <ContactView v-if="useChatStore().navFlag === 1" />
     </div>
   </transition>
 </template>
@@ -51,6 +52,7 @@ import { ref } from "vue";
 import { useChatStore } from "@/store/chat";
 import ToolBar from "@/components/chat/ toolbar/ToolBar";
 import ChatView from "@/components/chat/chat/ChatView.vue";
+import ContactView from "@/components/chat/chat/contact/ContactView.vue";
 // 聊天框显隐
 const handleClickOutside = () => {
   useChatStore().showModal = false;
