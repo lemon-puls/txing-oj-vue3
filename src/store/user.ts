@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { UserControllerService } from "../../generated";
 import ACCESS_ENUM from "@/access/accessEnum";
 
@@ -11,6 +11,7 @@ export const useUserStore = defineStore("user", () => {
     userRole: undefined,
     id: -1,
   });
+  const isSign = computed(() => loginUser.value.id !== -1);
 
   const getLoginUser = async () => {
     // 请求后端 获取登录信息
@@ -27,5 +28,5 @@ export const useUserStore = defineStore("user", () => {
     loginUser.value = payload;
   };
 
-  return { loginUser, getLoginUser, updateUser };
+  return { loginUser, getLoginUser, updateUser, isSign };
 });

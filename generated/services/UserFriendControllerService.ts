@@ -2,38 +2,27 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CursorPageBaseRequest } from '../models/CursorPageBaseRequest';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class FileControllerService {
+export class UserFriendControllerService {
 
     /**
-     * uploadFile
-     * @param biz 
-     * @param file 
-     * @param oldImg 
-     * @param postId 
+     * 查询联系人列表（游标翻页）
+     * @param cursorPageBaseRequest cursorPageBaseRequest
      * @returns any OK
      * @throws ApiError
      */
-    public static uploadFileUsingPost(
-biz?: string,
-file?: Blob,
-oldImg?: string,
-postId?: number,
+    public static listUsingPost7(
+cursorPageBaseRequest: CursorPageBaseRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/file/upload',
-            query: {
-                'biz': biz,
-                'oldImg': oldImg,
-                'postId': postId,
-            },
-            formData: {
-                'file': file,
-            },
+            url: '/api/user/friend/list',
+            body: cursorPageBaseRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

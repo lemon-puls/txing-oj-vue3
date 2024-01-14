@@ -64,7 +64,7 @@ postId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost(
+    public static listUsingPost2(
 queryVo: PageVO,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -88,7 +88,7 @@ queryVo: PageVO,
      */
     public static thumbQuestionCommentUsingGet(
 commentId: number,
-postId: string,
+postId: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',

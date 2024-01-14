@@ -2,28 +2,28 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PageVO } from '../models/PageVO';
+import type { UserApplyRequest } from '../models/UserApplyRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class QuestionFavourControllerService {
+export class UserApplyControllerService {
 
     /**
-     * favourQuestion
-     * @param questionId questionId
+     * 同意好友申请
+     * @param applyId applyId
      * @returns any OK
      * @throws ApiError
      */
-    public static favourQuestionUsingGet(
-questionId: number,
+    public static agreeApplyUsingPost(
+applyId: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/question/favour/favour',
+            method: 'POST',
+            url: '/api/user/apply/agree',
             query: {
-                'questionId': questionId,
+                'applyId': applyId,
             },
             errors: {
                 401: `Unauthorized`,
@@ -34,18 +34,18 @@ questionId: number,
     }
 
     /**
-     * list
-     * @param queryVo queryVO
+     * 申请加为好友
+     * @param request request
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost5(
-queryVo: PageVO,
+    public static applyFriendUsingPost(
+request: UserApplyRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/favour/list',
-            body: queryVo,
+            url: '/api/user/apply/apply',
+            body: request,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

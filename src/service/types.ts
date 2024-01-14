@@ -1,6 +1,8 @@
 /**
  * 聊天会话项
  */
+import { OnlineEnum } from "@/enume";
+
 export type SessionItem = {
   /**
    * 最后活跃时间
@@ -198,3 +200,35 @@ export enum RequestFriendStatus {
    */
   AGREE,
 }
+
+/**
+ * 用户
+ */
+export type UserItem = {
+  // 用户id
+  userId: number;
+  // 在线状态
+  activeStatus: OnlineEnum;
+  // 最后一次上下线时间
+  lastOptTime: number;
+  // 用户名称
+  userName: string;
+  // 用户头像
+  userAvatar: string;
+};
+
+/**
+ * 群组信息
+ */
+export type GroupDetailVO = {
+  // 群头像
+  avatar: string;
+  // 群名称
+  groupName: string;
+  // 在线人数
+  onlineCount: number;
+  // 房间id
+  roomId: number;
+  // 当前用户角色：0:群主 1：管理员 2：普通成员 3：被踢出群聊
+  role: number;
+};

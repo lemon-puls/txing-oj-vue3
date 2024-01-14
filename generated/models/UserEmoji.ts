@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PostUpdateRequest = {
-    content?: string;
-    coverImg?: string;
+export type UserEmoji = {
+    createTime?: string;
+    emojiUrl?: string;
     id?: number;
-    intro?: string;
-    tags?: Array<string>;
-    title?: string;
+    isDelete?: number;
+    updateTime?: string;
+    userId?: number;
 };

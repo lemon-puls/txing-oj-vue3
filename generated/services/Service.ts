@@ -2,203 +2,207 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PageVO } from '../models/PageVO';
-import type { Question } from '../models/Question';
-import type { QuestionAddRequest } from '../models/QuestionAddRequest';
-import type { QuestionUpdateRequest } from '../models/QuestionUpdateRequest';
-import type { QuestionVO } from '../models/QuestionVO';
+import type { ChatMessageRequest } from '../models/ChatMessageRequest';
+import type { CursorPageBaseRequest } from '../models/CursorPageBaseRequest';
+import type { GroupAddRequest } from '../models/GroupAddRequest';
+import type { GroupMemberRequest } from '../models/GroupMemberRequest';
+import type { MessagePageRequest } from '../models/MessagePageRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class QuestionControllerService {
+export class Service {
 
     /**
-     * addQuestion
-     * @param questionAddRequest questionAddRequest
+     * 获取会话详情（by FriendId）
+     * @param friendId friendId
      * @returns any OK
      * @throws ApiError
      */
-    public static addQuestionUsingPost(
-questionAddRequest: QuestionAddRequest,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/add',
-            body: questionAddRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * deleteQuestionByIds
-     * @param ids ids
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static deleteQuestionByIdsUsingPost(
-ids: Array<number>,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/delete',
-            body: ids,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * info
-     * @param id id
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static infoUsingGet1(
-id: number,
+    public static getDetailByFriendIdUsingGet(
+friendId: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/question/info/{id}',
-            path: {
-                'id': id,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * list
-     * @param queryVo queryVO
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static listUsingPost4(
-queryVo: PageVO,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/list',
-            body: queryVo,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * listForManager
-     * @param queryVo queryVO
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static listForManagerUsingPost(
-queryVo: PageVO,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/manager/list',
-            body: queryVo,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * save
-     * @param question question
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static saveUsingPost2(
-question: Question,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/temp1',
-            body: question,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * save1
-     * @param questionVo questionVO
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static save1UsingPost(
-questionVo: QuestionVO,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/temp2',
-            body: questionVo,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * updateQuestion
-     * @param questionUpdateRequest questionUpdateRequest
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static updateQuestionUsingPost(
-questionUpdateRequest: QuestionUpdateRequest,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/question/update',
-            body: questionUpdateRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-
-    /**
-     * getQuestionVoById
-     * @param id id
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static getQuestionVoByIdUsingGet(
-id: number,
-): CancelablePromise<Record<string, any>> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/question/vo/get/id',
+            url: '/api/chat/contact/detail/friend/get',
             query: {
-                'id': id,
+                'friendId': friendId,
             },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 获取会话详情
+     * @param roomId roomId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getDetailByRoomIdUsingGet(
+roomId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/chat/contact/detail/get',
+            query: {
+                'roomId': roomId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 查询（游标翻页）
+     * @param cursorPageBaseRequest cursorPageBaseRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static listUsingPost(
+cursorPageBaseRequest: CursorPageBaseRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/contact/list',
+            body: cursorPageBaseRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 消息阅读上报
+     * @param roomId 房间id
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static msgReadReportUsingPost(
+roomId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/contact/msg/read',
+            query: {
+                'roomId': roomId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 查询（游标翻页）
+     * @param pageRequest pageRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static listUsingPost1(
+pageRequest: MessagePageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/message/list',
+            body: pageRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 发送消息
+     * @param request request
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static sendMsgUsingPost(
+request: ChatMessageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/message/msg',
+            body: request,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 创建群聊
+     * @param groupAddRequest groupAddRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static addGroupUsingPost(
+groupAddRequest: GroupAddRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/room/group/add',
+            body: groupAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 群组详情
+     * @param roomId roomId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static groupDetailUsingGet(
+roomId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/chat/room/group/detail/get',
+            query: {
+                'roomId': roomId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 查询群组成员（游标）
+     * @param groupMemberRequest groupMemberRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getMembersByCursorUsingPost(
+groupMemberRequest: GroupMemberRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/room/group/member/page',
+            body: groupMemberRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

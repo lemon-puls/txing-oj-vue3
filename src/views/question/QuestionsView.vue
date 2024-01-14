@@ -138,7 +138,7 @@ const searchParams = ref<PageVO>({
 });
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listUsingPost2(
+  const res = await QuestionControllerService.listUsingPost4(
     searchParams.value
   );
   if (res.code === 0) {
