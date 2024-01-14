@@ -3892,7 +3892,7 @@ dagre-d3-es@7.0.10:
     d3 "^7.8.2"
     lodash-es "^4.17.21"
 
-dayjs@^1.10.3, dayjs@^1.11.3, dayjs@^1.11.7:
+dayjs@^1.10.3, dayjs@^1.11.10, dayjs@^1.11.3, dayjs@^1.11.7:
   version "1.11.10"
   resolved "https://registry.npmmirror.com/dayjs/-/dayjs-1.11.10.tgz"
   integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==

@@ -2,6 +2,7 @@
  * 聊天会话项
  */
 import { OnlineEnum } from "@/enume";
+import { UserVO } from "../../generated";
 
 export type SessionItem = {
   /**
@@ -231,4 +232,8 @@ export type GroupDetailVO = {
   roomId: number;
   // 当前用户角色：0:群主 1：管理员 2：普通成员 3：被踢出群聊
   role: number;
+};
+
+export type UserCacheVO = UserVO & {
+  lastModifyTime: number;
 };

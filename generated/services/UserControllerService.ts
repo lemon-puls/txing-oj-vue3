@@ -10,6 +10,7 @@ import type { UserQueryRequest } from '../models/UserQueryRequest';
 import type { UserRegisterRequest } from '../models/UserRegisterRequest';
 import type { UserUpdateMyRequest } from '../models/UserUpdateMyRequest';
 import type { UserUpdateRequest } from '../models/UserUpdateRequest';
+import type { UserVOBatchRequest } from '../models/UserVOBatchRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -295,6 +296,27 @@ userUpdateMyRequest: UserUpdateMyRequest,
             method: 'POST',
             url: '/api/user/update/my',
             body: userUpdateMyRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getUserVoBatch
+     * @param request request
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getUserVoBatchUsingPost(
+request: UserVOBatchRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/user/vo/batch/get',
+            body: request,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

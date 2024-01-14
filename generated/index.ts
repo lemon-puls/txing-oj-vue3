@@ -13,6 +13,7 @@ export type { DeleteRequest } from './models/DeleteRequest';
 export type { FilterVO } from './models/FilterVO';
 export type { GroupAddRequest } from './models/GroupAddRequest';
 export type { GroupMemberRequest } from './models/GroupMemberRequest';
+export type { ItemRequest } from './models/ItemRequest';
 export type { JudgeCase } from './models/JudgeCase';
 export type { JudgeConfig } from './models/JudgeConfig';
 export type { MessagePageRequest } from './models/MessagePageRequest';
@@ -45,6 +46,7 @@ export type { UserRegisterRequest } from './models/UserRegisterRequest';
 export type { UserUpdateMyRequest } from './models/UserUpdateMyRequest';
 export type { UserUpdateRequest } from './models/UserUpdateRequest';
 export type { UserVO } from './models/UserVO';
+export type { UserVOBatchRequest } from './models/UserVOBatchRequest';
 
 export { Service } from './services/Service';
 export { FileControllerService } from './services/FileControllerService';
