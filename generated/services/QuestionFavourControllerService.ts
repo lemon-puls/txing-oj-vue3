@@ -39,7 +39,7 @@ questionId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost5(
+    public static listUsingPost4(
 queryVo: PageVO,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

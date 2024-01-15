@@ -110,7 +110,7 @@ roomId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost1(
+    public static getMsgListByCursorUsingPost(
 pageRequest: MessagePageRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

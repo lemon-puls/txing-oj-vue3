@@ -83,7 +83,7 @@ questionSubmitDoRequest: QuestionSubmitDoRequest,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost6(
+    public static listUsingPost5(
 queryVo: PageVO,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
