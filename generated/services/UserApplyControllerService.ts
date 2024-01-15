@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CursorPageBaseRequest } from '../models/CursorPageBaseRequest';
 import type { UserApplyRequest } from '../models/UserApplyRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -46,6 +47,27 @@ request: UserApplyRequest,
             method: 'POST',
             url: '/api/user/apply/apply',
             body: request,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 获取好友申请列表
+     * @param cursorPageBaseRequest cursorPageBaseRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getFriendApplyPageByCursorUsingPost(
+cursorPageBaseRequest: CursorPageBaseRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/user/apply/cursor/list',
+            body: cursorPageBaseRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

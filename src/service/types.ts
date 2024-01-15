@@ -237,3 +237,33 @@ export type GroupDetailVO = {
 export type UserCacheVO = UserVO & {
   lastModifyTime: number;
 };
+
+// 联系人列表项
+export type ContactItem = {
+  userId: number;
+  activeStatus: OnlineEnum;
+  lastOptTime: number;
+};
+// 加好友申请列表项
+export type FriendApplyItem = {
+  /**
+   * id
+   */
+  id: number;
+  /**
+   * 申请人id
+   */
+  userId: number;
+  /**
+   * 申请类型 0：加好友
+   */
+  type: number;
+  /**
+   * 申请内容
+   */
+  msg: string;
+  /**
+   * 申请状态：0：待通过 1：已通过
+   */
+  status: number;
+};

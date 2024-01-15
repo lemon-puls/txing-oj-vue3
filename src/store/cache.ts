@@ -42,4 +42,6 @@ export const useCacheStore = defineStore("cache", () => {
       cachedUserList[item.userId] = curUserItem;
     });
   };
+
+  return { refreshCachedUserVOBatch };
 });

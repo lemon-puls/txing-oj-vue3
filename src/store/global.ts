@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { RoomTypeEnum } from "@/enume";
+import { ContactItem, FriendApplyItem } from "@/service/types";
 
 export const useGlobalStore = defineStore("global", () => {
   /**
@@ -10,6 +11,7 @@ export const useGlobalStore = defineStore("global", () => {
     roomId: 1,
     type: RoomTypeEnum.GROUP,
   });
+  const currentSelectedContact = ref<ContactItem | FriendApplyItem>();
 
-  return { currentSession };
+  return { currentSession, currentSelectedContact };
 });

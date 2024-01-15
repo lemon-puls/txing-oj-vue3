@@ -19,3 +19,8 @@ export enum RoomTypeEnum {
    */
   GROUP,
 }
+
+export enum FriendApplyStatusEnum {
+  WAITTING,
+  AGREE,
+}
