@@ -4,16 +4,25 @@ import {
   Message,
   MessageShow,
   MessageTypeEnum,
+  RoomTypeEnum,
   SessionItem,
 } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
 import { Service } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
+import { computedTimeNode } from "@/utils/computeTime";
+import { useCacheStore } from "@/store/cache";
+import { useGroupStore } from "@/store/group";
+import { useContactStore } from "@/store/contact";
 
 export const pageSize = 20;
+export let isFirstInit = true;
 
 export const useChatStore = defineStore("chat", () => {
   const globalStore = useGlobalStore();
+  const cacheStore = useCacheStore();
+  const groupStore = useGroupStore();
+  const contactStore = useContactStore();
 
   const showModal = ref(false);
   // 聊天导航选择 0: 聊天 1： 联系人
@@ -105,7 +114,10 @@ export const useChatStore = defineStore("chat", () => {
       );
     },
   });
-
+  // 将当前会话消息Map装换为数组
+  const chatMessageList = computed(() => [
+    ...(currentMessageMap.value?.values() || []),
+  ]);
   // 获取消息列表
   const getMsgList = async (size = pageSize) => {
     currentMessageOptions.value &&
@@ -115,13 +127,81 @@ export const useChatStore = defineStore("chat", () => {
       cursor: currentMessageOptions.value?.cursor,
       roomId: currentRoomId.value,
     }).finally(() => {
-      currentMessageOptions.value && (currentMessageOptions.value.isLoading = false);
+      currentMessageOptions.value &&
+        (currentMessageOptions.value.isLoading = false);
     });
     if (res.code !== 0) {
       message.error("消息列表加载失败 请尝试刷新！");
     }
-    const computedList = computedTimeBlock(res.data.list);
+    const computedList = computedTimeNode(res.data.list);
+    // 收集需要请求的用户id
+    const userIdSet: Set<number> = new Set();
+    computedList.forEach((message) => {
+      userIdSet.add(message.fromUser.userId);
+    });
+    cacheStore.refreshCachedUserVOBatch([...userIdSet]);
+    const newList = [...computedList, ...chatMessageList.value];
+    currentMessageMap.value?.clear();
+    newList.forEach((msg) => {
+      currentMessageMap.value?.set(msg.message.id, msg);
+    });
+    if (currentMessageOptions.value) {
+      currentMessageOptions.value.cursor = res.data.cursor;
+      currentMessageOptions.value.isLast = res.data.isLast;
+      currentMessageOptions.value.isLoading = false;
+    }
+  };
 
+  // 获取会话列表
+  const getSessionList = async (isFresh = false) => {
+    if (!isFresh && (sessionOptions.isLast || sessionOptions.isLoading)) {
+      return;
+    }
+    sessionOptions.isLoading = true;
+    const res = await Service.getSessionPageByCursorUsingPost({
+      pageSize: sessionList.length > pageSize ? sessionList.length : pageSize,
+      cursor:
+        isFresh || !sessionOptions.cursor ? undefined : sessionOptions.cursor,
+    }).catch(() => {
+      sessionOptions.isLoading = false;
+    });
+    if (!res || res.code !== 0) {
+      message.error("会话列表加载失败，请尝试刷新！");
+      return;
+    }
+    isFresh
+      ? sessionList.splice(0, sessionList.length, ...res.data.list)
+      : sessionList.push(...res.data.list);
+    // 更新游标参数
+    sessionOptions.isLoading = false;
+    sessionOptions.cursor = res.data.cursor;
+    sessionOptions.isLast = res.data.isLast;
+
+    sortAndUniqueSessionList();
+
+    sessionList[0].unreadCount = 0;
+    if (isFirstInit) {
+      isFirstInit = true;
+      globalStore.currentSession.roomId = res.data.list[0].roomId;
+      globalStore.currentSession.type = res.data.list[0].type;
+      // 加载会话列表第一个会话的消息列表
+      getMsgList();
+      // 请求群成员列表
+      currentRoomType.value === RoomTypeEnum.Group &&
+        groupStore.getGroupList(true);
+      // TODO 初始化所有用户基本信息 此处不需要
+      // 获取联系人列表
+      contactStore.getContactList(true);
+    }
+  };
+
+  const sortAndUniqueSessionList = () => {
+    const temp: Record<string, SessionItem> = {};
+    sessionList.forEach((item) => {
+      temp[item.roomId] = item;
+    });
+    sessionList.splice(0, sessionList.length, ...Object.values(temp));
+    sessionList.sort((pre, cur) => cur.activeTime - pre.activeTime);
   };
 
   return { showModal, navFlag };

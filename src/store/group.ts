@@ -81,4 +81,6 @@ export const useGroupStore = defineStore("group", () => {
     }
     userList.value = tempNew;
   };
+
+  return { getGroupList };
 });

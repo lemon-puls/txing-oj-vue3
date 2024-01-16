@@ -16,7 +16,7 @@ export class UserFriendControllerService {
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost6(
+    public static listUsingPost5(
 cursorPageBaseRequest: CursorPageBaseRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

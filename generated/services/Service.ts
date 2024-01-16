@@ -66,7 +66,7 @@ roomId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost(
+    public static getSessionPageByCursorUsingPost(
 cursorPageBaseRequest: CursorPageBaseRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

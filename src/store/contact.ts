@@ -101,4 +101,6 @@ export const useContactStore = defineStore("contact", () => {
     }
     // TODO 待完成
   };
+
+  return { getContactList };
 });

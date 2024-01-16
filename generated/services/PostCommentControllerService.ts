@@ -64,7 +64,7 @@ postId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost1(
+    public static listUsingPost(
 queryVo: PageVO,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

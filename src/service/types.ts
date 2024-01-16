@@ -36,20 +36,6 @@ export type SessionItem = {
 };
 
 /**
- * 房间类型
- */
-export enum RoomTypeEnum {
-  /**
-   * 私聊
-   */
-  Single,
-  /**
-   * 群聊
-   */
-  Group,
-}
-
-/**
  * 消息中的用户信息
  */
 export type MessageUser = {
