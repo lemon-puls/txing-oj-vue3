@@ -13,5 +13,13 @@ export const useGlobalStore = defineStore("global", () => {
   });
   const currentSelectedContact = ref<ContactItem | FriendApplyItem>();
 
-  return { currentSession, currentSelectedContact };
+  const unReadMark = reactive<{
+    newFriendUnreadCount: number;
+    newMessageUnreadCount: number;
+  }>({
+    newFriendUnreadCount: 0,
+    newMessageUnreadCount: 0,
+  });
+
+  return { currentSession, currentSelectedContact, unReadMark };
 });

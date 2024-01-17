@@ -43,5 +43,5 @@ export const useCacheStore = defineStore("cache", () => {
     });
   };
 
-  return { refreshCachedUserVOBatch };
+  return { refreshCachedUserVOBatch, cachedUserList };
 });

@@ -4,7 +4,6 @@ import {
   Message,
   MessageShow,
   MessageTypeEnum,
-  RoomTypeEnum,
   SessionItem,
 } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
@@ -14,6 +13,8 @@ import { computedTimeNode } from "@/utils/computeTime";
 import { useCacheStore } from "@/store/cache";
 import { useGroupStore } from "@/store/group";
 import { useContactStore } from "@/store/contact";
+import { cloneDeep } from "lodash";
+import { RoomTypeEnum } from "@/enume";
 
 export const pageSize = 20;
 export let isFirstInit = true;
@@ -202,6 +203,82 @@ export const useChatStore = defineStore("chat", () => {
     });
     sessionList.splice(0, sessionList.length, ...Object.values(temp));
     sessionList.sort((pre, cur) => cur.activeTime - pre.activeTime);
+  };
+
+  // 更新会话
+  const updateSession = (
+    roomId: number,
+    newSessionItem: Partial<SessionItem>
+  ) => {
+    const oldSession = sessionList.find((item) => item.roomId === roomId);
+    oldSession && newSessionItem && Object.assign(oldSession, newSessionItem);
+    sortAndUniqueSessionList();
+  };
+  // 更新会话活跃时间
+  const updateSessionLastActiveTime = (
+    roomId: number,
+    newSessionItem?: SessionItem
+  ) => {
+    const oldSession = sessionList.find((item) => item.roomId === roomId);
+    if (oldSession) {
+      Object.assign(oldSession, { activeTime: Date.now() });
+    } else if (newSessionItem) {
+      const temp = cloneDeep(newSessionItem);
+      temp.activeTime = Date.now();
+      sessionList.unshift(temp);
+    }
+    sortAndUniqueSessionList();
+  };
+
+  // 发送消息
+  const pushMsg = async (msg: MessageShow) => {
+    const currentMsgMap = messageMap.get(msg.message.roomId);
+    currentMsgMap?.set(msg.message.id, msg);
+    // 加载相关用户信息至缓存中
+    const userId = msg.fromUser.userId;
+    const cacheUser = cacheStore.cachedUserList[userId];
+    cacheStore.refreshCachedUserVOBatch([userId]);
+    // 刷新会话列表
+    if (
+      globalStore.currentSession &&
+      globalStore.currentSession.roomId !== msg.message.roomId
+    ) {
+      let result = undefined;
+      if (!showModal.value || navFlag.value !== 0) {
+        globalStore.currentSession.roomId = msg.message.roomId;
+        // TODO  为什么是私聊
+        globalStore.currentSession.type = RoomTypeEnum.SINGLE;
+        if (!currentMsgMap) {
+          result = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
+        }
+        showModal.value = true;
+        navFlag.value = 0;
+      }
+      updateSessionLastActiveTime(msg.message.roomId, result);
+    }
+
+    if (currentNewCount.value && currentNewCount.value.isStart) {
+      currentNewCount.value.count++;
+      return;
+    }
+    // 会话未读消息计数
+    if (currentRoomId.value !== msg.message.roomId) {
+      const item = sessionList.find(
+        (item) => item.roomId === msg.message.roomId
+      );
+      if (item) {
+        item.unreadCount += 1;
+      }
+    }
+    // 如果当前不处于聊天界面 则计数
+    if (!showModal.value || navFlag.value !== 0) {
+      globalStore.unReadMark.newMessageUnreadCount++;
+    }
+
+    // 聊天消息列表滚动到底部
+    setTimeout(() => {
+      chatListToBottomAction.value?.();
+    });
   };
 
   return { showModal, navFlag };
