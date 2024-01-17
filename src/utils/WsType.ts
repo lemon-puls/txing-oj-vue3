@@ -2,6 +2,7 @@
  * ws请求消息类型
  */
 import { UserVO } from "../../generated";
+import { UserItem } from "@/service/types";
 
 export enum WsRequestMsgType {
   HeartPack,
@@ -39,6 +40,10 @@ export enum WsResponseMsgType {
    * 用户登录成功
    */
   UserLoginSuccess,
+  /**
+   * 加好友请求
+   */
+  RequestAddFriend,
 }
 
 /**
@@ -49,4 +54,9 @@ export type UserLoginSuccessResponse = Pick<
   "userAvatar" | "userName" | "id"
 > & {
   token: string;
+};
+
+export type WsUserStatusChangeVO = {
+  chatMemberVOS: UserItem[];
+  onlineNum: number;
 };

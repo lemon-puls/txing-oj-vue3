@@ -11,7 +11,16 @@ export const useUserStore = defineStore("user", () => {
     userRole: undefined,
     id: -1,
   });
-  const isSign = computed(() => loginUser.value.id !== -1);
+  const isSign = computed({
+    get: () => {
+      return loginUser.value.id !== -1;
+    },
+    set: (val) => {
+      if (!val) {
+        loginUser.value.id = -1;
+      }
+    },
+  });
 
   const getLoginUser = async () => {
     // 请求后端 获取登录信息

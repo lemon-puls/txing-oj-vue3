@@ -1,7 +1,7 @@
 /**
  * 聊天会话项
  */
-import { OnlineEnum } from "@/enume";
+import { OnlineEnum, RoomTypeEnum } from "@/enume";
 import { UserVO } from "../../generated";
 
 export type SessionItem = {

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import {
   Message,
   MessageShow,
@@ -115,6 +115,25 @@ export const useChatStore = defineStore("chat", () => {
       );
     },
   });
+
+  // 当选中会话变动时 作出调整
+  watch(currentRoomId, (val, oldVal) => {
+    if (oldVal !== undefined && val !== oldVal) {
+      chatListToBottomAction.value?.();
+      if (!currentMessageMap.value || currentMessageMap.value.size === 0) {
+        if (!currentMessageMap.value) {
+          messageMap.set(currentRoomId.value as number, new Map());
+        }
+        getMsgList();
+      }
+
+      if (currentRoomType.value === RoomTypeEnum.GROUP) {
+        groupStore.getGroupMemberList(true);
+        groupStore.getGroupDetail();
+      }
+    }
+  });
+
   // 将当前会话消息Map装换为数组
   const chatMessageList = computed(() => [
     ...(currentMessageMap.value?.values() || []),
@@ -188,8 +207,8 @@ export const useChatStore = defineStore("chat", () => {
       // 加载会话列表第一个会话的消息列表
       getMsgList();
       // 请求群成员列表
-      currentRoomType.value === RoomTypeEnum.Group &&
-        groupStore.getGroupList(true);
+      currentRoomType.value === RoomTypeEnum.GROUP &&
+        groupStore.getGroupMemberList(true);
       // TODO 初始化所有用户基本信息 此处不需要
       // 获取联系人列表
       contactStore.getContactList(true);
@@ -254,7 +273,7 @@ export const useChatStore = defineStore("chat", () => {
         showModal.value = true;
         navFlag.value = 0;
       }
-      updateSessionLastActiveTime(msg.message.roomId, result);
+      updateSessionLastActiveTime(msg.message.roomId, result?.data);
     }
 
     if (currentNewCount.value && currentNewCount.value.isStart) {
@@ -281,5 +300,5 @@ export const useChatStore = defineStore("chat", () => {
     });
   };
 
-  return { showModal, navFlag };
+  return { getSessionList, showModal, navFlag, pushMsg };
 });

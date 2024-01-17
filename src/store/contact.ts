@@ -33,7 +33,7 @@ export const useContactStore = defineStore("contact", () => {
       }
     }
     contactsOptions.isLoading = true;
-    const res = await UserFriendControllerService.listUsingPost7({
+    const res = await UserFriendControllerService.listUsingPost5({
       pageSize,
       cursor:
         isFresh || !contactsOptions.cursor ? undefined : contactsOptions.cursor,

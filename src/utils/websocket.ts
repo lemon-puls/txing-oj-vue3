@@ -3,9 +3,16 @@ import { useUserStore } from "@/store/user";
 import {
   UserLoginSuccessResponse,
   WsRequestMsgContentType,
-  WsRequestMsgType,
   WsResponseMsgType,
+  WsUserStatusChangeVO,
 } from "@/utils/WsType";
+import { dealToken } from "@/service/request";
+import { useGroupStore } from "@/store/group";
+import { OnlineEnum } from "@/enume";
+import { useChatStore } from "@/store/chat";
+import { MessageShow } from "@/service/types";
+import { useGlobalStore } from "@/store/global";
+import { useRouter } from "vue-router";
 
 class Ws {
   // 是否已建立ws连接
@@ -94,12 +101,65 @@ class Ws {
   };
 
   onWsMessage = (value: string) => {
-    const params: { type: WsResponseMsgType; data: unknown } = JSON.parse(value);
+    const groupStore = useGroupStore();
+    const chatStore = useChatStore();
+    const userStore = useUserStore();
+    const globalStore = useGlobalStore();
+    const router = useRouter();
+
+    const params: { type: WsResponseMsgType; data: unknown } =
+      JSON.parse(value);
     switch (params.type) {
       case WsResponseMsgType.UserLoginSuccess: {
         const { token, ...rest } = params.data as UserLoginSuccessResponse;
         localStorage.setItem("TOKEN", token);
-
+        dealToken.clear();
+        dealToken.get();
+        // @ts-ignore
+        groupStore.updateUserStatusBatch([
+          {
+            userId: rest.id,
+            activeStatus: OnlineEnum.ONLINE,
+            lastOptTime: Date.now(),
+            userName: rest.userName,
+            userAvatar: rest.userAvatar,
+          },
+        ]);
+        chatStore.getSessionList(true);
+        break;
+      }
+      case WsResponseMsgType.Message: {
+        chatStore.pushMsg(params.data as MessageShow);
+        break;
+      }
+      case WsResponseMsgType.UserOlineOfflineNotify: {
+        const data = params.data as WsUserStatusChangeVO;
+        groupStore.groupInfo.onlineCount = data.onlineNum;
+        groupStore.updateUserStatusBatch(data.chatMemberVOS);
+        break;
+      }
+      case WsResponseMsgType.UserTokenInvalid: {
+        userStore.isSign = false;
+        userStore.loginUser.userRole = undefined;
+        localStorage.removeItem("TOKEN");
+        break;
+      }
+      case WsResponseMsgType.RequestAddFriend: {
+        const data = params.data as { userId: number; unReadCount: number };
+        globalStore.unReadMark.newFriendUnreadCount += data.unReadCount;
+        notify({
+          name: "新好友",
+          text: "您有一个新的好友请求，快来看看~",
+          onClick: () => {
+            chatStore.showModal = true;
+            chatStore.navFlag = 1;
+          },
+        });
+        break;
+      }
+      default: {
+        console.log("接收到非法类型的消息", params);
+        break;
       }
     }
   };

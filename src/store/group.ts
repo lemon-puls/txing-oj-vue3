@@ -34,7 +34,7 @@ export const useGroupStore = defineStore("group", () => {
   });
 
   // 获取群成员
-  const getGroupList = async (refresh = false) => {
+  const getGroupMemberList = async (refresh = false) => {
     const res = await Service.getMembersByCursorUsingPost({
       pageSize,
       cursor: refresh ? undefined : userListPageOptions.cursor,
@@ -82,5 +82,10 @@ export const useGroupStore = defineStore("group", () => {
     userList.value = tempNew;
   };
 
-  return { getGroupList };
+  return {
+    getGroupMemberList,
+    getGroupDetail,
+    updateUserStatusBatch,
+    groupInfo,
+  };
 });
