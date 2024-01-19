@@ -1,4 +1,4 @@
-import dayjs, { ConfigType, OpUnitType } from "dayjs";
+import dayjs, { ConfigType, Dayjs, OpUnitType } from "dayjs";
 import { MessageShow } from "@/service/types";
 
 const intervalTime = 5 * 60 * 1000;
@@ -60,4 +60,22 @@ const timeToStr = (time: number) => {
     : isLastWeek
     ? sendTime.format("YYYY-MM-DD HH:mm")
     : dayjs(sendTime).format("dddd HH:mm");
+};
+
+/**
+ * 消息时间戳格式化
+ * @param timestamp 时间戳
+ * @returns 格式化后的时间字符串
+ */
+export const formatTimestamp = (timestamp: number): string => {
+  const now: Dayjs = dayjs();
+  const date: Dayjs = dayjs(timestamp);
+
+  if (now.isSame(date, "day")) {
+    return date.format("HH:mm");
+  } else if (now.diff(date, "year") >= 1) {
+    return date.format("YYYY年MM月DD日");
+  } else {
+    return date.format("MM月DD日");
+  }
 };

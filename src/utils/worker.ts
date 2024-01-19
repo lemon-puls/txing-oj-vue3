@@ -22,7 +22,8 @@ const initWsConnection = () => {
   connection?.removeEventListener("error", onConnectError);
   // 建立连接
   connection = new WebSocket(
-    "wss://api.mallchat.cn/websocket" + (token ? "?token" + token : "")
+    // "ws://localhost:8090" + (token ? "?token=" + token : "")
+    "ws://localhost:8090?token=123456&userId=1726766580186198017"
   );
   // 消息监听器
   connection.addEventListener("message", onConnectMsg);
@@ -42,9 +43,9 @@ const onConnectOpen = () => {
 };
 const setHeartPackSendTimer = () => {
   // 10s内发送一次
-  heartTimer = window.setInterval(() => {
-    wsConnectionSend({ type: 2 });
-  }, 9900);
+  // heartTimer = window.setInterval(() => {
+  //   wsConnectionSend({ type: 2 });
+  // }, 9900);
 };
 
 // ws连接 关闭监听器
@@ -73,11 +74,11 @@ const onCloseHandler = () => {
     return;
   }
   // 断线重连
-  reconnectTimer = window.setTimeout(() => {
-    initWsConnection();
-    reconnectCount++;
-    reconnectLock = false;
-  }, 2000);
+  // reconnectTimer = window.setTimeout(() => {
+  //   initWsConnection();
+  //   reconnectCount++;
+  //   reconnectLock = false;
+  // }, 2000);
 };
 /**
  * ws连接 error监听器

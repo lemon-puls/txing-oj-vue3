@@ -89,6 +89,7 @@ export const useContactStore = defineStore("contact", () => {
     // 刷新联系人列表
     getContactList(true);
     if (globalStore.currentSelectedContact) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       globalStore.currentSelectedContact.status = FriendApplyStatusEnum.AGREE;
     }

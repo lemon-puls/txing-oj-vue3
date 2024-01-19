@@ -10,7 +10,7 @@ import { cloneDeep } from "lodash";
 
 export const pageSize = 20;
 // 标识是否第一次请求
-let isFirstInit = false;
+// let isFirstInit = false;
 
 export const useGroupStore = defineStore("group", () => {
   const globalStore = useGlobalStore();

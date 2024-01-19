@@ -11,17 +11,22 @@
     </div>
     <ul id="SessionList" v-infinite-scroll="load">
       <li
-        v-for="(item, index) in sessionList"
+        v-for="(item, index) in chatStore.sessionList"
         :key="index"
-        :class="['session-item', { active: 1 === item.roomId }]"
+        :class="[
+          'session-item',
+          { active: currentSession.roomId === item.roomId },
+        ]"
+        @click="onSelectedSession(item.roomId, item.type)"
       >
         <div class="avatar-name-message">
-          <a-badge :count="10" :max-count="99" class="session-avatar">
+          <a-badge
+            :count="item.unreadCount"
+            :max-count="99"
+            class="session-avatar"
+          >
             <a-avatar>
-              <img
-                alt="avatar"
-                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
-              />
+              <img alt="avatar" :src="item.avatar" />
             </a-avatar>
           </a-badge>
           <div class="name-and-message">
@@ -29,12 +34,13 @@
               <span>{{ item.name }}</span>
             </div>
             <div class="message">
-              {{ item.userName }}: {{ item.lastMessage }}
+              <!--              {{ item.userName }}: -->
+              {{ item.lastMessage }}
             </div>
           </div>
         </div>
 
-        <span class="time">{{ item.lastMsgTime }}</span>
+        <span class="time">{{ formatTimestamp(item.activeTime) }}</span>
       </li>
     </ul>
   </div>
@@ -148,8 +154,20 @@
 </style>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { RoomTypeEnum, SessionItem } from "@/service/types";
+import { computed, onMounted, ref } from "vue";
+import { useChatStore } from "@/store/chat";
+import { formatTimestamp } from "@/utils/computeTime";
+import { useGlobalStore } from "@/store/global";
+
+const chatStore = useChatStore();
+const globalStore = useGlobalStore();
+// onMounted(() => {
+//   chatStore.getSessionList();
+//   console.log("sessionList:", chatStore.sessionList);
+// });
+// 当前选中会话
+const currentSession = computed(() => globalStore.currentSession);
+
 // 会话数据
 const sessionList = ref([
   {
@@ -163,141 +181,14 @@ const sessionList = ref([
     unreadCount: 10,
     userName: "lemon",
   },
-  {
-    lastMsgTime: "2023年10月02日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 2,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "15:44",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 3,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月04日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 4,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月05日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 5,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月06日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 6,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 7,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 8,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 9,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 10,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 11,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 12,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
-  {
-    lastMsgTime: "2023年10月07日",
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    name: "相亲相爱一家人",
-    roomId: 13,
-    lastMessage: "家人们 烧烤不",
-    type: 0,
-    unreadCount: 10,
-    userName: "lemon",
-  },
 ]);
 // 加载会话
 const load = () => {
-  console.log("加载会话数据");
+  chatStore.getSessionList();
+};
+// 选中会话
+const onSelectedSession = (roomId: number, type: number) => {
+  globalStore.currentSession.roomId = roomId;
+  globalStore.currentSession.type = type;
 };
 </script>

@@ -22,6 +22,7 @@ class Ws {
 
   constructor() {
     this.initConnect();
+    console.log("执行构造函数了");
     // 收到消息
     worker.addEventListener("message", this.onWorkerMsg);
     // 后台重试次数达到上限后 tab获取焦点后再尝试连接
@@ -84,13 +85,13 @@ class Ws {
     }, 500);
   };
 
-  #send(msg: WsRequestMsgContentType) {
+  #send = (msg: WsRequestMsgContentType) => {
     worker.postMessage(
       `{"type": "message", "value":${
         typeof msg === "string" ? msg : JSON.stringify(msg)
       }}`
     );
-  }
+  };
 
   send = (params: WsRequestMsgContentType) => {
     if (this.#connectReady) {
@@ -111,11 +112,11 @@ class Ws {
       JSON.parse(value);
     switch (params.type) {
       case WsResponseMsgType.UserLoginSuccess: {
+        console.log("前端收到用户登录成功ws");
         const { token, ...rest } = params.data as UserLoginSuccessResponse;
         localStorage.setItem("TOKEN", token);
         dealToken.clear();
         dealToken.get();
-        // @ts-ignore
         groupStore.updateUserStatusBatch([
           {
             userId: rest.id,

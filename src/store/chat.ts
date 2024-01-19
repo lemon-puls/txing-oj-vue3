@@ -30,6 +30,12 @@ export const useChatStore = defineStore("chat", () => {
   const navFlag = ref(0);
   // 会话列表
   const sessionList = reactive<SessionItem[]>([]);
+  // 当前会话详情
+  const currentSessionItem = computed(() => {
+    return sessionList.find(
+      (item) => item.roomId === globalStore.currentSession.roomId
+    );
+  });
   // 会话游标翻页参数
   const sessionOptions = reactive({
     isLast: false,
@@ -300,5 +306,32 @@ export const useChatStore = defineStore("chat", () => {
     });
   };
 
-  return { getSessionList, showModal, navFlag, pushMsg };
+  const loadMore = async (size?: number) => {
+    if (
+      currentMessageOptions.value?.isLast ||
+      currentMessageOptions.value?.isLoading
+    ) {
+      return;
+    }
+    await getMsgList(size);
+  };
+
+  const clearNewMsgCount = () => {
+    currentNewCount.value && (currentNewCount.value.count = 0);
+  };
+
+  return {
+    getSessionList,
+    showModal,
+    navFlag,
+    pushMsg,
+    sessionList,
+    currentSessionItem,
+    chatMessageList,
+    currentMessageOptions,
+    loadMore,
+    currentNewCount,
+    clearNewMsgCount,
+    chatListToBottomAction,
+  };
 });
