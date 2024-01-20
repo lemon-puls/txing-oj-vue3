@@ -1,4 +1,4 @@
-import { worker } from "@/utils/initWorker";
+// import { worker } from "@/utils/initWorker";
 import { useUserStore } from "@/store/user";
 import {
   UserLoginSuccessResponse,
@@ -21,11 +21,14 @@ class Ws {
   // 任务队列
   #tasks: WsRequestMsgContentType[] = [];
 
+  worker: Worker | null = null;
+
   constructor() {
+    this.worker = new Worker(new URL("./worker.ts", import.meta.url));
     this.initConnect();
     console.log("执行构造函数了");
     // 收到消息
-    worker.addEventListener("message", this.onWorkerMsg);
+    this.worker.addEventListener("message", this.onWorkerMsg);
     // 后台重试次数达到上限后 tab获取焦点后再尝试连接
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden && !this.#connectReady) {
@@ -49,11 +52,13 @@ class Ws {
     // 初始化ws(连接)
     const params = `{"type": "initWS", "value": {"token": "${token}", "userId": "${userId.toString()}"}}`;
     // console.log(params);
-    worker.postMessage(params);
+    this.worker?.postMessage(params);
   };
 
   closeWsConnection = () => {
-    worker.postMessage(`{"type": "close", "value":""}`);
+    console.log("websocket: 关闭ws连接 销毁worker");
+    this.worker?.postMessage(`{"type": "close", "value":""}`);
+    this.worker?.terminate();
   };
 
   onWorkerMsg = (e: MessageEvent<any>) => {
@@ -98,7 +103,7 @@ class Ws {
   };
 
   #send = (msg: WsRequestMsgContentType) => {
-    worker.postMessage(
+    this.worker?.postMessage(
       `{"type": "message", "value":${
         typeof msg === "string" ? msg : JSON.stringify(msg)
       }}`
@@ -114,11 +119,10 @@ class Ws {
   };
 
   onWsMessage = (value: string) => {
-    const groupStore = useGroupStore();
     const chatStore = useChatStore();
     const userStore = useUserStore();
     const globalStore = useGlobalStore();
-    const router = useRouter();
+    const groupStore = useGroupStore();
 
     const params: { type: WsResponseMsgType; data: unknown } =
       JSON.parse(value);
@@ -155,9 +159,9 @@ class Ws {
         break;
       }
       case WsResponseMsgType.UserOlineOfflineNotify: {
-        const data = params.data as WsUserStatusChangeVO;
-        groupStore.groupInfo.onlineCount = data.onlineNum;
-        groupStore.updateUserStatusBatch(data.chatMemberVOS);
+        // const data = params.data as WsUserStatusChangeVO;
+        // groupStore.groupInfo.onlineCount = data.onlineNum;
+        // groupStore.updateUserStatusBatch(data.chatMemberVOS);
         break;
       }
       case WsResponseMsgType.UserTokenInvalid: {

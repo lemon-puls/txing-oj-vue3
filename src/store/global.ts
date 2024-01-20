@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { RoomTypeEnum } from "@/enume";
 import { ContactItem, FriendApplyItem } from "@/service/types";
 import Ws from "@/utils/websocket";
+import { Service } from "../../generated";
+import { useChatStore } from "@/store/chat";
 
 export const useGlobalStore = defineStore("global", () => {
   // Ws对象（管理websocket连接）

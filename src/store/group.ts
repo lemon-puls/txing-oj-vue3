@@ -87,5 +87,6 @@ export const useGroupStore = defineStore("group", () => {
     getGroupDetail,
     updateUserStatusBatch,
     groupInfo,
+    userList,
   };
 });

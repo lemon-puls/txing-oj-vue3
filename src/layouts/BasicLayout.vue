@@ -41,6 +41,9 @@ onMounted(async () => {
   // );
   if (userStore.isSign && globalStore.ws === undefined) {
     console.log("用户刷新页面 重新建立websocket连接");
+    if (globalStore.ws) {
+      globalStore.ws.closeWsConnection();
+    }
     globalStore.ws = new Ws();
   }
 });

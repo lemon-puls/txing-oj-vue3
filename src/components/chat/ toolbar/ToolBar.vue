@@ -16,7 +16,7 @@
       <!--      <router-link exact-active-class="nav-selected" to="/">-->
       <!--      </router-link>-->
       <div @click="chatStore.navFlag = 0">
-        <a-badge :count="2" :max-count="99">
+        <a-badge :count="unReadMark.newMessageUnreadCount" :max-count="99">
           <div class="nav-icon-div">
             <icon-message
               :class="['nav-icon', { selected: chatStore.navFlag === 0 }]"
@@ -100,6 +100,11 @@
 <script setup lang="ts">
 import { IconMessage, IconUserGroup } from "@arco-design/web-vue/es/icon";
 import { useChatStore } from "@/store/chat";
+import { useGlobalStore } from "@/store/global";
+import { computed } from "vue";
 
 const chatStore = useChatStore();
+const globalStore = useGlobalStore();
+
+const unReadMark = computed(() => globalStore.unReadMark);
 </script>

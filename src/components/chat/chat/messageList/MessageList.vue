@@ -79,7 +79,7 @@ import { throttle } from "lodash";
 
 const globalStore = useGlobalStore();
 const chatStore = useChatStore();
-const currentSessionItem = chatStore.currentSessionItem;
+const currentSessionItem = computed(() => chatStore.currentSessionItem);
 const msgList = computed(() => chatStore.chatMessageList);
 const messageOptions = computed(() => chatStore.currentMessageOptions);
 const virtualListRef = ref();

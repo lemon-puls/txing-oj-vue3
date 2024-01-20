@@ -21,7 +21,9 @@
             <div class="message-item-user-info">
               <!--              用户名-->
               <span class="user-name"> {{ fromUser.userName }} </span>
-              <span class="send-time" v-if="isShowTime">11：12</span>
+              <span class="send-time" v-if="isShowTime">{{
+                messageShow.sendTime
+              }}</span>
             </div>
             <div
               :class="[

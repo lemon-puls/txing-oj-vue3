@@ -129,8 +129,9 @@ export const useChatStore = defineStore("chat", () => {
   });
 
   // 当选中会话变动时 作出调整
-  watch(currentRoomId, (val, oldVal) => {
+  watch(currentRoomId, async (val, oldVal) => {
     if (oldVal !== undefined && val !== oldVal) {
+      groupStore.groupInfo.roomId = -1;
       chatListToBottomAction.value?.();
       if (!currentMessageMap.value || currentMessageMap.value.size === 0) {
         if (!currentMessageMap.value) {
@@ -140,8 +141,8 @@ export const useChatStore = defineStore("chat", () => {
       }
 
       if (currentRoomType.value === RoomTypeEnum.GROUP) {
-        groupStore.getGroupMemberList(true);
-        groupStore.getGroupDetail();
+        await groupStore.getGroupMemberList(true);
+        await groupStore.getGroupDetail();
       }
     }
   });
@@ -242,8 +243,12 @@ export const useChatStore = defineStore("chat", () => {
     roomId: number,
     newSessionItem: Partial<SessionItem>
   ) => {
-    const oldSession = sessionList.find((item) => item.roomId === roomId);
+    const oldSession = sessionList.find(
+      (item) => item.roomId.toString() === roomId.toString()
+    );
+    console.log("before:", oldSession, newSessionItem, roomId);
     oldSession && newSessionItem && Object.assign(oldSession, newSessionItem);
+    console.log("after:", oldSession, newSessionItem);
     sortAndUniqueSessionList();
   };
   // 更新会话活跃时间
@@ -278,17 +283,20 @@ export const useChatStore = defineStore("chat", () => {
       globalStore.currentSession &&
       globalStore.currentSession.roomId !== msg.message.roomId
     ) {
+      console.log("刷新会话列表----");
       let result = undefined;
-      if (!showModal.value || navFlag.value !== 0) {
-        globalStore.currentSession.roomId = msg.message.roomId;
-        // TODO  为什么是私聊
-        globalStore.currentSession.type = RoomTypeEnum.SINGLE;
-        if (!currentMsgMap) {
-          result = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
-        }
-        showModal.value = true;
-        navFlag.value = 0;
+      // if (!showModal.value || navFlag.value !== 0) {
+      //   globalStore.currentSession.roomId = msg.message.roomId;
+      //   // TODO  为什么是私聊
+      //   globalStore.currentSession.type = RoomTypeEnum.SINGLE;
+      if (!currentMsgMap) {
+        result = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
       }
+      //   showModal.value = true;
+      //   navFlag.value = 0;
+      // }
+      const res = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
+      updateSession(msg.message.roomId, res.data);
       updateSessionLastActiveTime(msg.message.roomId, result?.data);
     }
 
@@ -306,14 +314,20 @@ export const useChatStore = defineStore("chat", () => {
       }
     }
     // 如果当前不处于聊天界面 则计数
-    if (!showModal.value || navFlag.value !== 0) {
-      globalStore.unReadMark.newMessageUnreadCount++;
+    if (
+      !showModal.value ||
+      navFlag.value !== 0 ||
+      globalStore.currentSession.roomId !== msg.message.roomId
+    ) {
+      console.log("总未读消息数： +1");
+      globalStore.unReadMark.newMessageUnreadCount += 1;
     }
 
     // 聊天消息列表滚动到底部
     setTimeout(() => {
       chatListToBottomAction.value?.();
     });
+    console.log("刷新会话列表结束");
   };
 
   const loadMore = async (size?: number) => {
@@ -340,6 +354,26 @@ export const useChatStore = defineStore("chat", () => {
     pushMsg(newMessage);
   };
 
+  // 标记会话未读消息数为0
+  const markSessionRead = (roomId: number) => {
+    const session = sessionList.find((item) => item.roomId === roomId);
+    const unreadCount = session?.unreadCount || 0;
+    if (session) {
+      session.unreadCount = 0;
+    }
+    return unreadCount;
+  };
+
+  // 切换会话时修改未读消息数
+  watch(currentRoomId, (val) => {
+    Service.msgReadReportUsingPost(val);
+    const unreadCount = markSessionRead(val);
+    const curTotalUnreadCount =
+      globalStore.unReadMark.newMessageUnreadCount - unreadCount;
+    globalStore.unReadMark.newMessageUnreadCount =
+      curTotalUnreadCount > 0 ? curTotalUnreadCount : 0;
+  });
+
   return {
     getSessionList,
     showModal,
@@ -358,5 +392,6 @@ export const useChatStore = defineStore("chat", () => {
     updateSessionLastActiveTime,
     currentMessageMap,
     messageMap,
+    markSessionRead,
   };
 });
