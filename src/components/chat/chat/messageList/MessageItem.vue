@@ -14,10 +14,8 @@
       <transition enter-active-class="animate__animate animate__fadeInTopLeft">
         <div :class="messageCls" v-if="!isRecall">
           <a-avatar>
-            <img
-              alt="avatar"
-              src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
-            />
+            <img alt="avatar" :src="fromUser.userAvatar" />
+            <!--            cacheStore.cachedUserList[fromUser.userId].userAvatar-->
           </a-avatar>
           <div class="message-item-box">
             <div class="message-item-user-info">
@@ -25,9 +23,14 @@
               <span class="user-name"> {{ fromUser.userName }} </span>
               <span class="send-time" v-if="isShowTime">11：12</span>
             </div>
-            <div :class="['message-item-content', { uploading: msg?.loading }]">
+            <div
+              :class="[
+                'message-item-content',
+                { uploading: messageShow?.loading },
+              ]"
+            >
               <!--            消息加载中-->
-              <a-spin v-if="message?.loading" :size="20" />
+              <a-spin v-if="messageShow?.loading" :size="20" />
               <!--            消息内容-->
               <div class="text">
                 <span>{{ message.body.content }}</span>
@@ -149,7 +152,11 @@
 import { MessageShow } from "@/service/types";
 import { TooltipTriggerType } from "element-plus";
 import { computed, ref, withDefaults, defineProps } from "vue";
+import { useUserStore } from "@/store/user";
+import { useCacheStore } from "@/store/cache";
 
+const cacheStore = useCacheStore();
+console.log("cacheUserList:", cacheStore.cachedUserList);
 const props = withDefaults(
   defineProps<{
     // 消息
@@ -172,13 +179,15 @@ const props = withDefaults(
 );
 const isRecall = ref(false);
 const message = computed(() => props.messageShow.message);
-const fromUser = computed(() => props.messageShow.fromUser);
+const fromUser = computed(
+  () => cacheStore.cachedUserList[props.messageShow.fromUser.userId]
+);
 
-const isCurrentUser = ref(true);
+const isCurrentUser = useUserStore().loginUser.id === fromUser.value.id;
 const messageCls = computed(() => ({
   "message-item": true,
-  "is-me": props.messageShow.message.id % 2 === 0 ? true : false,
-  right: props.messageShow.message.id % 2 === 0 ? true : false,
+  "is-me": isCurrentUser,
+  right: isCurrentUser,
   // (isCurrentUser.value && props.bubbleMode === "spread") ||
   // props.bubbleMode === "right",
 }));

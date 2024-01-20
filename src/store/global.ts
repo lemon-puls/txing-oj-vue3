@@ -2,8 +2,11 @@ import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import { RoomTypeEnum } from "@/enume";
 import { ContactItem, FriendApplyItem } from "@/service/types";
+import Ws from "@/utils/websocket";
 
 export const useGlobalStore = defineStore("global", () => {
+  // Ws对象（管理websocket连接）
+  const ws = ref<Ws | undefined>(undefined);
   /**
    * 当前选中会话
    */
@@ -21,5 +24,5 @@ export const useGlobalStore = defineStore("global", () => {
     newMessageUnreadCount: 0,
   });
 
-  return { currentSession, currentSelectedContact, unReadMark };
+  return { currentSession, currentSelectedContact, unReadMark, ws };
 });

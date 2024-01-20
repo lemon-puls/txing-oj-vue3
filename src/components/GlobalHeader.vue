@@ -155,9 +155,11 @@ import {
   IconNotification,
 } from "@arco-design/web-vue/es/icon";
 import { useChatStore } from "@/store/chat";
+import { useGlobalStore } from "@/store/global";
 
 const router = useRouter();
 const loginUser = useUserStore().loginUser;
+const globalStore = useGlobalStore();
 // 默认主页
 const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
@@ -213,6 +215,10 @@ const handleLogout = async () => {
   }
   // 更新本地登录用户数据
   useUserStore().getLoginUser();
+  // 断开ws连接
+  globalStore.ws?.closeWsConnection();
+  globalStore.ws = undefined;
+  console.log("用户已退出登录 断开了ws连接");
   // 重定向到登录页
   router.push({
     path: "/txing/user/login",

@@ -35,11 +35,12 @@ export const useCacheStore = defineStore("cache", () => {
     }
     res.data.forEach((item: any) => {
       const curUserItem = {
-        ...(item?.needRefresh ? item : cachedUserList[item.userId]),
+        ...(item?.needRefresh ? item : cachedUserList[item.id]),
         needRefresh: undefined,
         lastModifyTime: Date.now(),
       };
-      cachedUserList[item.userId] = curUserItem;
+      console.log("筛选：", curUserItem);
+      cachedUserList[item.id] = curUserItem;
     });
   };
 

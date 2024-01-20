@@ -60,12 +60,15 @@ export const useChatStore = defineStore("chat", () => {
     get: () => {
       const currentMsgMap = messageMap.get(currentRoomId.value as number);
       if (currentMsgMap === undefined) {
-        messageMap.set(currentRoomId.value, new Map());
+        messageMap.set(Number(currentRoomId.value), new Map());
       }
-      return messageMap.get(currentRoomId.value as number);
+      return messageMap.get(Number(currentRoomId.value));
     },
     set: (val) => {
-      messageMap.set(currentRoomId.value, val as Map<number, MessageShow>);
+      messageMap.set(
+        Number(currentRoomId.value),
+        val as Map<number, MessageShow>
+      );
     },
   });
   // 获取当前会话游标翻页参数
@@ -73,17 +76,17 @@ export const useChatStore = defineStore("chat", () => {
     get: () => {
       const currentOptions = messageOptions.get(currentRoomId.value as number);
       if (currentOptions === undefined) {
-        messageOptions.set(currentRoomId.value, {
+        messageOptions.set(Number(currentRoomId.value), {
           isLast: false,
           isLoading: false,
           cursor: "",
         });
       }
-      return messageOptions.get(currentRoomId.value as number);
+      return messageOptions.get(Number(currentRoomId.value));
     },
     set: (val) => {
       messageOptions.set(
-        currentRoomId.value,
+        Number(currentRoomId.value),
         val as { isLast: boolean; isLoading: boolean; cursor: string }
       );
     },
@@ -108,15 +111,18 @@ export const useChatStore = defineStore("chat", () => {
   // 获取当前会话新消息数信息
   const currentNewCount = computed({
     get: () => {
-      const current = newMsgCountMap.get(currentRoomId.value as number);
+      const current = newMsgCountMap.get(Number(currentRoomId.value));
       if (current === undefined) {
-        newMsgCountMap.set(currentRoomId.value, { count: 0, isStart: false });
+        newMsgCountMap.set(Number(currentRoomId.value), {
+          count: 0,
+          isStart: false,
+        });
       }
-      return newMsgCountMap.get(currentRoomId.value as number);
+      return newMsgCountMap.get(Number(currentRoomId.value));
     },
     set: (val) => {
       newMsgCountMap.set(
-        currentRoomId.value,
+        Number(currentRoomId.value),
         val as { count: number; isStart: boolean }
       );
     },
@@ -165,6 +171,7 @@ export const useChatStore = defineStore("chat", () => {
     computedList.forEach((message) => {
       userIdSet.add(message.fromUser.userId);
     });
+    // console.log("需要更新的用户id:", userIdSet);
     cacheStore.refreshCachedUserVOBatch([...userIdSet]);
     const newList = [...computedList, ...chatMessageList.value];
     currentMessageMap.value?.clear();
@@ -258,7 +265,10 @@ export const useChatStore = defineStore("chat", () => {
   // 发送消息
   const pushMsg = async (msg: MessageShow) => {
     const currentMsgMap = messageMap.get(msg.message.roomId);
+    console.log("前 roomId:", msg.message.roomId, messageMap.get(1));
+    console.log("前：", currentMsgMap, msg);
     currentMsgMap?.set(msg.message.id, msg);
+    console.log("后：", currentMsgMap);
     // 加载相关用户信息至缓存中
     const userId = msg.fromUser.userId;
     const cacheUser = cacheStore.cachedUserList[userId];
@@ -320,6 +330,16 @@ export const useChatStore = defineStore("chat", () => {
     currentNewCount.value && (currentNewCount.value.count = 0);
   };
 
+  // 删除消息
+  const deleteMsg = (msgId: number) => {
+    currentMessageMap.value?.delete(msgId);
+  };
+  // 更新消息
+  const updateMsg = (msgId: number, newMessage: MessageShow) => {
+    deleteMsg(msgId);
+    pushMsg(newMessage);
+  };
+
   return {
     getSessionList,
     showModal,
@@ -333,5 +353,10 @@ export const useChatStore = defineStore("chat", () => {
     currentNewCount,
     clearNewMsgCount,
     chatListToBottomAction,
+    deleteMsg,
+    updateMsg,
+    updateSessionLastActiveTime,
+    currentMessageMap,
+    messageMap,
   };
 });

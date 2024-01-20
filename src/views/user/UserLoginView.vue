@@ -42,8 +42,11 @@ import { UserControllerService, UserLoginRequest } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
+import Ws from "@/utils/websocket";
+import { useGlobalStore } from "@/store/global";
 
 const router = useRouter();
+const globalStore = useGlobalStore();
 /**
  * 前往注册页
  */
@@ -68,6 +71,11 @@ const handleSubmit = async () => {
     // 等获取登录信息成功后 再跳转到主页
     await useUserStore().getLoginUser();
     // alert("恭喜你！登录成功" + JSON.stringify(res.data));
+    // 保存Token
+    useUserStore().loginUser.token = res.data.token;
+    localStorage.setItem("TOKEN", res.data.token);
+    // 建立websocket
+    globalStore.ws = new Ws();
     router.push({
       path: "/txing",
       replace: true,

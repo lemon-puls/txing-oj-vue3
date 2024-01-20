@@ -14,7 +14,7 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 // import ElementPlus from "element-plus"; //全局引入
 import "element-plus/dist/index.css";
 import "@/style/main.css";
-import "@/utils/websocket";
+// import "@/utils/websocket";
 
 const requireAll = (requireContext: any) =>
   requireContext.keys().map(requireContext);

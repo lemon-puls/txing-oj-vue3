@@ -148,6 +148,7 @@ const onScroll = throttle((eventData) => {
 // 使滚动条回到底部
 const goToBottom = () => {
   if (virtualListRef.value) {
+    console.log("==================================触发回到底部");
     virtualListRef.value.scrollToBottom();
     chatStore.clearNewMsgCount();
   }

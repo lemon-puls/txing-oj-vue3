@@ -20,6 +20,30 @@
 import GlobalHeader from "@/components/GlobalHeader";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import ChatBox from "@/components/chat/ChatBox.vue";
+import { useUserStore } from "@/store/user";
+import { useGlobalStore } from "@/store/global";
+import Ws from "@/utils/websocket";
+
+const userStore = useUserStore();
+const globalStore = useGlobalStore();
+onMounted(async () => {
+  if (!userStore.isSign) {
+    await userStore.getLoginUser();
+  }
+  // 当用户刷新页面后 此时就需要重新建立ws连接
+  // console.log(
+  //   "isSign:",
+  //   userStore.isSign,
+  //   "ws:",
+  //   globalStore.ws,
+  //   "loginUser:",
+  //   userStore.loginUser
+  // );
+  if (userStore.isSign && globalStore.ws === undefined) {
+    console.log("用户刷新页面 重新建立websocket连接");
+    globalStore.ws = new Ws();
+  }
+});
 
 const handleScroll = () => {
   if (window.pageYOffset > 300) {

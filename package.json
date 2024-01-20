@@ -25,6 +25,7 @@
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
     "element-plus": "^2.4.4",
+    "json-bigint": "^1.0.0",
     "juejin-markdown-themes": "^1.32.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@arco-design/web-vue": "^2.52.1",
+    "@types/json-bigint": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",

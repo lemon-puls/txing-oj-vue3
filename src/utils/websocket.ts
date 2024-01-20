@@ -13,6 +13,7 @@ import { useChatStore } from "@/store/chat";
 import { MessageShow } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
 import { useRouter } from "vue-router";
+import JSONBig from "json-bigint";
 
 class Ws {
   // 是否已建立ws连接
@@ -37,11 +38,22 @@ class Ws {
    * 初始化ws连接
    */
   initConnect = () => {
+    const id = useUserStore().loginUser.id;
     const token = localStorage.getItem("TOKEN");
+    const userId = id === -1 ? "" : id;
+    // console.log("userId19:", userId.toString());
+    if (!token || !userId) {
+      console.log("还未登录，不能建立Ws连接");
+      return;
+    }
     // 初始化ws(连接)
-    worker.postMessage(
-      `{"type": "initWS", "value": ${token ? `"${token}"` : null}}`
-    );
+    const params = `{"type": "initWS", "value": {"token": "${token}", "userId": "${userId.toString()}"}}`;
+    // console.log(params);
+    worker.postMessage(params);
+  };
+
+  closeWsConnection = () => {
+    worker.postMessage(`{"type": "close", "value":""}`);
   };
 
   onWorkerMsg = (e: MessageEvent<any>) => {
@@ -130,6 +142,15 @@ class Ws {
         break;
       }
       case WsResponseMsgType.Message: {
+        console.log(
+          "ws: 接收到新消息",
+          chatStore.chatMessageList,
+          chatStore.messageMap,
+          "params:",
+          params,
+          "value:",
+          value
+        );
         chatStore.pushMsg(params.data as MessageShow);
         break;
       }
@@ -166,4 +187,4 @@ class Ws {
   };
 }
 
-export default new Ws();
+export default Ws;

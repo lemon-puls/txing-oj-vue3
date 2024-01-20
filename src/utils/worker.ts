@@ -11,6 +11,8 @@ let reconnectTimer: null | number = null;
 let reconnectLock = false;
 // 用户token
 let token: null | string = null;
+// 用户id
+let userId: null | string = null;
 
 /**
  * 建立ws连接
@@ -21,10 +23,15 @@ const initWsConnection = () => {
   connection?.removeEventListener("close", onConnectClose);
   connection?.removeEventListener("error", onConnectError);
   // 建立连接
-  connection = new WebSocket(
-    // "ws://localhost:8090" + (token ? "?token=" + token : "")
-    "ws://localhost:8090?token=123456&userId=1726766580186198017"
-  );
+  const path =
+    "ws://localhost:8090" +
+    "?token=" +
+    (token ? token : "") +
+    "&userId=" +
+    (userId ? userId : "");
+  console.log("ws路径：", path);
+  connection = new WebSocket(path);
+  // "ws://localhost:8090?token=123456&userId=1726766580186198017"
   // 消息监听器
   connection.addEventListener("message", onConnectMsg);
   connection.addEventListener("open", onConnectOpen);
@@ -111,7 +118,8 @@ self.onmessage = (e: MessageEvent<string>) => {
   switch (type) {
     case "initWS": {
       reconnectCount = 0;
-      token = value;
+      token = value.token;
+      userId = value.userId;
       initWsConnection();
       break;
     }
@@ -120,6 +128,11 @@ self.onmessage = (e: MessageEvent<string>) => {
         return;
       }
       wsConnectionSend(value);
+      break;
+    }
+    case "close": {
+      connection?.close();
+      console.log("关闭ws连接");
       break;
     }
   }

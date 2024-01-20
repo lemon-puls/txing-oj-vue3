@@ -24,3 +24,10 @@ export enum FriendApplyStatusEnum {
   WAITTING,
   AGREE,
 }
+
+export enum MsgTypeEnum {
+  TEXT,
+  RECALL,
+  IMG,
+  SYSTEM,
+}
