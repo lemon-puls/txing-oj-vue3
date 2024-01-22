@@ -21,6 +21,7 @@
           v-for="(item, index) in requestList"
           :key="index"
           :item="item"
+          @xxx="onNodeClick"
         />
       </a-collapse-item>
       <a-collapse-item header="好友列表" key="2">
@@ -28,6 +29,7 @@
           v-for="(item, index) in friendList"
           :key="index"
           :item="item"
+          @myClick="onNodeClick"
         />
       </a-collapse-item>
     </a-collapse>
@@ -121,12 +123,24 @@
 </style>
 
 <script setup lang="ts">
-import FriendRequestItem from "@/components/chat/chat/contact/contactList/friendRequestItem/FriendRequestItem";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import FriendItem from "@/components/chat/chat/contact/contactList/friendItem/FriendItem.vue";
 import { IconDelete } from "@arco-design/web-vue/es/icon";
+import { useContactStore } from "@/store/contact";
+import { ContactItem, FriendApplyItem } from "@/service/types";
+import { useGlobalStore } from "@/store/global";
+import FriendRequestItem from "@/components/chat/chat/contact/contactList/friendRequestItem/FriendRequestItem.vue";
 
-const requestList = ref([
+const contactStore = useContactStore();
+const globalStore = useGlobalStore();
+const requestList = computed(() => contactStore.friendApplyList);
+const friendList = computed(() => contactStore.contactList);
+
+const onNodeClick = (item: FriendApplyItem | ContactItem) => {
+  globalStore.currentSelectedContact = item;
+};
+
+const requestList1 = ref([
   {
     avatar:
       "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
@@ -135,52 +149,8 @@ const requestList = ref([
     time: "13:11",
     content: "哥哥 我们可以加个微信吗",
   },
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "明天会更好明天会更好明天会更好",
-    status: 1,
-    time: "13:11",
-    content: "我想认识你一下 你太帅了吧",
-  },
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "lemon",
-    status: 1,
-    time: "13:11",
-    content: "你好 我叫哆啦A梦！",
-  },
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "lemon",
-    status: 0,
-    time: "13:11",
-    content: "你好 我叫哆啦A梦！",
-  },
 ]);
-const friendList = ref([
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "ITLemonx",
-  },
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "ITLemonx",
-  },
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "ITLemonx",
-  },
-  {
-    avatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",
-    userName: "ITLemonx",
-  },
+const friendList1 = ref([
   {
     avatar:
       "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1726766580186198017/aic5Zy0z-42f3f796a326707a796ec644af28e1a1.jpg",

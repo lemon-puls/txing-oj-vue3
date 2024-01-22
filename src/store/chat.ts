@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch, watchEffect } from "vue";
 import {
   Message,
   MessageShow,
@@ -33,7 +33,8 @@ export const useChatStore = defineStore("chat", () => {
   // 当前会话详情
   const currentSessionItem = computed(() => {
     return sessionList.find(
-      (item) => item.roomId === globalStore.currentSession.roomId
+      (item) =>
+        item.roomId.toString() === globalStore.currentSession.roomId.toString()
     );
   });
   // 会话游标翻页参数
@@ -215,9 +216,9 @@ export const useChatStore = defineStore("chat", () => {
 
     sessionList[0].unreadCount = 0;
     if (isFirstInit) {
-      isFirstInit = true;
-      globalStore.currentSession.roomId = res.data.list[0].roomId;
-      globalStore.currentSession.type = res.data.list[0].type;
+      isFirstInit = false;
+      globalStore.currentSession.roomId = 1;
+      globalStore.currentSession.type = RoomTypeEnum.GROUP;
       // 加载会话列表第一个会话的消息列表
       getMsgList();
       // 请求群成员列表
@@ -226,6 +227,8 @@ export const useChatStore = defineStore("chat", () => {
       // TODO 初始化所有用户基本信息 此处不需要
       // 获取联系人列表
       contactStore.getContactList(true);
+      // 获取群聊详情
+      groupStore.getGroupDetail();
     }
   };
 
@@ -247,6 +250,7 @@ export const useChatStore = defineStore("chat", () => {
       (item) => item.roomId.toString() === roomId.toString()
     );
     console.log("before:", oldSession, newSessionItem, roomId);
+    delete newSessionItem.unreadCount;
     oldSession && newSessionItem && Object.assign(oldSession, newSessionItem);
     console.log("after:", oldSession, newSessionItem);
     sortAndUniqueSessionList();
@@ -278,38 +282,45 @@ export const useChatStore = defineStore("chat", () => {
     const userId = msg.fromUser.userId;
     const cacheUser = cacheStore.cachedUserList[userId];
     cacheStore.refreshCachedUserVOBatch([userId]);
+
     // 刷新会话列表
-    if (
-      globalStore.currentSession &&
-      globalStore.currentSession.roomId !== msg.message.roomId
-    ) {
-      console.log("刷新会话列表----");
-      let result = undefined;
-      // if (!showModal.value || navFlag.value !== 0) {
-      //   globalStore.currentSession.roomId = msg.message.roomId;
-      //   // TODO  为什么是私聊
-      //   globalStore.currentSession.type = RoomTypeEnum.SINGLE;
-      if (!currentMsgMap) {
-        result = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
-      }
-      //   showModal.value = true;
-      //   navFlag.value = 0;
-      // }
-      const res = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
-      updateSession(msg.message.roomId, res.data);
-      updateSessionLastActiveTime(msg.message.roomId, result?.data);
-    }
+    // if (
+    //   globalStore.currentSession &&
+    //   globalStore.currentSession.roomId.toString() !==
+    //     msg.message.roomId.toString()
+    // ) {
+    console.log("刷新会话列表----");
+    // let result = undefined;
+    // if (!showModal.value || navFlag.value !== 0) {
+    //   globalStore.currentSession.roomId = msg.message.roomId;
+    //   // TODO  为什么是私聊
+    //   globalStore.currentSession.type = RoomTypeEnum.SINGLE;
+    // if (!currentMsgMap) {
+    //   result = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
+    // }
+    //   showModal.value = true;
+    //   navFlag.value = 0;
+    // }
+    const res = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
+    updateSession(msg.message.roomId, res.data);
+    updateSessionLastActiveTime(msg.message.roomId, res?.data);
+    // }
 
     if (currentNewCount.value && currentNewCount.value.isStart) {
       currentNewCount.value.count++;
       return;
     }
     // 会话未读消息计数
-    if (currentRoomId.value !== msg.message.roomId) {
+    if (
+      currentRoomId.value.toString() !== msg.message.roomId.toString() ||
+      !showModal.value ||
+      navFlag.value === 1
+    ) {
       const item = sessionList.find(
-        (item) => item.roomId === msg.message.roomId
+        (item) => item.roomId.toString() === msg.message.roomId.toString()
       );
       if (item) {
+        console.log("糟了 +1了");
         item.unreadCount += 1;
       }
     }
@@ -317,7 +328,8 @@ export const useChatStore = defineStore("chat", () => {
     if (
       !showModal.value ||
       navFlag.value !== 0 ||
-      globalStore.currentSession.roomId !== msg.message.roomId
+      globalStore.currentSession.roomId.toString() !==
+        msg.message.roomId.toString()
     ) {
       console.log("总未读消息数： +1");
       globalStore.unReadMark.newMessageUnreadCount += 1;
@@ -365,13 +377,23 @@ export const useChatStore = defineStore("chat", () => {
   };
 
   // 切换会话时修改未读消息数
-  watch(currentRoomId, (val) => {
-    Service.msgReadReportUsingPost(val);
-    const unreadCount = markSessionRead(val);
-    const curTotalUnreadCount =
-      globalStore.unReadMark.newMessageUnreadCount - unreadCount;
-    globalStore.unReadMark.newMessageUnreadCount =
-      curTotalUnreadCount > 0 ? curTotalUnreadCount : 0;
+  // watch(currentRoomId, (val) => {
+  //   Service.msgReadReportUsingPost(val);
+  //   const unreadCount = markSessionRead(val);
+  //   const curTotalUnreadCount =
+  //     globalStore.unReadMark.newMessageUnreadCount - unreadCount;
+  //   globalStore.unReadMark.newMessageUnreadCount =
+  //     curTotalUnreadCount > 0 ? curTotalUnreadCount : 0;
+  // });
+  watchEffect(() => {
+    if (showModal.value && navFlag.value === 0 && currentRoomId) {
+      Service.msgReadReportUsingPost(currentRoomId.value);
+      const unreadCount = markSessionRead(currentRoomId.value);
+      const curTotalUnreadCount =
+        globalStore.unReadMark.newMessageUnreadCount - unreadCount;
+      globalStore.unReadMark.newMessageUnreadCount =
+        curTotalUnreadCount > 0 ? curTotalUnreadCount : 0;
+    }
   });
 
   return {

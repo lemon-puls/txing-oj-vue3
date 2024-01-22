@@ -8,7 +8,7 @@ export type UserVO = {
     acceptedRate?: number;
     activeStatus?: number;
     createTime?: string;
-    id: number;
+    id?: number;
     lastOpsTime?: string;
     /**
      * 是否需要刷新
@@ -19,8 +19,8 @@ export type UserVO = {
     questionCount?: number;
     school?: string;
     submitCount?: number;
-    userAvatar: string;
-    userName: string;
+    userAvatar?: string;
+    userName?: string;
     userProfile?: string;
     userRole?: string;
     workExperience?: number;

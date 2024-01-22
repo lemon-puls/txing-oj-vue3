@@ -5,14 +5,16 @@
 -->
 
 <template>
-  <div id="FriendRequestList">
+  <div id="FriendRequestList" @click="handler">
     <a-avatar class="avatar">
-      <img alt="avatar" :src="item.avatar" />
+      <img alt="avatar" :src="cachedUserList[item.userId].userAvatar" />
     </a-avatar>
     <div class="apply-info">
       <div class="username-ops">
         <div class="username-parent">
-          <span class="username">{{ item.userName }}</span>
+          <span class="username">{{
+            cachedUserList[item.userId].userName
+          }}</span>
         </div>
 
         <a-button
@@ -26,7 +28,7 @@
       </div>
       <div class="content-time">
         <div class="content-parent">
-          <span class="content">{{ item.content }}</span>
+          <span class="content">{{ item.msg }}</span>
         </div>
         <span class="time">{{ item.time }}</span>
       </div>
@@ -107,8 +109,17 @@
 </style>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { computed, defineProps, defineEmits } from "vue";
 import { RequestFriendStatus } from "@/service/types";
+import { useCacheStore } from "@/store/cache";
+
+const cacheStore = useCacheStore();
+const cachedUserList = computed(() => cacheStore.cachedUserList);
 
 const props = defineProps(["item"]);
+
+let $emit = defineEmits(["xxx"]);
+const handler = () => {
+  $emit("xxx", props.item);
+};
 </script>

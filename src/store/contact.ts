@@ -8,12 +8,16 @@ import {
 } from "../../generated";
 import { Message } from "@arco-design/web-vue";
 import { FriendApplyStatusEnum } from "@/enume";
+import { timeToStr } from "@/utils/computeTime";
+import { useCacheStore } from "@/store/cache";
+import message from "@arco-design/web-vue/es/message";
 
 export const pageSize = 20;
 export const useContactStore = defineStore("contact", () => {
   const globalStore = useGlobalStore();
   const contactList = reactive<ContactItem[]>([]);
   const friendApplyList = reactive<FriendApplyItem[]>([]);
+  const cacheStore = useCacheStore();
 
   const contactsOptions = reactive({
     isLast: false,
@@ -69,12 +73,22 @@ export const useContactStore = defineStore("contact", () => {
       Message.error("加好友请求数据加载失败，请尝试刷新！");
       return;
     }
+    // 格式化以及设置时间
+    const needLoadUserIds: number[] = [];
+    res.data.list.forEach((item: any) => {
+      item.time = timeToStr(item.createTime);
+      needLoadUserIds.push(item.userId);
+    });
+    await cacheStore.refreshCachedUserVOBatch(needLoadUserIds);
     isFresh
       ? friendApplyList.splice(0, friendApplyList.length, ...res.data.list)
       : friendApplyList.push(...res.data.list);
     friendApplysOptions.cursor = res.data.cursor;
     friendApplysOptions.isLast = res.data.isLast;
     friendApplysOptions.isLoading = false;
+    if (isFresh && !globalStore.currentSelectedContact) {
+      globalStore.currentSelectedContact = friendApplyList[0];
+    }
   };
 
   // 同意好友申请
@@ -100,8 +114,23 @@ export const useContactStore = defineStore("contact", () => {
     if (!userId) {
       return;
     }
-    // TODO 待完成
+    const res = await UserFriendControllerService.deleteUsingGet2(userId);
+    if (res.code !== 0) {
+      message.error("删除失败，请稍后重试！");
+    }
+    await getContactList(true);
+    if (contactList.length > 0) {
+      globalStore.currentSelectedContact = contactList[0];
+    } else {
+      globalStore.currentSelectedContact = undefined;
+    }
   };
-
-  return { getContactList };
+  return {
+    getContactList,
+    friendApplyList,
+    getFriendApplyList,
+    contactList,
+    onAcceptFriendApply,
+    onDeleteContact,
+  };
 });

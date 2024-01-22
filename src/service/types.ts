@@ -50,7 +50,7 @@ export type MessageUser = {
   /**
    * 头像
    */
-  avatar: string;
+  userAvatar: string;
 };
 
 /**
@@ -193,15 +193,15 @@ export enum RequestFriendStatus {
  */
 export type UserItem = {
   // 用户id
-  userId: number;
+  userId?: number;
   // 在线状态
   activeStatus: OnlineEnum;
   // 最后一次上下线时间
   lastOptTime: number;
   // 用户名称
-  userName: string;
+  userName?: string;
   // 用户头像
-  userAvatar: string;
+  userAvatar?: string;
 };
 
 /**
@@ -252,4 +252,8 @@ export type FriendApplyItem = {
    * 申请状态：0：待通过 1：已通过
    */
   status: number;
+  /**
+   * 时间
+   */
+  time: string;
 };

@@ -29,7 +29,7 @@ export const useGroupStore = defineStore("group", () => {
     avatar: "",
     groupName: "",
     onlineCount: 0,
-    roomId: currentRoomId.value,
+    roomId: -1,
     role: -1,
   });
 

@@ -5,11 +5,13 @@
 -->
 
 <template>
-  <div id="FriendList">
+  <div id="FriendList" @click="handler">
     <a-avatar class="avatar">
-      <img alt="avatar" :src="item.avatar" />
+      <img alt="avatar" :src="cachedUserList[Number(item.userId)].userAvatar" />
     </a-avatar>
-    <span class="username">{{ item.userName }}</span>
+    <span class="username">{{
+      cachedUserList[Number(item.userId)].userName
+    }}</span>
   </div>
   <a-divider></a-divider>
 </template>
@@ -31,6 +33,16 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
+import { useCacheStore } from "@/store/cache";
+import { computed, defineEmits } from "vue";
+
+const cacheStore = useCacheStore();
+const cachedUserList = computed(() => cacheStore.cachedUserList);
 
 const props = defineProps(["item"]);
+
+let $emit = defineEmits(["myClick"]);
+const handler = () => {
+  $emit("myClick", props.item);
+};
 </script>

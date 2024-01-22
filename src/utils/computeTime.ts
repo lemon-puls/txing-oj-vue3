@@ -48,7 +48,7 @@ const checkAddTimeBlock = (cur: MessageShow, pre: MessageShow) => {
 };
 
 // 时间格式化为相对文本，仿微信风格
-const timeToStr = (time: number) => {
+export const timeToStr = (time: number) => {
   const sendTime = dayjs(time);
   // 计算今天和消息的发送时间间隔多少天
   const gapDay = dayjs().endOf("day").diff(sendTime, "day");

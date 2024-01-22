@@ -15,7 +15,7 @@
         :key="index"
         :class="[
           'session-item',
-          { active: currentSession.roomId === item.roomId },
+          { active: currentSession.roomId.toString() === item.roomId },
         ]"
         @click="onSelectedSession(item.roomId, item.type)"
       >

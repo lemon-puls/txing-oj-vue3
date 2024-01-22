@@ -5,7 +5,7 @@
 -->
 
 <template>
-  <div id="SessionMemberList" v-if="!isLoading">
+  <div id="SessionMemberList">
     <div class="session-search-parent">
       <a-input-search class="session-search" placeholder="快速查找" />
     </div>
@@ -106,8 +106,6 @@ import { useCacheStore } from "@/store/cache";
 const groupStore = useGroupStore();
 const cacheStore = useCacheStore();
 const cachedUserList = computed(() => cacheStore.cachedUserList);
-
-const isLoading = computed(() => Number(groupStore.groupInfo.roomId) === -1);
 
 // const userList = ref([
 //   {

@@ -7,15 +7,12 @@
 <template>
   <aside id="ToolBar">
     <a-avatar>
-      <img
-        alt="avatar"
-        src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
-      />
+      <img alt="avatar" :src="userStore.loginUser.userAvatar" />
     </a-avatar>
     <div class="navs">
       <!--      <router-link exact-active-class="nav-selected" to="/">-->
       <!--      </router-link>-->
-      <div @click="chatStore.navFlag = 0">
+      <div @click="onClickIcon(0)">
         <a-badge :count="unReadMark.newMessageUnreadCount" :max-count="99">
           <div class="nav-icon-div">
             <icon-message
@@ -25,7 +22,7 @@
           </div>
         </a-badge>
       </div>
-      <div @click="chatStore.navFlag = 1">
+      <div @click="onClickIcon(1)">
         <a-badge :count="10" :max-count="99">
           <div class="nav-icon-div">
             <icon-user-group
@@ -102,9 +99,19 @@ import { IconMessage, IconUserGroup } from "@arco-design/web-vue/es/icon";
 import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
 import { computed } from "vue";
+import { useContactStore } from "@/store/contact";
+import { useUserStore } from "@/store/user";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
+const contactStore = useContactStore();
+const userStore = useUserStore();
 
 const unReadMark = computed(() => globalStore.unReadMark);
+
+const onClickIcon = async (val: number) => {
+  await contactStore.getFriendApplyList(true);
+  await contactStore.getContactList(true);
+  chatStore.navFlag = val;
+};
 </script>

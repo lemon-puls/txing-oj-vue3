@@ -133,6 +133,11 @@ const send = (msgType: MsgTypeEnum, body: any) => {
         return;
       } else if (res.data.message.type === MsgTypeEnum.TEXT) {
         chatStore.pushMsg(res.data);
+        // await Service.msgReadReportUsingPost(res.data.message.roomId).then(
+        //   (res1) => {
+        //     chatStore.pushMsg(res.data);
+        //   }
+        // );
       } else {
         // 更新上传状态下的消息
         chatStore.updateMsg(tempMsgId.value, res.data);

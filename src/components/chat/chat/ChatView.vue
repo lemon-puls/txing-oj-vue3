@@ -56,7 +56,7 @@
             </div>
           </template>
           <template #second>
-            <SessionMemberList />
+            <SessionMemberList v-if="!isLoading" />
           </template>
         </a-split>
       </template>
@@ -83,9 +83,20 @@ import {
   MessageUser,
   TextMsgBody,
 } from "@/service/types";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import MessageList from "@/components/chat/chat/messageList/MessageList.vue";
 import SessionMemberList from "@/components/chat/chat/sessionmemberlist/SessionMemberList.vue";
+import { useGroupStore } from "@/store/group";
+import { useChatStore } from "@/store/chat";
+
+const groupStore = useGroupStore();
+const chatStore = useChatStore();
+const currentSessionItem = computed(() => chatStore.currentSessionItem);
+
+const isLoading = computed(() => Number(groupStore.groupInfo.roomId) === -1);
+// const isShowMessageList = computed(
+//   () => currentSessionItem.value !== undefined
+// );
 
 // 测试数据
 const msg = ref([

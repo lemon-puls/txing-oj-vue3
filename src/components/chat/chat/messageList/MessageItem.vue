@@ -181,11 +181,14 @@ const props = withDefaults(
 );
 const isRecall = ref(false);
 const message = computed(() => props.messageShow.message);
-const fromUser = computed(
-  () => cacheStore.cachedUserList[props.messageShow.fromUser.userId]
-);
+// const fromUser = computed(
+//   () => cacheStore.cachedUserList[props.messageShow.fromUser.userId]
+// );
+// eslint-disable-next-line vue/no-setup-props-destructure
+const fromUser = computed(() => props.messageShow.fromUser);
 
-const isCurrentUser = useUserStore().loginUser.id === fromUser.value.id;
+const isCurrentUser =
+  useUserStore().loginUser.id.toString() === fromUser.value.userId.toString();
 const messageCls = computed(() => ({
   "message-item": true,
   "is-me": isCurrentUser,
