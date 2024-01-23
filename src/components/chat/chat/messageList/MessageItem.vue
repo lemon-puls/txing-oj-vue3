@@ -95,7 +95,7 @@
         background-color: #ffffff;
         min-height: 1em;
         padding: 8px 12px;
-        font-size: 15px;
+        font-size: 1vw;
         line-height: 22px;
         color: var(--font-main);
         word-break: break-word;

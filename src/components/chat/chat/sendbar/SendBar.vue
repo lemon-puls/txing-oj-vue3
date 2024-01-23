@@ -7,7 +7,32 @@
 <template>
   <div ref="sendBarRef" id="SendBar">
     <div class="icons">
-      <icon-face-smile-fill class="icon" :size="30" style="color: #ff9500" />
+      <a-popover trigger="click" position="tl">
+        <icon-face-smile-fill class="icon" :size="30" style="color: #ff9500" />
+        <template #content>
+          <div class="emoji-div">
+            <div class="emoji-content">
+              <ul class="emoji-list">
+                <li
+                  class="emoji-item"
+                  v-for="(emoji, index) of emojisConstant"
+                  :key="index"
+                  @click="insertEmoji(emoji)"
+                >
+                  {{ emoji }}
+                </li>
+              </ul>
+            </div>
+            <div class="emoji-foot">
+              <icon-face-smile-fill
+                class="icon"
+                :size="30"
+                style="color: #ff9500"
+              />
+            </div>
+          </div>
+        </template>
+      </a-popover>
       <icon-folder class="icon" :size="30" style="color: #e9d28a" />
       <icon-voice class="icon" :size="30" style="color: cornflowerblue" />
     </div>
@@ -16,6 +41,7 @@
       class="input"
       :contenteditable="true"
       @input="onInputText"
+      autofocus
     ></div>
     <div class="sendMsg">
       <a-button
@@ -86,6 +112,52 @@
     }
   }
 }
+
+.emoji-div {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+
+  .emoji-foot {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px 0;
+    margin-top: 4px;
+    border-top: 1px solid #7d7979;
+  }
+
+  .emoji-content {
+    display: flex;
+    // 换行
+    flex-wrap: wrap;
+    align-content: flex-start;
+    height: 220px;
+    overflow-y: auto;
+  }
+
+  .emoji-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    word-break: break-word;
+    list-style-type: none;
+  }
+
+  .emoji-item {
+    width: 28px;
+    height: 28px;
+    padding-top: 4px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #979797;
+    }
+  }
+}
 </style>
 
 <script setup lang="ts">
@@ -100,9 +172,13 @@ import { Service } from "../../../../../generated";
 import { useGlobalStore } from "@/store/global";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
+import { emojisConstant } from "@/service/constant/emojisConstant";
+import { ElInput } from "element-plus";
+import { insertInputText } from "@/utils/sendBarUtils";
+import { useFileDialog } from "@vueuse/core";
 
 const sendBarRef = ref<HTMLElement | null>();
-const inputRef = ref<HTMLElement | null>();
+const inputRef = ref<HTMLElement>();
 const inputValue = ref("");
 const isSending = ref(false);
 const globalStore = useGlobalStore();
@@ -163,4 +239,25 @@ const onInputText = () => {
     inputValue.value = text;
   }
 };
+// 插入表情
+const insertEmoji = (emoji: string) => {
+  if (inputRef.value) {
+    inputValue.value = inputRef.value.innerText =
+      inputRef.value.innerText + emoji;
+  }
+
+  // const input = inputRef.value.input;
+  // const editRange = inputRef.value?.range as {
+  //   range: Range;
+  //   selection: Selection;
+  // };
+  // if (!input || !editRange) {
+  //   console.log("到了！", input, editRange);
+  //   return;
+  // }
+  // insertInputText({ content: emoji, ...editRange });
+  // inputValue.value = input.innerText;
+};
+
+// const openFileSelector(fileType: string,)
 </script>

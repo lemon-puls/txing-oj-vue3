@@ -20,16 +20,33 @@
     aSssadasD
     <SvgIcon icon="lock" />
     <div ref="charts" style="width: 800px; height: 500px"></div>
+
+    <!--    <a-upload action="/" :upload="uploadFile" />-->
+    <input type="file" name="file" @change="handleFileSelect" />
+    <button value="上传" @click="uploadFile" />
   </div>
 </template>
 
 <script setup lang="ts">
 import VirtualList from "@/components/VirtualList";
-import { onMounted, provide, ref } from "vue";
+import { onMounted, provide, reactive, ref } from "vue";
 import { throttle } from "lodash";
 import MsgItem from "@/views/test/MsgItem.vue";
 import SvgIcon from "@/icons/SvgIcon";
 import * as echarts from "echarts";
+import { handleFileInUploading } from "@/utils/CosUtils";
+
+const selectedFile = ref<File | undefined>(undefined);
+const uploadFile = () => {
+  alert("选择了文件");
+  console.log(selectedFile.value);
+  handleFileInUploading(selectedFile.value as File, "chat");
+};
+
+const handleFileSelect = (event: any) => {
+  // 获取选中的文件对象
+  selectedFile.value = event.target.files[0];
+};
 
 let charts = ref();
 onMounted(() => {

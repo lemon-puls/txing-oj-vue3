@@ -9,6 +9,23 @@ import { request as __request } from '../core/request';
 export class FileControllerService {
 
     /**
+     * getCosCredentials
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getCosCredentialsUsingGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/file/credential/get',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * uploadFile
      * @param biz 
      * @param file 

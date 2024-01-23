@@ -21,23 +21,48 @@
         v-for="(item, index) in groupStore.userList"
         :key="index"
       >
-        <a-badge
-          :count="6"
-          dot
-          :dotStyle="{ width: '10px', height: '10px' }"
-          :offset="[-3, 3]"
-          :class="[{ memberOnline: item.activeStatus === 1 }]"
+        <a-dropdown
+          style="z-index: 14000"
+          trigger="contextMenu"
+          @select="handleSelect"
         >
-          <a-avatar>
-            <img alt="avatar" :src="cachedUserList[item.userId]?.userAvatar" />
-          </a-avatar>
-        </a-badge>
-        <span class="user-name">{{
-          cachedUserList[item.userId]?.userName
-        }}</span>
+          <div>
+            <a-badge
+              :count="6"
+              dot
+              :dotStyle="{ width: '10px', height: '10px' }"
+              :offset="[-3, 3]"
+              :class="[{ memberOnline: item.activeStatus === 1 }]"
+            >
+              <a-avatar>
+                <img
+                  alt="avatar"
+                  :src="cachedUserList[item.userId]?.userAvatar"
+                />
+              </a-avatar>
+            </a-badge>
+            <span class="user-name">{{
+              cachedUserList[item.userId]?.userName
+            }}</span>
+          </div>
+          <template #content>
+            <a-doption
+              v-if="!isFriend(item)"
+              :value="{ item, value: 'friendApply' }"
+              >加好友
+            </a-doption>
+            <a-doption
+              v-if="isFriend(item)"
+              :value="{ item, value: 'sendMessage' }"
+              >发消息
+            </a-doption>
+          </template>
+        </a-dropdown>
       </li>
     </ul>
   </div>
+
+  <AddFriendModal :userId="curUserId" v-model:visible="visible" />
 </template>
 
 <style lang="scss">
@@ -99,13 +124,45 @@
 </style>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, provide, ref } from "vue";
 import { useGroupStore } from "@/store/group";
 import { useCacheStore } from "@/store/cache";
+import { useContactStore } from "@/store/contact";
+import { useUserStore } from "@/store/user";
+import AddFriendModal from "@/components/chat/AddFriendModal/AddFriendModal.vue";
+import message from "@arco-design/web-vue/es/message";
 
 const groupStore = useGroupStore();
 const cacheStore = useCacheStore();
+const contactStore = useContactStore();
+const userStore = useUserStore();
 const cachedUserList = computed(() => cacheStore.cachedUserList);
+
+const isFriend = (item: any) => {
+  return (
+    contactStore.contactList.find(
+      (cur) => cur.userId.toString() === item.userId.toString()
+    ) !== undefined ||
+    item.userId.toString() === userStore.loginUser.id.toString()
+  );
+};
+const curUserId = ref<number>();
+// 右键菜单选择处理器
+const handleSelect = (val: { item: any; value: string }) => {
+  switch (val.value) {
+    case "friendApply": {
+      curUserId.value = val.item.userId;
+      visible.value = true;
+    }
+  }
+};
+const visible = ref(false);
+
+// 处理右击事件
+// const handleRightClick = (e: MouseEvent) => {
+//   alert("右击");
+//   isShowRightClickModal.value = true;
+// };
 
 // const userList = ref([
 //   {

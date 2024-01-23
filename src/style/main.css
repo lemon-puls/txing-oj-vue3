@@ -45,3 +45,17 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #979797;
 }
+
+/**
+组件库的消息提示框 确保置于顶层展示
+ */
+.arco-message-list-top {
+    z-index: 20000 !important;
+}
+
+/**
+气泡卡片popover 确保置于顶层展示
+ */
+.arco-trigger-popup {
+    z-index: 10002 !important;
+}
