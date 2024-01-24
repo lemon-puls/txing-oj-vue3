@@ -273,7 +273,8 @@ export const useChatStore = defineStore("chat", () => {
 
   // 发送消息
   const pushMsg = async (msg: MessageShow) => {
-    const currentMsgMap = messageMap.get(msg.message.roomId);
+    // alert(msg.message.id);
+    const currentMsgMap = messageMap.get(Number(msg.message.roomId));
     console.log("前 roomId:", msg.message.roomId, messageMap.get(1));
     console.log("前：", currentMsgMap, msg);
     currentMsgMap?.set(msg.message.id, msg);
@@ -358,7 +359,7 @@ export const useChatStore = defineStore("chat", () => {
 
   // 删除消息
   const deleteMsg = (msgId: number) => {
-    currentMessageMap.value?.delete(msgId);
+    currentMessageMap.value?.delete(Number(msgId));
   };
   // 更新消息
   const updateMsg = (msgId: number, newMessage: MessageShow) => {

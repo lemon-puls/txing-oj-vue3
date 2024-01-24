@@ -222,6 +222,7 @@ const send = (msgType: MsgTypeEnum, body: any) => {
         // );
       } else {
         // 更新上传状态下的消息
+        // alert("更新消息：" + tempMsgId.value);
         chatStore.updateMsg(tempMsgId.value, res.data);
       }
       if (inputRef.value) {
@@ -265,13 +266,13 @@ const insertEmoji = (emoji: string) => {
   // inputValue.value = input.innerText;
 };
 
-const nowMsgType = ref<MsgTypeEnum>(MsgTypeEnum.FILE);
+const nowMsgType = ref<MsgTypeEnum>(MsgTypeEnum.IMG);
 const options = reactive({ multiple: false, accept: ".jpg,.png" });
 const { open, reset, onChange } = useFileDialog(options);
 const mockMessage = useMockMessage();
-const tempMessageId = ref(0);
 // 文件上传状态变动回调
 const useUploadChange = (status: any) => {
+  // alert("调用了useUploadChange");
   if (status === "success") {
     if (!fileInfo.value) {
       return;
@@ -283,12 +284,14 @@ const useUploadChange = (status: any) => {
 };
 // 开始上传文件时（前）触发调用
 const onStartFunction = () => {
+  // alert("调用了onStartFunction");
   if (!fileInfo.value) {
     return;
   }
   const { type, body } = generateBody(fileInfo.value, nowMsgType.value, true);
   const res = mockMessage.mockMessage(type, body);
-  tempMessageId.value = res.message.id;
+  tempMsgId.value = res.message.id;
+  console.log("pushMsg:", res);
   chatStore.pushMsg(res);
   chatStore.chatListToBottomAction?.();
 };
@@ -297,9 +300,11 @@ const {
   uploadFile,
   isUploading,
   fileInfo,
-  onStart = onStartFunction(),
-  onChange: uploadOnChange = useUploadChange,
+  onStart,
+  onChange: uploadOnChange,
 } = useUpload();
+onStart.on(onStartFunction);
+uploadOnChange(useUploadChange);
 
 const openFileSelector = (fileType: string, isEmoji = false) => {
   if (fileType === "img") {

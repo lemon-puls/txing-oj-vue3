@@ -11,7 +11,12 @@
       加载失败
     </div>
     <template v-else>
-      <img :src="body?.url" v-if="body?.url" @error="handleError" />
+      <img
+        :src="body?.url"
+        v-if="body?.url"
+        @error="handleError"
+        style="height: 100%"
+      />
     </template>
   </div>
 </template>
@@ -31,6 +36,7 @@ const hasLoadError = ref(false);
 const isLoading = ref(true);
 
 const props = defineProps<{ body: ImageBody }>();
+console.log("ImageBody:", props.body);
 
 const getImageHeight = computed(() => {
   const { width, height } = props.body;

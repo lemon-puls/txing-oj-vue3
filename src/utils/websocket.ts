@@ -155,6 +155,7 @@ class Ws {
           "value:",
           value
         );
+        // alert("接受到新消息：" + (params.data as MessageShow).message.id);
         chatStore.pushMsg(params.data as MessageShow);
         break;
       }
