@@ -34,9 +34,7 @@
               <!--            消息加载中-->
               <a-spin v-if="messageShow?.loading" :size="20" />
               <!--            消息内容-->
-              <div class="text">
-                <span>{{ message.body.content }}</span>
-              </div>
+              <MessageRender :message="message"></MessageRender>
             </div>
           </div>
         </div>
@@ -156,6 +154,7 @@ import { TooltipTriggerType } from "element-plus";
 import { computed, ref, withDefaults, defineProps } from "vue";
 import { useUserStore } from "@/store/user";
 import { useCacheStore } from "@/store/cache";
+import MessageRender from "@/components/chat/MessageRender/indexRender.vue";
 
 const cacheStore = useCacheStore();
 console.log("cacheUserList:", cacheStore.cachedUserList);

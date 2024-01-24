@@ -1,7 +1,7 @@
 import COS from "cos-js-sdk-v5";
 import { FileControllerService } from "../../generated";
 
-const cos = new COS({
+export const cos = new COS({
   // getAuthorization 必选参数
   getAuthorization: function (options, callback) {
     // 初始化时不会调用，只有调用 cos 方法（例如 cos.putObject）时才会进入
@@ -28,43 +28,3 @@ const cos = new COS({
     });
   },
 });
-
-const generateUUID = () => {
-  // 生成随机的 UUID
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-};
-
-export const handleFileInUploading = (file: File, bussiness: string) => {
-  const prefix = file.name.slice(file.name.lastIndexOf("."));
-  cos.uploadFile(
-    {
-      Bucket: "xxx" /* 填写自己的 bucket，必须字段 */,
-      Region: "xxx" /* 存储桶所在地域，必须字段 */,
-      Key:
-        bussiness +
-        "/" +
-        generateUUID() +
-        prefix /* 存储在桶里的对象键（例如:1.jpg，a/b/test.txt，图片.jpg）支持中文，必须字段 */,
-      Body: file, // 上传文件对象
-      // SliceSize:
-      //   1024 *
-      //   1024 *
-      //   5 /* 触发分块上传的阈值，超过5MB使用分块上传，小于5MB使用简单上传。可自行设置，非必须 */,
-      onProgress: function (progressData) {
-        console.log(JSON.stringify(progressData));
-      },
-    },
-    function (err, data) {
-      if (err) {
-        console.log("上传失败", err);
-      } else {
-        alert("上传成功");
-        console.log("上传成功:", data);
-      }
-    }
-  );
-};

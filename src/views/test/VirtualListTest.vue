@@ -34,7 +34,9 @@ import { throttle } from "lodash";
 import MsgItem from "@/views/test/MsgItem.vue";
 import SvgIcon from "@/icons/SvgIcon";
 import * as echarts from "echarts";
-import { handleFileInUploading } from "@/utils/CosUtils";
+import { useUpload } from "@/hooks/useUpload";
+
+const { handleFileInUploading } = useUpload();
 
 const selectedFile = ref<File | undefined>(undefined);
 const uploadFile = () => {

@@ -33,7 +33,12 @@
           </div>
         </template>
       </a-popover>
-      <icon-folder class="icon" :size="30" style="color: #e9d28a" />
+      <icon-folder
+        @click="openFileSelector"
+        class="icon"
+        :size="30"
+        style="color: #e9d28a"
+      />
       <icon-voice class="icon" :size="30" style="color: cornflowerblue" />
     </div>
     <div
@@ -166,16 +171,17 @@ import {
   IconFolder,
   IconVoice,
 } from "@arco-design/web-vue/es/icon";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { MsgTypeEnum } from "@/enume";
 import { Service } from "../../../../../generated";
 import { useGlobalStore } from "@/store/global";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
 import { emojisConstant } from "@/service/constant/emojisConstant";
-import { ElInput } from "element-plus";
-import { insertInputText } from "@/utils/sendBarUtils";
 import { useFileDialog } from "@vueuse/core";
+import { useUpload } from "@/hooks/useUpload";
+import { generateBody } from "@/utils/multimediaUtils";
+import { useMockMessage } from "@/hooks/useMockMessage";
 
 const sendBarRef = ref<HTMLElement | null>();
 const inputRef = ref<HTMLElement>();
@@ -259,5 +265,63 @@ const insertEmoji = (emoji: string) => {
   // inputValue.value = input.innerText;
 };
 
-// const openFileSelector(fileType: string,)
+const nowMsgType = ref<MsgTypeEnum>(MsgTypeEnum.FILE);
+const options = reactive({ multiple: false, accept: ".jpg,.png" });
+const { open, reset, onChange } = useFileDialog(options);
+const mockMessage = useMockMessage();
+const tempMessageId = ref(0);
+// 文件上传状态变动回调
+const useUploadChange = (status: any) => {
+  if (status === "success") {
+    if (!fileInfo.value) {
+      return;
+    }
+    const { body, type } = generateBody(fileInfo.value, nowMsgType.value);
+    send(type, body);
+  }
+  reset();
+};
+// 开始上传文件时（前）触发调用
+const onStartFunction = () => {
+  if (!fileInfo.value) {
+    return;
+  }
+  const { type, body } = generateBody(fileInfo.value, nowMsgType.value, true);
+  const res = mockMessage.mockMessage(type, body);
+  tempMessageId.value = res.message.id;
+  chatStore.pushMsg(res);
+  chatStore.chatListToBottomAction?.();
+};
+const {
+  handleFileInUploading,
+  uploadFile,
+  isUploading,
+  fileInfo,
+  onStart = onStartFunction(),
+  onChange: uploadOnChange = useUploadChange,
+} = useUpload();
+
+const openFileSelector = (fileType: string, isEmoji = false) => {
+  if (fileType === "img") {
+    nowMsgType.value = MsgTypeEnum.IMG;
+    options.accept = ".jpg,.png,.gif,.jpeg,.webp";
+  }
+  open();
+};
+// 选中文件后调用
+const selectAndUploadFile = async (files?: FileList | null) => {
+  console.log("files:", files);
+  if (!files?.length) {
+    return;
+  }
+  const file = files[0];
+  if (nowMsgType.value === MsgTypeEnum.IMG) {
+    if (!file.type.includes("image")) {
+      return message.error("请选择图片文件");
+    }
+  }
+  await uploadFile(file, "chat");
+  console.log("上传成功了out", fileInfo.value);
+};
+onChange(selectAndUploadFile);
 </script>

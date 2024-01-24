@@ -110,11 +110,21 @@ export type Message = {
   /**
    * 消息主体
    */
-  body: TextMsgBody | any;
+  body: TextMsgBody | ImageBody | any;
   /**
    * 发送时间 时间戳
    */
   sendTime: number;
+};
+
+/**
+ * 图片消息体
+ */
+export type ImageBody = {
+  size: number;
+  url: string;
+  width: number;
+  height: number;
 };
 
 /**
