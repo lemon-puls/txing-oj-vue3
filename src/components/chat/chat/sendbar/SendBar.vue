@@ -81,6 +81,10 @@
 
     .icon {
       margin-right: 10px;
+      border-radius: 5px;
+      &:hover {
+        background-color: #d0d0d0;
+      }
     }
   }
 

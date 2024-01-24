@@ -59,3 +59,10 @@
 .arco-trigger-popup {
     z-index: 10002 !important;
 }
+
+/**
+预览图
+ */
+.arco-image-preview {
+    z-index: 10002 !important;
+}

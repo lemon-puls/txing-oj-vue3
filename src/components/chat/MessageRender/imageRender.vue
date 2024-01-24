@@ -5,7 +5,11 @@
 -->
 
 <template>
-  <div id="imageRender" :style="{ height: getImageHeight + 'px' }">
+  <div
+    id="imageRender"
+    :style="{ height: getImageHeight + 'px' }"
+    @click="onPreview(body?.url)"
+  >
     <div v-if="hasLoadError" class="image-slot" :style="getWidthStyle()">
       <icon-sync :size="36" />
       加载失败
@@ -15,7 +19,7 @@
         :src="body?.url"
         v-if="body?.url"
         @error="handleError"
-        style="height: 100%"
+        style="height: 100%; border: 1px solid #d0d0d0"
       />
     </template>
   </div>
@@ -31,6 +35,7 @@ import { computed, defineProps, ref } from "vue";
 import { ImageBody } from "@/service/types";
 import { formatImage } from "@/utils/multimediaUtils";
 import { IconSync } from "@arco-design/web-vue/es/icon";
+import { useImgPreviewStore } from "@/store/preview";
 
 const hasLoadError = ref(false);
 const isLoading = ref(true);
@@ -49,5 +54,10 @@ const handleError = () => {
 const getWidthStyle = () => {
   const { width, height } = props.body;
   return `width: ${(getImageHeight.value / height) * width}px`;
+};
+
+const imgPreviewStore = useImgPreviewStore();
+const onPreview = (url: string) => {
+  imgPreviewStore.show([url]);
 };
 </script>
