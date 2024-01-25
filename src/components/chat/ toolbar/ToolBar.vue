@@ -13,7 +13,11 @@
       <!--      <router-link exact-active-class="nav-selected" to="/">-->
       <!--      </router-link>-->
       <div @click="onClickIcon(0)">
-        <a-badge :count="unReadMark.newMessageUnreadCount" :max-count="99">
+        <a-badge
+          :count="globalStore.isNeedNotify.messageNotify ? 1 : 0"
+          dot
+          :dotStyle="{ width: '10px', height: '10px' }"
+        >
           <div class="nav-icon-div">
             <icon-message
               :class="['nav-icon', { selected: chatStore.navFlag === 0 }]"
@@ -23,7 +27,11 @@
         </a-badge>
       </div>
       <div @click="onClickIcon(1)">
-        <a-badge :count="10" :max-count="99">
+        <a-badge
+          :count="globalStore.isNeedNotify.friendNotify ? 1 : 0"
+          dot
+          :dotStyle="{ width: '10px', height: '10px' }"
+        >
           <div class="nav-icon-div">
             <icon-user-group
               :class="['nav-icon', { selected: chatStore.navFlag === 1 }]"
@@ -110,8 +118,10 @@ const userStore = useUserStore();
 const unReadMark = computed(() => globalStore.unReadMark);
 
 const onClickIcon = async (val: number) => {
-  await contactStore.getFriendApplyList(true);
-  await contactStore.getContactList(true);
+  // if (val === 1) {
+  //   await contactStore.getFriendApplyList(true);
+  //   await contactStore.getContactList(true);
+  // }
   chatStore.navFlag = val;
 };
 </script>

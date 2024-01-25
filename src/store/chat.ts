@@ -7,7 +7,7 @@ import {
   SessionItem,
 } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
-import { Service } from "../../generated";
+import { Service, UserApplyControllerService } from "../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { computedTimeNode } from "@/utils/computeTime";
 import { useCacheStore } from "@/store/cache";
@@ -214,9 +214,21 @@ export const useChatStore = defineStore("chat", () => {
 
     sortAndUniqueSessionList();
 
-    sessionList[0].unreadCount = 0;
+    // sessionList[0].unreadCount = 0;
     if (isFirstInit) {
       isFirstInit = false;
+
+      // 判断是否有未读消息
+      let isHasUnread = false;
+      for (let i = 0; i < sessionList.length; i++) {
+        const cur = sessionList[i];
+        if (cur.unreadCount > 0) {
+          isHasUnread = true;
+          break;
+        }
+      }
+      globalStore.isNeedNotify.messageNotify = isHasUnread;
+
       globalStore.currentSession.roomId = 1;
       globalStore.currentSession.type = RoomTypeEnum.GROUP;
       // 加载会话列表第一个会话的消息列表
@@ -335,6 +347,19 @@ export const useChatStore = defineStore("chat", () => {
       console.log("总未读消息数： +1");
       globalStore.unReadMark.newMessageUnreadCount += 1;
     }
+    // 如果正打开当前会话 则需要向后端报告阅读时间 以免下次重新打开系统时未读消息数不正确
+    if (
+      showModal.value &&
+      navFlag.value === 0 &&
+      globalStore.currentSession.roomId.toString() ===
+        msg.message.roomId.toString()
+    ) {
+      Service.msgReadReportUsingPost(globalStore.currentSession.roomId);
+    }
+    // 判断是需要红点提示
+    if (!showModal.value || navFlag.value === 1) {
+      globalStore.isNeedNotify.messageNotify = true;
+    }
 
     // 聊天消息列表滚动到底部
     setTimeout(() => {
@@ -394,6 +419,15 @@ export const useChatStore = defineStore("chat", () => {
         globalStore.unReadMark.newMessageUnreadCount - unreadCount;
       globalStore.unReadMark.newMessageUnreadCount =
         curTotalUnreadCount > 0 ? curTotalUnreadCount : 0;
+
+      globalStore.isNeedNotify.messageNotify = false;
+    }
+    if (showModal.value && navFlag.value === 1) {
+      globalStore.isNeedNotify.friendNotify = false;
+      UserApplyControllerService.markReadFriendApplyUsingGet();
+      if (contactStore.friendApplyList.length > 0) {
+        contactStore.friendApplyList[0].readStatus = 1;
+      }
     }
   });
 

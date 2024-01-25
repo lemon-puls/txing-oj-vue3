@@ -82,7 +82,16 @@
           </template>
         </a-popover>
 
-        <a-badge :count="9" dot :offset="[2, -2]">
+        <a-badge
+          :count="
+            globalStore.isNeedNotify.friendNotify ||
+            globalStore.isNeedNotify.messageNotify
+              ? 1
+              : 0
+          "
+          dot
+          :offset="[2, -2]"
+        >
           <IconNotification
             @click="openChatBox"
             :style="{ color: '#888', fontSize: '25px', verticalAlign: '-3px' }"

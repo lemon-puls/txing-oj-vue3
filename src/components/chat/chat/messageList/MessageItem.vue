@@ -88,17 +88,6 @@
     &-content {
       position: relative;
       width: fit-content;
-
-      .text {
-        background-color: #ffffff;
-        min-height: 1em;
-        padding: 8px 12px;
-        font-size: 1vw;
-        line-height: 22px;
-        color: var(--font-main);
-        word-break: break-word;
-        border-radius: 2px 18px 18px;
-      }
     }
   }
 

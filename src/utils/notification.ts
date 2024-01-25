@@ -14,7 +14,7 @@ const notification = ({ text, name, icon, onClick }: NotificationType) => {
   });
 };
 
-const notify = ({ text, name, icon, onClick }: NotificationType) => {
+export const notify = ({ text, name, icon, onClick }: NotificationType) => {
   switch (Notification.permission) {
     case "granted": {
       notification({ text, name, icon, onClick });

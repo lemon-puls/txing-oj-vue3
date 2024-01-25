@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { RoomTypeEnum } from "@/enume";
 import { ContactItem, FriendApplyItem } from "@/service/types";
 import Ws from "@/utils/websocket";
@@ -25,6 +25,22 @@ export const useGlobalStore = defineStore("global", () => {
     newFriendUnreadCount: 0,
     newMessageUnreadCount: 0,
   });
+  // const isNeedNotify = computed(() => {
+  //   return {
+  //     friendNotify: unReadMark.newFriendUnreadCount > 0,
+  //     messageNotify: unReadMark.newMessageUnreadCount > 0,
+  //   };
+  // });
+  const isNeedNotify = reactive({
+    friendNotify: false,
+    messageNotify: false,
+  });
 
-  return { currentSession, currentSelectedContact, unReadMark, ws };
+  return {
+    currentSession,
+    currentSelectedContact,
+    unReadMark,
+    ws,
+    isNeedNotify,
+  };
 });

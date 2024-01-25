@@ -11,6 +11,7 @@ import { FriendApplyStatusEnum } from "@/enume";
 import { timeToStr } from "@/utils/computeTime";
 import { useCacheStore } from "@/store/cache";
 import message from "@arco-design/web-vue/es/message";
+import { useChatStore } from "@/store/chat";
 
 export const pageSize = 20;
 export const useContactStore = defineStore("contact", () => {
@@ -18,6 +19,7 @@ export const useContactStore = defineStore("contact", () => {
   const contactList = reactive<ContactItem[]>([]);
   const friendApplyList = reactive<FriendApplyItem[]>([]);
   const cacheStore = useCacheStore();
+  const chatStore = useChatStore();
 
   const contactsOptions = reactive({
     isLast: false,
@@ -89,7 +91,18 @@ export const useContactStore = defineStore("contact", () => {
     if (isFresh && !globalStore.currentSelectedContact) {
       globalStore.currentSelectedContact = friendApplyList[0];
     }
+
+    // 是否需要红点提示
+    if (isFresh && friendApplyList[0].readStatus === 0) {
+      if (!chatStore.showModal || chatStore.navFlag !== 1) {
+        globalStore.isNeedNotify.friendNotify = true;
+      }
+    }
   };
+
+  // const formatFriendApplyTime = () => {
+  //
+  // }
 
   // 同意好友申请
   const onAcceptFriendApply = async (applyId: number) => {

@@ -76,4 +76,21 @@ cursorPageBaseRequest: CursorPageBaseRequest,
         });
     }
 
+    /**
+     * markReadFriendApply
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static markReadFriendApplyUsingGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/user/apply/read/mark',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
 }

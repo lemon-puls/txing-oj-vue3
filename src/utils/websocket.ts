@@ -2,6 +2,7 @@
 import { useUserStore } from "@/store/user";
 import {
   UserLoginSuccessResponse,
+  WsFriendApplyVO,
   WsRequestMsgContentType,
   WsResponseMsgType,
   WsUserStatusChangeVO,
@@ -14,6 +15,10 @@ import { MessageShow } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
 import { useRouter } from "vue-router";
 import JSONBig from "json-bigint";
+import { notify } from "@/utils/notification";
+import { useContactStore } from "@/store/contact";
+import { timeToStr } from "@/utils/computeTime";
+import { UserApplyControllerService } from "../../generated";
 
 class Ws {
   // 是否已建立ws连接
@@ -123,6 +128,7 @@ class Ws {
     const userStore = useUserStore();
     const globalStore = useGlobalStore();
     const groupStore = useGroupStore();
+    const contactStore = useContactStore();
 
     const params: { type: WsResponseMsgType; data: unknown } =
       JSON.parse(value);
@@ -143,6 +149,8 @@ class Ws {
           },
         ]);
         chatStore.getSessionList(true);
+        contactStore.getFriendApplyList(true);
+        contactStore.getContactList(true);
         break;
       }
       case WsResponseMsgType.Message: {
@@ -172,12 +180,27 @@ class Ws {
         break;
       }
       case WsResponseMsgType.RequestAddFriend: {
-        const data = params.data as { userId: number; unReadCount: number };
-        globalStore.unReadMark.newFriendUnreadCount += data.unReadCount;
+        const data = params.data as WsFriendApplyVO;
+        globalStore.unReadMark.newFriendUnreadCount += data.unreadCount;
+        if (chatStore.navFlag === 1) {
+          const friendApplyItem = data.friendApplyVO;
+          friendApplyItem.time = timeToStr(friendApplyItem.createTime);
+          contactStore.friendApplyList.unshift(friendApplyItem);
+          if (chatStore.showModal) {
+            contactStore.friendApplyList[0].readStatus = 1;
+            UserApplyControllerService.markReadFriendApplyUsingGet();
+          }
+        }
+        if (!chatStore.showModal || chatStore.navFlag !== 1) {
+          globalStore.isNeedNotify.friendNotify = true;
+        }
         notify({
           name: "新好友",
           text: "您有一个新的好友请求，快来看看~",
           onClick: () => {
+            if (chatStore.navFlag !== 1) {
+              contactStore.getFriendApplyList(true);
+            }
             chatStore.showModal = true;
             chatStore.navFlag = 1;
           },

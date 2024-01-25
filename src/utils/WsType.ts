@@ -2,7 +2,7 @@
  * ws请求消息类型
  */
 import { UserVO } from "../../generated";
-import { UserItem } from "@/service/types";
+import { FriendApplyItem, UserItem } from "@/service/types";
 
 export enum WsRequestMsgType {
   HeartPack,
@@ -59,4 +59,9 @@ export type UserLoginSuccessResponse = Pick<
 export type WsUserStatusChangeVO = {
   chatMemberVOS: UserItem[];
   onlineNum: number;
+};
+
+export type WsFriendApplyVO = {
+  friendApplyVO: FriendApplyItem;
+  unreadCount: number;
 };

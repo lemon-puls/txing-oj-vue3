@@ -266,4 +266,12 @@ export type FriendApplyItem = {
    * 时间
    */
   time: string;
+  /**
+   * 创建时间（需要进行格式转换再供前端展示 转换后的值存储在time字段）
+   */
+  createTime: number;
+  /**
+   * 阅读状态：0：未读 1：已读
+   */
+  readStatus: number;
 };
