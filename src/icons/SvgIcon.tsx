@@ -7,6 +7,8 @@ export default defineComponent({
     id: { type: [String, Number] },
     class: { type: String },
     icon: { type: String, required: true },
+    size: { type: String },
+    color: { type: String },
   },
   setup(props) {
     const className = computed(() => {
@@ -20,8 +22,12 @@ export default defineComponent({
       return `#icon-${props.icon}`;
     });
     return () => (
-      <svg class={className.value} aria-hidden="true">
-        <use xlinkHref={icon.value} />
+      <svg
+        class={className.value}
+        aria-hidden="true"
+        style={`width: ${props.size}; height: ${props.size}`}
+      >
+        <use xlinkHref={icon.value} fill={props.color} />
       </svg>
     );
   },

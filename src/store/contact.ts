@@ -13,7 +13,7 @@ import { useCacheStore } from "@/store/cache";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
 
-export const pageSize = 10;
+export const pageSize = 20;
 export const useContactStore = defineStore("contact", () => {
   const globalStore = useGlobalStore();
   const contactList = reactive<ContactItem[]>([]);

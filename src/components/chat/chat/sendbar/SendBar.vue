@@ -8,7 +8,8 @@
   <div ref="sendBarRef" id="SendBar">
     <div class="icons">
       <a-popover trigger="click" position="tl">
-        <icon-face-smile-fill class="icon" :size="30" style="color: #ff9500" />
+        <!--        <icon-face-smile-fill class="icon" :size="30" style="color: #ff9500" />-->
+        <svg-icon class="icon" color="blue" icon="emoji" size="35px" />
         <template #content>
           <div class="emoji-div">
             <div class="emoji-content">
@@ -33,13 +34,19 @@
           </div>
         </template>
       </a-popover>
-      <icon-folder
+      <!--      <icon-folder-->
+      <!--        @click="openFileSelector"-->
+      <!--        class="icon"-->
+      <!--        :size="30"-->
+      <!--        style="color: #e9d28a"-->
+      <!--      />-->
+      <!--      <icon-voice class="icon" :size="30" style="color: cornflowerblue" />-->
+      <svg-icon
         @click="openFileSelector"
         class="icon"
-        :size="30"
-        style="color: #e9d28a"
+        icon="picture"
+        size="35px"
       />
-      <icon-voice class="icon" :size="30" style="color: cornflowerblue" />
     </div>
     <div
       ref="inputRef"
@@ -82,6 +89,7 @@
     .icon {
       margin-right: 10px;
       border-radius: 5px;
+
       &:hover {
         background-color: #d0d0d0;
       }
@@ -186,6 +194,7 @@ import { useFileDialog } from "@vueuse/core";
 import { useUpload } from "@/hooks/useUpload";
 import { generateBody } from "@/utils/multimediaUtils";
 import { useMockMessage } from "@/hooks/useMockMessage";
+import SvgIcon from "@/icons/SvgIcon";
 
 const sendBarRef = ref<HTMLElement | null>();
 const inputRef = ref<HTMLElement>();
