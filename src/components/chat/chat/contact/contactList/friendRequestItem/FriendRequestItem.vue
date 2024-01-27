@@ -70,7 +70,7 @@
         overflow: hidden;
 
         .username {
-          font-size: 14px;
+          font-size: var(--font-size-chat-list-name);
         }
       }
 
@@ -95,13 +95,14 @@
         overflow: hidden;
 
         .content {
-          font-size: 12px;
+          font-size: var(--font-size-chat-list-message);
         }
       }
 
       .time {
         margin-left: 10px;
         margin-right: 10px;
+        font-size: var(--font-size-chat-list-time);
       }
     }
   }

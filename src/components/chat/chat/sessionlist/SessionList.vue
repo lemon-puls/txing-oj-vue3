@@ -7,11 +7,19 @@
 <template>
   <div class="session-list-parent">
     <div class="session-search-parent">
-      <a-input-search class="session-search" placeholder="快速查找" />
+      <a-input-search
+        v-model="queryKey"
+        @input="onQueryInputChange"
+        class="session-search"
+        placeholder="快速查找"
+        allow-clear
+      />
     </div>
     <ul id="SessionList" v-infinite-scroll="load">
       <li
-        v-for="(item, index) in chatStore.sessionList"
+        v-for="(item, index) in queryKey.length === 0
+          ? chatStore.sessionList
+          : tempSessionList"
         :key="index"
         :class="[
           'session-item',
@@ -121,7 +129,7 @@
           //max-width: 50%;
 
           .name {
-            font-size: (1vw);
+            font-size: var(--font-size-chat-list-name);
             width: 100%;
             display: -webkit-box;
             -webkit-box-orient: vertical;
@@ -133,19 +141,20 @@
           .message {
             color: #979797;
             width: 100%;
-            font-size: (1vw * 0.8);
+            font-size: var(--font-size-chat-list-message);
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 1;
             text-overflow: ellipsis;
             overflow: hidden;
             //word-break: break-word;
+            margin-top: 5px;
           }
         }
       }
 
       .time {
-        font-size: (1vw * 0.8);
+        font-size: var(--font-size-chat-list-time);
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
@@ -167,6 +176,8 @@ import { computed, onMounted, ref } from "vue";
 import { useChatStore } from "@/store/chat";
 import { formatTimestamp } from "@/utils/computeTime";
 import { useGlobalStore } from "@/store/global";
+import { reactive } from "vue";
+import { SessionItem } from "@/service/types";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
@@ -193,11 +204,26 @@ const sessionList = ref([
 ]);
 // 加载会话
 const load = () => {
+  alert("触发");
   chatStore.getSessionList();
 };
 // 选中会话
 const onSelectedSession = (roomId: number, type: number) => {
   globalStore.currentSession.roomId = roomId;
   globalStore.currentSession.type = type;
+};
+
+// 会话搜索框
+const queryKey = ref<string>("");
+// 临时会话列表 用于存储搜索结果
+let tempSessionList = reactive<SessionItem[]>([]);
+const onQueryInputChange = () => {
+  if (queryKey.value.length === 0) {
+    tempSessionList.splice(0, tempSessionList.length);
+    return;
+  }
+  tempSessionList = chatStore.sessionList.filter((item) =>
+    item.name.includes(queryKey.value)
+  );
 };
 </script>

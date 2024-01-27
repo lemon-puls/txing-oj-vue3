@@ -71,6 +71,21 @@
         <!--        </a-dropdown>-->
       </li>
     </ul>
+    <a-divider />
+    <div class="group-name">
+      <div class="group-name-label">
+        <span class="group-name-label-span">群聊名称</span>
+      </div>
+      <div class="group-name-content">
+        <span class="group-name-content-span">明天会更好</span>
+        <svg-icon icon="modify" size="20px"></svg-icon>
+      </div>
+    </div>
+    <a-divider />
+    <div class="group-ops">
+      <span class="group-ops-span" v-if="true">解散群聊</span>
+      <span class="group-ops-span" v-else>退出群聊</span>
+    </div>
   </div>
 
   <!--  <AddFriendModal :userId="curUserId" v-model:visible="visible" />-->
@@ -131,6 +146,35 @@
       }
     }
   }
+
+  .group-name {
+    &-label {
+      &-span {
+        font-size: 15px;
+        margin-left: 10px;
+      }
+    }
+
+    &-content {
+      padding: 10px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &-span {
+        font-size: 10px;
+      }
+    }
+  }
+
+  .group-ops {
+    text-align: center;
+
+    &-span {
+      font-size: 18px;
+      color: #ff7300;
+    }
+  }
 }
 </style>
 
@@ -143,6 +187,7 @@ import { useUserStore } from "@/store/user";
 import AddFriendModal from "@/components/chat/AddFriendModal/AddFriendModal.vue";
 import message from "@arco-design/web-vue/es/message";
 import AvatarPopover from "@/components/user/AvatarPopover.vue";
+import SvgIcon from "@/icons/SvgIcon";
 
 const groupStore = useGroupStore();
 const cacheStore = useCacheStore();

@@ -1,0 +1,11 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+
+  $vw: 1vw;
+  --font-size-chat-list-name: calc(0.8vw);
+  --font-size-chat-list-message: calc(1vw * 0.6);
+  --font-size-chat-list-time: calc(1vw * 0.6);
+  --font-size-chat-room-name: calc(1.3vw);
+  --font-size-chat-message-content: calc(1vw);
+  --font-family-chat-message-content: "楷体", KaiTi, serif;
+}

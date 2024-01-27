@@ -7,9 +7,7 @@
 <template>
   <div id="MessageList" @contextmenu.prevent>
     <div class="sesion-header">
-      <span class="session-name" style="font-size: 1.5em">{{
-        currentSessionItem.name
-      }}</span>
+      <span class="session-name">{{ currentSessionItem.name }}</span>
     </div>
     <hr class="advier-line" />
     <VirtualList
@@ -43,6 +41,7 @@
 
     .session-name {
       margin-left: 10px;
+      font-size: var(--font-size-chat-room-name);
     }
   }
 

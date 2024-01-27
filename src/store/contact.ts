@@ -8,7 +8,7 @@ import {
 } from "../../generated";
 import { Message } from "@arco-design/web-vue";
 import { FriendApplyStatusEnum } from "@/enume";
-import { timeToStr } from "@/utils/computeTime";
+import { formatTimestamp, timeToStr } from "@/utils/computeTime";
 import { useCacheStore } from "@/store/cache";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
@@ -84,7 +84,7 @@ export const useContactStore = defineStore("contact", () => {
     // 格式化以及设置时间
     const needLoadUserIds: number[] = [];
     res.data.list.forEach((item: any) => {
-      item.time = timeToStr(item.createTime);
+      item.time = formatTimestamp(item.createTime);
       needLoadUserIds.push(item.userId);
     });
     await cacheStore.refreshCachedUserVOBatch(needLoadUserIds);
@@ -99,7 +99,11 @@ export const useContactStore = defineStore("contact", () => {
     }
 
     // 是否需要红点提示
-    if (isFresh && friendApplyList[0].readStatus === 0) {
+    if (
+      isFresh &&
+      friendApplyList.length > 0 &&
+      friendApplyList[0].readStatus === 0
+    ) {
       if (!chatStore.showModal || chatStore.navFlag !== 1) {
         globalStore.isNeedNotify.friendNotify = true;
       }

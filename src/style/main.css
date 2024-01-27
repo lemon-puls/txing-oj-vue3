@@ -25,6 +25,8 @@
 /*    width: 20px;*/
 /*}*/
 
+@import "base.scss";
+
 /* width */
 ::-webkit-scrollbar {
     width: 8px;

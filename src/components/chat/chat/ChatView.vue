@@ -25,7 +25,7 @@
         height: '100%',
         width: '100%',
       }"
-      :default-size="0.25"
+      :default-size="0.3"
     >
       <template #first>
         <SessionList />

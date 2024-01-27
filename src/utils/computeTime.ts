@@ -74,8 +74,8 @@ export const formatTimestamp = (timestamp: number): string => {
   if (now.isSame(date, "day")) {
     return date.format("HH:mm");
   } else if (now.diff(date, "year") >= 1) {
-    return date.format("YYYY年MM月DD日");
+    return date.format("YYYY/MM/DD");
   } else {
-    return date.format("MM月DD日");
+    return date.format("MM/DD");
   }
 };

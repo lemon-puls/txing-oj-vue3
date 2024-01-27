@@ -96,6 +96,8 @@
 
       .selected {
         color: #fcf743;
+        //color: $primary-color;
+        //color: var(--primary-color);
       }
     }
   }

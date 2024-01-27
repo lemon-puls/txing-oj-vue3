@@ -11,7 +11,7 @@
         width: '100%',
         height: '100%',
       }"
-      :default-size="0.3"
+      :default-size="0.35"
     >
       <template #first>
         <ContactList />

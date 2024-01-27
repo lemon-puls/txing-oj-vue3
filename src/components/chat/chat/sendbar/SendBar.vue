@@ -107,7 +107,8 @@
     padding: 4px 20px;
     overflow: hidden;
     overflow-y: auto;
-    font-size: 14px;
+    font-size: var(--font-size-chat-message-content);
+    font-family: var(--font-family-chat-message-content);
     color: inherit;
     white-space: pre-wrap;
     cursor: inherit;
@@ -224,7 +225,7 @@ const send = (msgType: MsgTypeEnum, body: any) => {
   })
     .then((res) => {
       if (res.code !== 0) {
-        message.error("发送消息失败，请刷新重试！");
+        message.error(res.msg);
         return;
       } else if (res.data.message.type === MsgTypeEnum.TEXT) {
         chatStore.pushMsg(res.data);
