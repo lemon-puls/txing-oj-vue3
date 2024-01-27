@@ -15,6 +15,7 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import "element-plus/dist/index.css";
 import "@/style/main.css";
 // import "@/utils/websocket";
+import InfiniteScroll from "vue-infinite-scroll";
 
 const requireAll = (requireContext: any) =>
   requireContext.keys().map(requireContext);
@@ -28,5 +29,6 @@ createApp(App)
   .use(ArcoVue)
   .use(JsonViewer)
   .use(router)
+  .use(InfiniteScroll)
   // .use(ElementPlus)
   .mount("#app");

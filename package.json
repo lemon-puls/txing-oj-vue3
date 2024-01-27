@@ -37,6 +37,7 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.69.5",
     "vue": "^3.2.13",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-json-viewer": "^3.0.4",
     "vue-router": "^4.0.3",
     "vue3-json-viewer": "^2.2.2",

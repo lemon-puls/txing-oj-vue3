@@ -29,6 +29,6 @@ export enum MsgTypeEnum {
   TEXT,
   RECALL,
   IMG,
-  FILE,
   SYSTEM,
+  FILE,
 }

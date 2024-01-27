@@ -44,11 +44,10 @@ export const useCacheStore = defineStore("cache", () => {
     });
   };
 
-  const getUserById = async (userId: number): Promise<Partial<UserCacheVO>> => {
-    let user = cachedUserList[userId];
+  const getUserById = (userId: number): Partial<UserCacheVO> => {
+    const user = cachedUserList[userId];
     if (!user) {
-      await refreshCachedUserVOBatch([userId]);
-      user = cachedUserList[userId];
+      refreshCachedUserVOBatch([userId]);
     }
     return user;
   };

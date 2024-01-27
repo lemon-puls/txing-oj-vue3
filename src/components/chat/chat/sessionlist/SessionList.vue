@@ -40,7 +40,9 @@
           </div>
         </div>
 
-        <span class="time">{{ formatTimestamp(item.activeTime) }}</span>
+        <div class="time">
+          <span>{{ formatTimestamp(item.activeTime) }}</span>
+        </div>
       </li>
     </ul>
   </div>
@@ -101,10 +103,14 @@
       .avatar-name-message {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
         align-items: center;
         column-gap: 15px;
+        max-width: 70%;
 
         .session-avatar {
+          margin-left: 5px;
+
           .arco-badge-number {
             //width: 40px;
           }
@@ -112,6 +118,7 @@
 
         .name-and-message {
           margin-left: 5px;
+          //max-width: 50%;
 
           .name {
             font-size: (1vw);
@@ -144,9 +151,11 @@
         -webkit-line-clamp: 1;
         text-overflow: ellipsis;
         overflow: hidden;
-        width: auto;
-        max-width: 40%;
+        //width: auto;
+        max-width: 30%;
         color: #979797;
+        margin-left: 10px;
+        margin-right: 5px;
       }
     }
   }

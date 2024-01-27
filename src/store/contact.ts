@@ -13,7 +13,7 @@ import { useCacheStore } from "@/store/cache";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
 
-export const pageSize = 20;
+export const pageSize = 10;
 export const useContactStore = defineStore("contact", () => {
   const globalStore = useGlobalStore();
   const contactList = reactive<ContactItem[]>([]);
@@ -32,7 +32,7 @@ export const useContactStore = defineStore("contact", () => {
     cursor: "",
   });
   // 获取联系人列表 游标分页
-  const getContactList = async (isFresh = false) => {
+  const getContactList = async (isFresh = false, myPageSize = pageSize) => {
     if (!isFresh) {
       if (contactsOptions.isLast || contactsOptions.isLoading) {
         return;
@@ -40,7 +40,7 @@ export const useContactStore = defineStore("contact", () => {
     }
     contactsOptions.isLoading = true;
     const res = await UserFriendControllerService.listUsingPost5({
-      pageSize,
+      pageSize: myPageSize,
       cursor:
         isFresh || !contactsOptions.cursor ? undefined : contactsOptions.cursor,
     });
@@ -48,6 +48,12 @@ export const useContactStore = defineStore("contact", () => {
       Message.error("加载联系人列表失败 请尝试刷新！");
       return;
     }
+    // 刷新用户信息缓存
+    const needLoadUserIds: number[] = [];
+    res.data.list.forEach((item: any) => {
+      needLoadUserIds.push(item.userId);
+    });
+    await cacheStore.refreshCachedUserVOBatch(needLoadUserIds);
     isFresh
       ? contactList.splice(0, contactList.length, ...res.data.list)
       : contactList.push(...res.data.list);
@@ -108,7 +114,7 @@ export const useContactStore = defineStore("contact", () => {
   const onAcceptFriendApply = async (applyId: number) => {
     const res = await UserApplyControllerService.agreeApplyUsingPost(applyId);
     if (res.code !== 0) {
-      Message.error("操作失败, 请尝试刷新！");
+      Message.error(res.msg);
       return;
     }
     // 刷新好友申请列表
@@ -120,6 +126,7 @@ export const useContactStore = defineStore("contact", () => {
       // @ts-ignore
       globalStore.currentSelectedContact.status = FriendApplyStatusEnum.AGREE;
     }
+    chatStore.pushMsg(res.data);
   };
 
   // 删除好友

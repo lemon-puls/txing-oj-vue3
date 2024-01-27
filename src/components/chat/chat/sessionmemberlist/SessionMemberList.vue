@@ -21,48 +21,59 @@
         v-for="(item, index) in groupStore.userList"
         :key="index"
       >
-        <a-dropdown
-          style="z-index: 14000"
-          trigger="contextMenu"
-          @select="handleSelect"
+        <!--        <a-dropdown-->
+        <!--          style="z-index: 14000"-->
+        <!--          trigger="contextMenu"-->
+        <!--          @select="handleSelect"-->
+        <!--        >-->
+        <AvatarPopover
+          :user-name="cachedUserList[item.userId]?.userName"
+          :user-avatar="cachedUserList[item.userId]?.userAvatar"
+          :sign="cachedUserList[item.userId]?.personSign"
+          :is-friend="isFriend(item)"
+          :user-id="item.userId"
         >
-          <div>
-            <a-badge
-              :count="6"
-              dot
-              :dotStyle="{ width: '10px', height: '10px' }"
-              :offset="[-3, 3]"
-              :class="[{ memberOnline: item.activeStatus === 1 }]"
-            >
-              <a-avatar>
-                <img
-                  alt="avatar"
-                  :src="cachedUserList[item.userId]?.userAvatar"
-                />
-              </a-avatar>
-            </a-badge>
-            <span class="user-name">{{
-              cachedUserList[item.userId]?.userName
-            }}</span>
-          </div>
-          <template #content>
-            <a-doption
-              v-if="!isFriend(item)"
-              :value="{ item, value: 'friendApply' }"
-              >加好友
-            </a-doption>
-            <a-doption
-              v-if="isFriend(item)"
-              :value="{ item, value: 'sendMessage' }"
-              >发消息
-            </a-doption>
+          <template #target>
+            <div>
+              <a-badge
+                :count="6"
+                dot
+                :dotStyle="{ width: '10px', height: '10px' }"
+                :offset="[-3, 3]"
+                :class="[{ memberOnline: item.activeStatus === 1 }]"
+              >
+                <a-avatar>
+                  <img
+                    alt="avatar"
+                    :src="cachedUserList[item.userId]?.userAvatar"
+                  />
+                </a-avatar>
+              </a-badge>
+              <span class="user-name">{{
+                cachedUserList[item.userId]?.userName
+              }}</span>
+            </div>
           </template>
-        </a-dropdown>
+        </AvatarPopover>
+
+        <!--        <template #content>-->
+        <!--          <a-doption-->
+        <!--            v-if="!isFriend(item)"-->
+        <!--            :value="{ item, value: 'friendApply' }"-->
+        <!--            >加好友-->
+        <!--          </a-doption>-->
+        <!--          <a-doption-->
+        <!--            v-if="isFriend(item)"-->
+        <!--            :value="{ item, value: 'sendMessage' }"-->
+        <!--            >发消息-->
+        <!--          </a-doption>-->
+        <!--        </template>-->
+        <!--        </a-dropdown>-->
       </li>
     </ul>
   </div>
 
-  <AddFriendModal :userId="curUserId" v-model:visible="visible" />
+  <!--  <AddFriendModal :userId="curUserId" v-model:visible="visible" />-->
 </template>
 
 <style lang="scss">
@@ -131,6 +142,7 @@ import { useContactStore } from "@/store/contact";
 import { useUserStore } from "@/store/user";
 import AddFriendModal from "@/components/chat/AddFriendModal/AddFriendModal.vue";
 import message from "@arco-design/web-vue/es/message";
+import AvatarPopover from "@/components/user/AvatarPopover.vue";
 
 const groupStore = useGroupStore();
 const cacheStore = useCacheStore();

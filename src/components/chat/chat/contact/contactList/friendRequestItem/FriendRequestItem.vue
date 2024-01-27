@@ -7,13 +7,13 @@
 <template>
   <div id="FriendRequestList" @click="handler">
     <a-avatar class="avatar">
-      <img alt="avatar" :src="cachedUserList[item.userId].userAvatar" />
+      <img alt="avatar" :src="cachedUserList[item.userId]?.userAvatar" />
     </a-avatar>
     <div class="apply-info">
       <div class="username-ops">
         <div class="username-parent">
           <span class="username">{{
-            cachedUserList[item.userId].userName
+            cachedUserList[item.userId]?.userName
           }}</span>
         </div>
 

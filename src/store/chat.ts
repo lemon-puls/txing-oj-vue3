@@ -171,7 +171,7 @@ export const useChatStore = defineStore("chat", () => {
     // 收集需要请求的用户id
     const userIdSet: Set<number> = new Set();
     computedList.forEach((message) => {
-      userIdSet.add(message.fromUser.userId);
+      userIdSet.add(message.fromUser?.userId);
     });
     // console.log("需要更新的用户id:", userIdSet);
     cacheStore.refreshCachedUserVOBatch([...userIdSet]);
@@ -246,11 +246,25 @@ export const useChatStore = defineStore("chat", () => {
 
   const sortAndUniqueSessionList = () => {
     const temp: Record<string, SessionItem> = {};
+    let totalGroup: SessionItem | undefined = undefined;
     sessionList.forEach((item) => {
-      temp[item.roomId] = item;
+      if (Number(item.roomId) !== 1) {
+        temp[item.roomId] = item;
+      } else {
+        totalGroup = item;
+      }
     });
     sessionList.splice(0, sessionList.length, ...Object.values(temp));
-    sessionList.sort((pre, cur) => cur.activeTime - pre.activeTime);
+    sessionList.sort((pre, cur) => {
+      const res =
+        new Date(cur.activeTime).getTime() - new Date(pre.activeTime).getTime();
+      return res;
+    });
+    if (totalGroup) {
+      sessionList.unshift(totalGroup);
+    }
+
+    console.log("排完序了SessionList:", sessionList);
   };
 
   // 更新会话
@@ -272,11 +286,20 @@ export const useChatStore = defineStore("chat", () => {
     roomId: number,
     newSessionItem?: SessionItem
   ) => {
-    const oldSession = sessionList.find((item) => item.roomId === roomId);
+    const oldSession = sessionList.find(
+      (item) => item.roomId.toString() === roomId.toString()
+    );
     if (oldSession) {
-      Object.assign(oldSession, { activeTime: Date.now() });
+      Object.assign(oldSession, {
+        ...newSessionItem,
+        unreadCount: oldSession.unreadCount,
+        activeTime: Date.now(),
+      });
+      console.log("更新后：", oldSession);
     } else if (newSessionItem) {
       const temp = cloneDeep(newSessionItem);
+      temp.unreadCount = 0;
+      console.log("temp:", temp, "new:", newSessionItem);
       temp.activeTime = Date.now();
       sessionList.unshift(temp);
     }
@@ -292,7 +315,7 @@ export const useChatStore = defineStore("chat", () => {
     currentMsgMap?.set(msg.message.id, msg);
     console.log("后：", currentMsgMap);
     // 加载相关用户信息至缓存中
-    const userId = msg.fromUser.userId;
+    const userId = msg.fromUser?.userId;
     const cacheUser = cacheStore.cachedUserList[userId];
     cacheStore.refreshCachedUserVOBatch([userId]);
 
@@ -315,7 +338,8 @@ export const useChatStore = defineStore("chat", () => {
     //   navFlag.value = 0;
     // }
     const res = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
-    updateSession(msg.message.roomId, res.data);
+    // updateSession(msg.message.roomId, res.data);
+    console.log("res.data", res.data);
     updateSessionLastActiveTime(msg.message.roomId, res?.data);
     // }
 
@@ -362,9 +386,10 @@ export const useChatStore = defineStore("chat", () => {
     }
 
     // 聊天消息列表滚动到底部
-    setTimeout(() => {
-      chatListToBottomAction.value?.();
-    });
+    // setTimeout(() => {
+    //   chatListToBottomAction.value?.();
+    // });
+    chatListToBottomAction.value?.();
     console.log("刷新会话列表结束");
   };
 

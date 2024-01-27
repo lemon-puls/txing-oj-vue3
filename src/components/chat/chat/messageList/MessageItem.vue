@@ -10,7 +10,10 @@
       messageShow.timeNode
     }}</span>
     <span v-if="isRecall" class="recall-tip">{{ message.body }}</span>
-    <div>
+    <div class="system-message" v-if="message.type === MsgTypeEnum.SYSTEM">
+      <span class="system-message-content">{{ message.body }}</span>
+    </div>
+    <div v-else>
       <transition enter-active-class="animate__animate animate__fadeInTopLeft">
         <div :class="messageCls" v-if="!isRecall">
           <a-avatar>
@@ -56,6 +59,12 @@
     color: #7d7979;
     text-align: center;
     user-select: none;
+  }
+
+  .system-message {
+    text-align: center;
+    color: #adadad;
+    margin: 10px;
   }
 
   .message-item {
@@ -144,6 +153,7 @@ import { computed, ref, withDefaults, defineProps } from "vue";
 import { useUserStore } from "@/store/user";
 import { useCacheStore } from "@/store/cache";
 import MessageRender from "@/components/chat/MessageRender/indexRender.vue";
+import { MsgTypeEnum } from "@/enume";
 
 const cacheStore = useCacheStore();
 console.log("cacheUserList:", cacheStore.cachedUserList);
@@ -176,7 +186,7 @@ const message = computed(() => props.messageShow.message);
 const fromUser = computed(() => props.messageShow.fromUser);
 
 const isCurrentUser =
-  useUserStore().loginUser.id.toString() === fromUser.value.userId.toString();
+  useUserStore().loginUser.id.toString() === fromUser.value?.userId.toString();
 const messageCls = computed(() => ({
   "message-item": true,
   "is-me": isCurrentUser,

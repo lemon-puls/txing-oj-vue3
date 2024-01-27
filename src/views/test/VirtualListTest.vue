@@ -24,6 +24,21 @@
     <!--    <a-upload action="/" :upload="uploadFile" />-->
     <input type="file" name="file" @change="handleFileSelect" />
     <button value="上传" @click="uploadFile" />
+    <AvatarPopoverTest
+      user-name="最好的我们"
+      sign="Ta说: 为了提高自己而努力！"
+      :is-friend="true"
+      user-avatar="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+    >
+      <template #target>
+        <a-button>success</a-button>
+      </template>
+      <!--      <template #mycontent>-->
+      <!--        <span>这是内容！</span>-->
+      <!--      </template>-->
+    </AvatarPopoverTest>
+
+    <InfiniteScrollTest />
   </div>
 </template>
 
@@ -35,6 +50,8 @@ import MsgItem from "@/views/test/MsgItem.vue";
 import SvgIcon from "@/icons/SvgIcon";
 import * as echarts from "echarts";
 import { useUpload } from "@/hooks/useUpload";
+import AvatarPopoverTest from "@/components/user/AvatarPopover.vue";
+import InfiniteScrollTest from "@/components/test/InfiniteScrollTest.vue";
 
 const { handleFileInUploading } = useUpload();
 

@@ -15,6 +15,7 @@ import AddPostView from "@/views/post/AddPostView.vue";
 import ViewPostView from "@/views/post/ViewPostView.vue";
 import PostSearchView from "@/views/post/PostSearchView.vue";
 import VirtualListTest from "@/views/test/VirtualListTest.vue";
+import InfiniteScrollTest from "@/components/test/InfiniteScrollTest.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -158,6 +159,6 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/txing/virtualList/test",
     name: "虚拟列表",
-    component: VirtualListTest,
+    component: InfiniteScrollTest,
   },
 ];
