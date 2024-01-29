@@ -12,6 +12,7 @@ export type { CursorPageBaseRequest } from './models/CursorPageBaseRequest';
 export type { DeleteRequest } from './models/DeleteRequest';
 export type { FilterVO } from './models/FilterVO';
 export type { GroupAddRequest } from './models/GroupAddRequest';
+export type { GroupMemberRemoveRequest } from './models/GroupMemberRemoveRequest';
 export type { GroupMemberRequest } from './models/GroupMemberRequest';
 export type { ItemRequest } from './models/ItemRequest';
 export type { JudgeCase } from './models/JudgeCase';

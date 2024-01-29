@@ -31,6 +31,8 @@ export const useGroupStore = defineStore("group", () => {
     onlineCount: 0,
     roomId: -1,
     role: -1,
+    memberOrNot: false,
+    forbiddenOrNot: false,
   });
 
   // 获取群成员

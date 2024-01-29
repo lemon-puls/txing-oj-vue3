@@ -5,6 +5,7 @@
 import type { ChatMessageRequest } from '../models/ChatMessageRequest';
 import type { CursorPageBaseRequest } from '../models/CursorPageBaseRequest';
 import type { GroupAddRequest } from '../models/GroupAddRequest';
+import type { GroupMemberRemoveRequest } from '../models/GroupMemberRemoveRequest';
 import type { GroupMemberRequest } from '../models/GroupMemberRequest';
 import type { MessagePageRequest } from '../models/MessagePageRequest';
 
@@ -203,6 +204,27 @@ groupMemberRequest: GroupMemberRequest,
             method: 'POST',
             url: '/api/chat/room/group/member/page',
             body: groupMemberRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * removeGroupMember
+     * @param groupMemberRemoveRequest groupMemberRemoveRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static removeGroupMemberUsingPost(
+groupMemberRemoveRequest: GroupMemberRemoveRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/room/group/member/remove',
+            body: groupMemberRemoveRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

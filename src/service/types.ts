@@ -228,6 +228,10 @@ export type GroupDetailVO = {
   roomId: number;
   // 当前用户角色：0:群主 1：管理员 2：普通成员 3：被踢出群聊
   role: number;
+  // 当前用户是否还是该群聊成员
+  memberOrNot: boolean;
+  // 群聊是否禁用
+  forbiddenOrNot: boolean;
 };
 
 export type UserCacheVO = UserVO & {

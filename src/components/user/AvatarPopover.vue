@@ -28,7 +28,7 @@
           </div>
           <a-divider />
           <div class="person-info-ops">
-            <a-button type="primary">关注Ta</a-button>
+            <!--            <a-button type="primary">关注Ta</a-button>-->
             <a-button
               type="primary"
               status="warning"
@@ -42,6 +42,13 @@
               @click="onApplyFriend"
               v-else
               >加好友
+            </a-button>
+            <a-button
+              type="primary"
+              status="warning"
+              @click="onRemoveMember"
+              v-if="isLeader"
+              >移出群聊
             </a-button>
           </div>
         </div>
@@ -91,18 +98,39 @@ import AddFriendModal from "@/components/chat/AddFriendModal/AddFriendModal.vue"
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
+import { useGroupStore } from "@/store/group";
+import { Service } from "../../../generated";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
+const groupStore = useGroupStore();
 
-const props = defineProps([
-  "userName",
-  "userAvatar",
-  "sign",
-  "isFriend",
-  "isFan",
-  "userId",
-]);
+const props = defineProps({
+  userName: {
+    type: String,
+  },
+  userAvatar: {
+    type: String,
+  },
+  sign: {
+    type: String,
+  },
+  isFriend: {
+    type: Boolean,
+    default: false, // 设置默认值为 false
+  },
+  isFan: {
+    type: Boolean,
+    default: false,
+  },
+  userId: {
+    type: Number,
+  },
+  isLeader: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 // const curUserId = ref<number>();
 // 右键菜单选择处理器
@@ -124,5 +152,21 @@ const onSendMessage = () => {
     // TODO 应该要向后端查询
     message.error("找不到当前联系人对应的会话信息");
   }
+};
+
+// 移出群聊
+const onRemoveMember = async () => {
+  const res = await Service.removeGroupMemberUsingPost({
+    roomId: groupStore.groupInfo.roomId,
+    userId: props.userId,
+  });
+  if (res.code !== 0) {
+    message.error(res.msg);
+    return;
+  }
+  visible.value = false;
+  message.success('成功移除"' + props.userName + '"');
+  groupStore.getGroupMemberList(true);
+  groupStore.getGroupDetail();
 };
 </script>

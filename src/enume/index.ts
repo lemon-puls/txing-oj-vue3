@@ -32,3 +32,10 @@ export enum MsgTypeEnum {
   SYSTEM,
   FILE,
 }
+
+export enum GroupMemberRoleEnum {
+  LEADER,
+  MANAGER,
+  MEMBER,
+  REMOVE,
+}

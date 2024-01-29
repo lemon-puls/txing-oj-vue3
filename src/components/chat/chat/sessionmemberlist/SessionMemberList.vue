@@ -32,6 +32,7 @@
           :sign="cachedUserList[item.userId]?.personSign"
           :is-friend="isFriend(item)"
           :user-id="item.userId"
+          :is-leader="isLeader"
         >
           <template #target>
             <div>
@@ -77,14 +78,32 @@
         <span class="group-name-label-span">群聊名称</span>
       </div>
       <div class="group-name-content">
-        <span class="group-name-content-span">明天会更好</span>
+        <span class="group-name-content-span">{{ groupInfo.groupName }}</span>
         <svg-icon icon="modify" size="20px"></svg-icon>
       </div>
     </div>
     <a-divider />
     <div class="group-ops">
-      <span class="group-ops-span" v-if="true">解散群聊</span>
-      <span class="group-ops-span" v-else>退出群聊</span>
+      <span
+        class="group-ops-span"
+        v-if="
+          !groupInfo.forbiddenOrNot &&
+          isLeader &&
+          Number(groupInfo.roomId) !== 1
+        "
+        @click="onRemoveMember"
+        >解散群聊</span
+      >
+      <span
+        class="group-ops-span"
+        @click="onRemoveMember"
+        v-else-if="
+          !groupInfo.forbiddenOrNot &&
+          groupInfo.memberOrNot &&
+          Number(groupInfo.roomId) !== 1
+        "
+        >退出群聊</span
+      >
     </div>
   </div>
 
@@ -150,7 +169,7 @@
   .group-name {
     &-label {
       &-span {
-        font-size: 15px;
+        font-size: 16px;
         margin-left: 10px;
       }
     }
@@ -162,7 +181,7 @@
       align-items: center;
 
       &-span {
-        font-size: 10px;
+        font-size: 14px;
       }
     }
   }
@@ -173,6 +192,7 @@
     &-span {
       font-size: 18px;
       color: #ff7300;
+      cursor: default;
     }
   }
 }
@@ -188,12 +208,23 @@ import AddFriendModal from "@/components/chat/AddFriendModal/AddFriendModal.vue"
 import message from "@arco-design/web-vue/es/message";
 import AvatarPopover from "@/components/user/AvatarPopover.vue";
 import SvgIcon from "@/icons/SvgIcon";
+import { GroupMemberRoleEnum } from "@/enume";
+import { Service } from "../../../../../generated";
 
 const groupStore = useGroupStore();
 const cacheStore = useCacheStore();
 const contactStore = useContactStore();
 const userStore = useUserStore();
 const cachedUserList = computed(() => cacheStore.cachedUserList);
+
+// 是否是群主
+const isLeader = computed(
+  () => groupInfo.value.role === GroupMemberRoleEnum.LEADER
+);
+// 是否是该群聊成员
+// const isMemeber = computed(() => {
+//   groupStore.
+// })
 
 const isFriend = (item: any) => {
   return (
@@ -230,4 +261,19 @@ const visible = ref(false);
 //     userName: "lemon",
 //   },
 // ]);
+const groupInfo = computed(() => groupStore.groupInfo);
+// 移除成员处理
+const onRemoveMember = async () => {
+  const res = await Service.removeGroupMemberUsingPost({
+    roomId: groupInfo.value.roomId,
+    userId: userStore.loginUser.id,
+  });
+  if (res.code !== 0) {
+    message.error(res.msg);
+    return;
+  }
+  message.success("操作成功");
+  groupStore.getGroupMemberList(true);
+  groupStore.getGroupDetail();
+};
 </script>
