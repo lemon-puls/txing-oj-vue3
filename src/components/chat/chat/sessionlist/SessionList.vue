@@ -21,38 +21,54 @@
           ? chatStore.sessionList
           : tempSessionList"
         :key="index"
-        :class="[
-          'session-item',
-          { active: currentSession.roomId.toString() === item.roomId },
-        ]"
         @click="onSelectedSession(item.roomId, item.type)"
       >
-        <div class="avatar-name-message">
-          <a-badge
-            :count="item.unreadCount"
-            :max-count="99"
-            class="session-avatar"
+        <a-popover
+          v-model="popoverVisible"
+          position="bottom"
+          trigger="contextMenu"
+        >
+          <div
+            :class="[
+              'session-item',
+              { active: currentSession.roomId.toString() === item.roomId },
+            ]"
           >
-            <a-avatar>
-              <img alt="avatar" :src="item.avatar" />
-            </a-avatar>
-          </a-badge>
-          <div class="name-and-message">
-            <div class="name">
-              <span>{{ item.name }}</span>
+            <div class="avatar-name-message">
+              <a-badge
+                :count="item.unreadCount"
+                :max-count="99"
+                class="session-avatar"
+              >
+                <a-avatar>
+                  <img alt="avatar" :src="item.avatar" />
+                </a-avatar>
+              </a-badge>
+              <div class="name-and-message">
+                <div class="name">
+                  <span>{{ item.name }}</span>
+                </div>
+                <div class="message">
+                  <!--              {{ item.userName }}: -->
+                  {{ item.lastMessage }}
+                </div>
+              </div>
             </div>
-            <div class="message">
-              <!--              {{ item.userName }}: -->
-              {{ item.lastMessage }}
+            <div class="time">
+              <span v-if="item.activeTime">{{
+                formatTimestamp(item.activeTime)
+              }}</span>
             </div>
           </div>
-        </div>
-
-        <div class="time">
-          <span>{{ formatTimestamp(item.activeTime) }}</span>
-        </div>
+          <template #content>
+            <a-button type="text" @click="onRemoveSession(item.roomId)"
+              >移除
+            </a-button>
+          </template>
+        </a-popover>
       </li>
     </ul>
+    <MyContextMenu />
   </div>
 </template>
 
@@ -178,6 +194,10 @@ import { formatTimestamp } from "@/utils/computeTime";
 import { useGlobalStore } from "@/store/global";
 import { reactive } from "vue";
 import { SessionItem } from "@/service/types";
+import { Service } from "../../../../../generated";
+import message from "@arco-design/web-vue/es/message";
+import { RoomTypeEnum } from "@/enume";
+import MyContextMenu from "@/components/chat/chat/sessionlist/ContextMenu/MyContextMenu.vue";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
@@ -225,5 +245,30 @@ const onQueryInputChange = () => {
   tempSessionList = chatStore.sessionList.filter((item) =>
     item.name.includes(queryKey.value)
   );
+};
+
+const popoverVisible = ref(true);
+// 移除会话
+const onRemoveSession = async (roomId: number) => {
+  // 总群不能移除
+  if (Number(roomId) === 1) {
+    message.error("总群会话无法移除");
+    return;
+  }
+  const res = await Service.removeSessionUsingPost({ roomId });
+  if (res.code !== 0) {
+    message.error(res.msg);
+    return;
+  }
+  // 查找目标会话index
+  const index = chatStore.sessionList.findIndex(
+    (item) => item.roomId.toString() === roomId.toString()
+  );
+  if (globalStore.currentSession.roomId.toString() === roomId.toString()) {
+    globalStore.currentSession.roomId = 1;
+    globalStore.currentSession.type = RoomTypeEnum.GROUP;
+  }
+  chatStore.sessionList.splice(index, 1);
+  message.success("移除成功");
 };
 </script>

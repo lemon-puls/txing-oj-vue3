@@ -159,6 +159,6 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/txing/virtualList/test",
     name: "虚拟列表",
-    component: InfiniteScrollTest,
+    component: VirtualListTest,
   },
 ];

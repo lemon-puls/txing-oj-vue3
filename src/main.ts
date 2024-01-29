@@ -17,6 +17,8 @@ import "@/style/main.css";
 // import "@/utils/websocket";
 import InfiniteScroll from "vue-infinite-scroll";
 
+import "@imengyu/vue3-context-menu/lib/vue3-context-menu.css";
+
 const requireAll = (requireContext: any) =>
   requireContext.keys().map(requireContext);
 const req = require.context("@/icons/svg", false, /\.svg$/);

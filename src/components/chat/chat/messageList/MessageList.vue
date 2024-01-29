@@ -42,6 +42,7 @@
     .session-name {
       margin-left: 10px;
       font-size: var(--font-size-chat-room-name);
+      font-family: var(--font-family-chat-message-content);
     }
   }
 

@@ -59,7 +59,7 @@ export const useChatStore = defineStore("chat", () => {
   // 获取当前会话消息
   const currentMessageMap = computed({
     get: () => {
-      const currentMsgMap = messageMap.get(currentRoomId.value as number);
+      const currentMsgMap = messageMap.get(Number(currentRoomId.value));
       if (currentMsgMap === undefined) {
         messageMap.set(Number(currentRoomId.value), new Map());
       }
@@ -475,5 +475,6 @@ export const useChatStore = defineStore("chat", () => {
     currentMessageMap,
     messageMap,
     markSessionRead,
+    sortAndUniqueSessionList,
   };
 });

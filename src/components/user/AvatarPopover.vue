@@ -32,7 +32,7 @@
             <a-button
               type="primary"
               status="warning"
-              v-if="isFriend"
+              v-if="isFriend && !isCurrent"
               @click="onSendMessage"
               >发消息
             </a-button>
@@ -40,14 +40,14 @@
               type="primary"
               status="warning"
               @click="onApplyFriend"
-              v-else
+              v-else-if="!isCurrent"
               >加好友
             </a-button>
             <a-button
               type="primary"
               status="warning"
               @click="onRemoveMember"
-              v-if="isLeader"
+              v-if="isLeader && !isCurrent"
               >移出群聊
             </a-button>
           </div>
@@ -100,11 +100,12 @@ import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
 import { useGroupStore } from "@/store/group";
 import { Service } from "../../../generated";
+import { useUserStore } from "@/store/user";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
 const groupStore = useGroupStore();
-
+const userStore = useUserStore();
 const props = defineProps({
   userName: {
     type: String,
@@ -125,6 +126,7 @@ const props = defineProps({
   },
   userId: {
     type: Number,
+    default: 0,
   },
   isLeader: {
     type: Boolean,
@@ -147,11 +149,23 @@ const onSendMessage = () => {
   if (session) {
     globalStore.currentSession.roomId = session.roomId;
     globalStore.currentSession.type = session.type;
-    chatStore.navFlag = 0;
   } else {
     // TODO 应该要向后端查询
-    message.error("找不到当前联系人对应的会话信息");
+    Service.updateOrCreateContactUsingPost({ friendId: props.userId }).then(
+      (res) => {
+        if (res.code !== 0) {
+          message.error(res.msg);
+          return;
+        }
+        chatStore.sessionList.push(res.data);
+        chatStore.sortAndUniqueSessionList();
+        globalStore.currentSession.roomId = res.data.roomId;
+        globalStore.currentSession.type = res.data.type;
+      }
+    );
+    // message.error("找不到当前联系人对应的会话信息");
   }
+  chatStore.navFlag = 0;
 };
 
 // 移出群聊
@@ -169,4 +183,7 @@ const onRemoveMember = async () => {
   groupStore.getGroupMemberList(true);
   groupStore.getGroupDetail();
 };
+
+// 选中的是否是当前用户自己
+const isCurrent = props.userId.toString() === userStore.loginUser.id.toString();
 </script>

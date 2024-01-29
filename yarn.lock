@@ -1212,6 +1212,11 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@imengyu/vue3-context-menu@^1.3.7":
+  version "1.3.7"
+  resolved "https://registry.npmmirror.com/@imengyu/vue3-context-menu/-/vue3-context-menu-1.3.7.tgz"
+  integrity sha512-7LiF5BtwT6nsAlR1jwtz7GyjfaxfxOeVK1CDpM0etmyOS0Vwq5nC5uayiZJzvzZ5HGuGePYw15MRQrjHlPTL8w==
+
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz"

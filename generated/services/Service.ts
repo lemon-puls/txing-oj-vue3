@@ -3,17 +3,40 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ChatMessageRequest } from '../models/ChatMessageRequest';
+import type { ContactUpdateOrAddRequest } from '../models/ContactUpdateOrAddRequest';
 import type { CursorPageBaseRequest } from '../models/CursorPageBaseRequest';
 import type { GroupAddRequest } from '../models/GroupAddRequest';
 import type { GroupMemberRemoveRequest } from '../models/GroupMemberRemoveRequest';
 import type { GroupMemberRequest } from '../models/GroupMemberRequest';
 import type { MessagePageRequest } from '../models/MessagePageRequest';
+import type { RemoveSessionRequest } from '../models/RemoveSessionRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class Service {
+
+    /**
+     * 更新（活跃时间）/创建会话
+     * @param updateOrAddRequest updateOrAddRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static updateOrCreateContactUsingPost(
+updateOrAddRequest: ContactUpdateOrAddRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/contact/add',
+            body: updateOrAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
 
     /**
      * 获取会话详情（by FriendId）
@@ -97,6 +120,27 @@ roomId: number,
             query: {
                 'roomId': roomId,
             },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * 移除会话
+     * @param removeSessionRequest removeSessionRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static removeSessionUsingPost(
+removeSessionRequest: RemoveSessionRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/chat/contact/remove',
+            body: removeSessionRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

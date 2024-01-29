@@ -38,7 +38,13 @@
       <!--      </template>-->
     </AvatarPopoverTest>
 
-    <InfiniteScrollTest />
+    <!--    <InfiniteScrollTest />-->
+    <a-button
+      type="primary"
+      @contextmenu.prevent="contextMenuVisible != !contextMenuVisible"
+      >出现右键菜单
+    </a-button>
+    <MyContextMenu />
   </div>
 </template>
 
@@ -52,6 +58,10 @@ import * as echarts from "echarts";
 import { useUpload } from "@/hooks/useUpload";
 import AvatarPopoverTest from "@/components/user/AvatarPopover.vue";
 import InfiniteScrollTest from "@/components/test/InfiniteScrollTest.vue";
+import MyContextMenu from "@/components/chat/chat/sessionlist/ContextMenu/MyContextMenu.vue";
+
+// 右键菜单显隐
+const contextMenuVisible = ref(false);
 
 const { handleFileInUploading } = useUpload();
 

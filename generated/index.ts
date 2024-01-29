@@ -8,6 +8,7 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { ChatMessageRequest } from './models/ChatMessageRequest';
+export type { ContactUpdateOrAddRequest } from './models/ContactUpdateOrAddRequest';
 export type { CursorPageBaseRequest } from './models/CursorPageBaseRequest';
 export type { DeleteRequest } from './models/DeleteRequest';
 export type { FilterVO } from './models/FilterVO';
@@ -36,6 +37,7 @@ export type { QuestionSubmit } from './models/QuestionSubmit';
 export type { QuestionSubmitDoRequest } from './models/QuestionSubmitDoRequest';
 export type { QuestionUpdateRequest } from './models/QuestionUpdateRequest';
 export type { QuestionVO } from './models/QuestionVO';
+export type { RemoveSessionRequest } from './models/RemoveSessionRequest';
 export type { Sort } from './models/Sort';
 export type { UserAddRequest } from './models/UserAddRequest';
 export type { UserApplyRequest } from './models/UserApplyRequest';
