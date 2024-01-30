@@ -33,6 +33,14 @@ export type SessionItem = {
    * 未读消息数
    */
   unreadCount: number;
+  /**
+   * 好友id(仅针对于私聊设置)
+   */
+  userId: number;
+  /**
+   * 房间状态 0: 正常 1：禁用
+   */
+  status: number;
 };
 
 /**

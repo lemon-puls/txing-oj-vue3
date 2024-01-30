@@ -5,19 +5,16 @@ import {
   WsFriendApplyVO,
   WsRequestMsgContentType,
   WsResponseMsgType,
-  WsUserStatusChangeVO,
 } from "@/utils/WsType";
 import { dealToken } from "@/service/request";
 import { useGroupStore } from "@/store/group";
 import { OnlineEnum } from "@/enume";
 import { useChatStore } from "@/store/chat";
-import { MessageShow } from "@/service/types";
+import { ContactItem, MessageShow } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
-import { useRouter } from "vue-router";
-import JSONBig from "json-bigint";
 import { notify } from "@/utils/notification";
 import { useContactStore } from "@/store/contact";
-import { timeToStr } from "@/utils/computeTime";
+import { formatTimestamp, timeToStr } from "@/utils/computeTime";
 import { UserApplyControllerService } from "../../generated";
 
 class Ws {
@@ -182,10 +179,10 @@ class Ws {
       case WsResponseMsgType.RequestAddFriend: {
         const data = params.data as WsFriendApplyVO;
         globalStore.unReadMark.newFriendUnreadCount += data.unreadCount;
+        const friendApplyItem = data.friendApplyVO;
+        friendApplyItem.time = formatTimestamp(friendApplyItem.createTime);
+        contactStore.friendApplyList.unshift(friendApplyItem);
         if (chatStore.navFlag === 1) {
-          const friendApplyItem = data.friendApplyVO;
-          friendApplyItem.time = timeToStr(friendApplyItem.createTime);
-          contactStore.friendApplyList.unshift(friendApplyItem);
           if (chatStore.showModal) {
             contactStore.friendApplyList[0].readStatus = 1;
             UserApplyControllerService.markReadFriendApplyUsingGet();
@@ -205,6 +202,11 @@ class Ws {
             chatStore.navFlag = 1;
           },
         });
+        break;
+      }
+      case WsResponseMsgType.FriendApplyAgree: {
+        // alert("接收到同意申请消息");
+        contactStore.contactList.unshift(params.data as ContactItem);
         break;
       }
       default: {

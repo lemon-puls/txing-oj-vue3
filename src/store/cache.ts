@@ -45,7 +45,7 @@ export const useCacheStore = defineStore("cache", () => {
   };
 
   const getUserById = (userId: number): Partial<UserCacheVO> => {
-    const user = cachedUserList[userId];
+    const user = cachedUserList[Number(userId)];
     if (!user) {
       refreshCachedUserVOBatch([userId]);
     }

@@ -184,8 +184,8 @@ import {
   IconFolder,
   IconVoice,
 } from "@arco-design/web-vue/es/icon";
-import { reactive, ref } from "vue";
-import { MsgTypeEnum } from "@/enume";
+import { computed, reactive, ref } from "vue";
+import { MsgTypeEnum, RoomTypeEnum } from "@/enume";
 import { Service } from "../../../../../generated";
 import { useGlobalStore } from "@/store/global";
 import message from "@arco-design/web-vue/es/message";
@@ -196,10 +196,33 @@ import { useUpload } from "@/hooks/useUpload";
 import { generateBody } from "@/utils/multimediaUtils";
 import { useMockMessage } from "@/hooks/useMockMessage";
 import SvgIcon from "@/icons/SvgIcon";
+import { watch } from "vue";
 
 const sendBarRef = ref<HTMLElement | null>();
 const inputRef = ref<HTMLElement>();
-const inputValue = ref("");
+const inputValue = computed({
+  get: () => {
+    const inputValue = chatStore.inputDraftMap.get(
+      Number(globalStore.currentSession.roomId)
+    );
+    if (inputValue === undefined) {
+      chatStore.inputDraftMap.set(
+        Number(globalStore.currentSession.roomId),
+        ""
+      );
+    }
+    return chatStore.inputDraftMap.get(
+      Number(globalStore.currentSession.roomId)
+    );
+  },
+  set: (val) => {
+    chatStore.inputDraftMap.set(
+      Number(globalStore.currentSession.roomId),
+      val as string
+    );
+  },
+});
+
 const isSending = ref(false);
 const globalStore = useGlobalStore();
 const chatStore = useChatStore();
@@ -241,6 +264,7 @@ const send = (msgType: MsgTypeEnum, body: any) => {
       }
       if (inputRef.value) {
         inputRef.value.innerText = "";
+        inputValue.value = "";
       }
       chatStore.updateSessionLastActiveTime(globalStore.currentSession.roomId);
     })
@@ -260,6 +284,12 @@ const onInputText = () => {
     inputValue.value = text;
   }
 };
+// 当选中会话变动时 切换输入草稿！
+watch(globalStore.currentSession, async (val, oldVal) => {
+  if (inputValue.value !== undefined && inputRef.value) {
+    inputRef.value.innerText = inputValue.value;
+  }
+});
 // 插入表情
 const insertEmoji = (emoji: string) => {
   if (inputRef.value) {

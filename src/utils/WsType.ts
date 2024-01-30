@@ -44,6 +44,10 @@ export enum WsResponseMsgType {
    * 加好友请求
    */
   RequestAddFriend,
+  /**
+   * "好友申请同意通知"
+   */
+  FriendApplyAgree,
 }
 
 /**

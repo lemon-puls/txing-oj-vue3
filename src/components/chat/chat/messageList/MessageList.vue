@@ -7,7 +7,7 @@
 <template>
   <div id="MessageList" @contextmenu.prevent>
     <div class="sesion-header">
-      <span class="session-name">{{ currentSessionItem.name }}</span>
+      <span class="session-name">{{ currentSessionItem?.name }}</span>
     </div>
     <hr class="advier-line" />
     <VirtualList

@@ -39,3 +39,8 @@ export enum GroupMemberRoleEnum {
   MEMBER,
   REMOVE,
 }
+
+export enum RoomStatusEnum {
+  ACTIVE,
+  FORBIDDEN,
+}

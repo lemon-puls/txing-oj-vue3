@@ -8,7 +8,6 @@
   <div id="AvatarPopover">
     <a-popover
       trigger="contextMenu"
-      :title="nice"
       style="width: 300px !important; border-radius: 10px"
     >
       <slot name="target"></slot>

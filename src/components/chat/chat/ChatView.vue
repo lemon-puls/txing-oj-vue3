@@ -56,7 +56,19 @@
             </div>
           </template>
           <template #second>
-            <SessionMemberList v-if="!isLoading" />
+            <SessionMemberList
+              v-if="
+                !isLoading &&
+                currentSessionItem &&
+                currentSessionItem.type == RoomTypeEnum.GROUP
+              "
+            />
+            <SessionFriendInfo
+              v-if="
+                currentSessionItem &&
+                currentSessionItem.type == RoomTypeEnum.SINGLE
+              "
+            />
           </template>
         </a-split>
       </template>
@@ -88,6 +100,8 @@ import MessageList from "@/components/chat/chat/messageList/MessageList.vue";
 import SessionMemberList from "@/components/chat/chat/sessionmemberlist/SessionMemberList.vue";
 import { useGroupStore } from "@/store/group";
 import { useChatStore } from "@/store/chat";
+import { RoomTypeEnum } from "@/enume";
+import SessionFriendInfo from "@/components/chat/chat/sessionmemberlist/SessionFriendInfo.vue";
 
 const groupStore = useGroupStore();
 const chatStore = useChatStore();

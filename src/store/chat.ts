@@ -456,6 +456,8 @@ export const useChatStore = defineStore("chat", () => {
     }
   });
 
+  // 聊天输入草稿
+  const inputDraftMap = reactive<Map<number, string>>(new Map([[1, ""]]));
   return {
     getSessionList,
     showModal,
@@ -476,5 +478,6 @@ export const useChatStore = defineStore("chat", () => {
     messageMap,
     markSessionRead,
     sortAndUniqueSessionList,
+    inputDraftMap,
   };
 });
