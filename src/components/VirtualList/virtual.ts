@@ -159,7 +159,6 @@ export default class Virtual {
   handleScroll(offset) {
     this.direction = offset < this.offset ? "FRONT" : "BEHIND";
     this.offset = offset;
-    console.log(this.direction);
     if (!this.param) {
       return;
     }

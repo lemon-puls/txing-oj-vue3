@@ -67,8 +67,6 @@ const { handleFileInUploading } = useUpload();
 
 const selectedFile = ref<File | undefined>(undefined);
 const uploadFile = () => {
-  alert("选择了文件");
-  console.log(selectedFile.value);
   handleFileInUploading(selectedFile.value as File, "chat");
 };
 

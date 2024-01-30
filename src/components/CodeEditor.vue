@@ -27,7 +27,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   value: () => "",
   handleChange: (v: string) => {
-    console.log(v);
+    // console.log(v);
   },
   language: () => "java",
 });
@@ -83,7 +83,6 @@ onMounted(() => {
     },
   });
   codeEditor.value.onDidChangeModelContent(() => {
-    console.log(props.value);
     props.handleChange(toRaw(codeEditor.value).getValue());
   });
 });

@@ -12,7 +12,9 @@
     <div class="online-count-parent">
       <span class="online-count"
         >在线人数:
-        <font color="red">{{ groupStore.groupInfo?.onlineCount }}</font></span
+        <span style="color: red">{{
+          groupStore.groupInfo?.onlineCount
+        }}</span></span
       >
     </div>
     <ul class="member-list">
@@ -31,7 +33,7 @@
           :user-avatar="cachedUserList[item.userId]?.userAvatar"
           :sign="cachedUserList[item.userId]?.personSign"
           :is-friend="isFriend(item)"
-          :user-id="item.userId"
+          :user-id="Number(item.userId)"
           :is-leader="isLeader"
         >
           <template #target>

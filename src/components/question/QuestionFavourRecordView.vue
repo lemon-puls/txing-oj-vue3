@@ -5,7 +5,6 @@
       style="max-width: 90%; margin: 0 auto"
       :columns="columns"
       :data="data"
-      :row-key="id"
       @rowClick="clickRow"
       :pagination="{
         pageSize: searchParams.page.pageSize,
@@ -188,7 +187,6 @@ const onPageChange = (page: number) => {
  * 取消收藏
  */
 const clickCancelFavour = async (record: any) => {
-  console.log(record);
   const res = await QuestionFavourControllerService.favourQuestionUsingGet(
     record.id
   );

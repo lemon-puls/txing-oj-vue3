@@ -229,16 +229,14 @@ const chatStore = useChatStore();
 const tempMsgId = ref(0);
 
 const sendMsgHandler = () => {
-  console.log("触发消息发送处理");
   if (!inputValue.value?.trim().length || isSending.value) {
-    console.log("消息无效：", inputValue.value);
+    message.error("消息无效");
     return;
   }
   isSending.value = true;
   send(MsgTypeEnum.TEXT, {
     content: inputValue.value,
   });
-  console.log("发送消息：", inputValue.value);
 };
 const send = (msgType: MsgTypeEnum, body: any) => {
   Service.sendMsgUsingPost({
@@ -335,7 +333,6 @@ const onStartFunction = () => {
   const { type, body } = generateBody(fileInfo.value, nowMsgType.value, true);
   const res = mockMessage.mockMessage(type, body);
   tempMsgId.value = res.message.id;
-  console.log("pushMsg:", res);
   chatStore.pushMsg(res);
   chatStore.chatListToBottomAction?.();
 };
@@ -359,7 +356,6 @@ const openFileSelector = (fileType: string, isEmoji = false) => {
 };
 // 选中文件后调用
 const selectAndUploadFile = async (files?: FileList | null) => {
-  console.log("files:", files);
   if (!files?.length) {
     return;
   }
@@ -370,7 +366,6 @@ const selectAndUploadFile = async (files?: FileList | null) => {
     }
   }
   await uploadFile(file, "chat");
-  console.log("上传成功了out", fileInfo.value);
 };
 onChange(selectAndUploadFile);
 </script>

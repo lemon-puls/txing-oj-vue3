@@ -39,7 +39,6 @@ export const useCacheStore = defineStore("cache", () => {
         needRefresh: undefined,
         lastModifyTime: Date.now(),
       };
-      console.log("筛选：", curUserItem);
       cachedUserList[item.id] = curUserItem;
     });
   };

@@ -37,7 +37,7 @@
         <a-button type="primary" @click="doSubmit">查询</a-button>
       </a-form-item>
     </a-form>
-    <a-divider size="0" />
+    <a-divider :size="0" />
     <a-space wrap>
       <a-tag
         :checkable="true"
@@ -51,7 +51,7 @@
         >{{ item.name }}
       </a-tag>
     </a-space>
-    <a-divider size="0" />
+    <a-divider :size="0" />
     <a-table
       :columns="columns"
       :data="dataList"

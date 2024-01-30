@@ -8,15 +8,15 @@
       @pageChange="onPageChange"
     >
       <template #scroll-loading>
-        <div v-if="bottom === 1">
-          <span style="color: #7d7979"
-            >已经到尽头啦 可以尝试发表一下文章哦！</span
-          >
-        </div>
-        <a-spin v-else-if="bottom === 0" />
-        <div v-else-if="bottom === 2">
-          <a-empty />
-        </div>
+        <!--        <div v-if="bottom === 1">-->
+        <!--          <span style="color: #7d7979"-->
+        <!--            >已经到尽头啦 可以尝试发表一下文章哦！</span-->
+        <!--          >-->
+        <!--        </div>-->
+        <!--        <a-spin v-else-if="bottom === 0" />-->
+        <!--        <div v-else-if="bottom === 2">-->
+        <!--          <a-empty />-->
+        <!--        </div>-->
       </template>
       <template #item="{ item }">
         <a-list-item
@@ -115,7 +115,6 @@ const searchMyPostParams = ref<PostQueryRequest>({
   pageSize: 5,
 });
 const loadData = async () => {
-  console.log("执行还是没问题的");
   const res = await PostFavourControllerService.listMyFavourPostByPageUsingPost(
     searchMyPostParams.value
   );

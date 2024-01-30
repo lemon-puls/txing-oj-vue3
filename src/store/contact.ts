@@ -12,6 +12,7 @@ import { formatTimestamp, timeToStr } from "@/utils/computeTime";
 import { useCacheStore } from "@/store/cache";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
+import { useUserStore } from "@/store/user";
 
 export const pageSize = 20;
 export const useContactStore = defineStore("contact", () => {
@@ -20,6 +21,7 @@ export const useContactStore = defineStore("contact", () => {
   const friendApplyList = reactive<FriendApplyItem[]>([]);
   const cacheStore = useCacheStore();
   const chatStore = useChatStore();
+  const userStore = useUserStore();
 
   const contactsOptions = reactive({
     isLast: false,
@@ -149,6 +151,10 @@ export const useContactStore = defineStore("contact", () => {
       globalStore.currentSelectedContact = undefined;
     }
   };
+
+  const isFriend = (userId: number) => {
+    return contactList.find((cur) => cur.userId == userId) !== undefined;
+  };
   return {
     getContactList,
     friendApplyList,
@@ -156,5 +162,6 @@ export const useContactStore = defineStore("contact", () => {
     contactList,
     onAcceptFriendApply,
     onDeleteContact,
+    isFriend,
   };
 });

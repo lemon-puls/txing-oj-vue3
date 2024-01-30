@@ -66,11 +66,9 @@ export const useUpload = () => {
         isUploading.value = false;
         if (inner) return;
         if (err) {
-          console.log("上传失败", err);
           trigger("fail");
         } else {
           const downloadUrl = "https://" + data.Location;
-          console.log("上传成功:", downloadUrl);
           if (fileInfo.value) {
             fileInfo.value.downloadUrl = downloadUrl;
           }

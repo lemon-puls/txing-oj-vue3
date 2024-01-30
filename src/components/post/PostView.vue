@@ -8,15 +8,15 @@
       @pageChange="onPageChange"
     >
       <template #scroll-loading>
-        <div v-if="bottom === 1">
-          <span style="color: #7d7979"
-            >已经到尽头啦 可以尝试发表一下文章哦！</span
-          >
-        </div>
-        <a-spin v-else-if="bottom === 0" />
-        <div v-else-if="bottom === 2">
-          <a-empty />
-        </div>
+        <!--        <div v-if="bottom === 1">-->
+        <!--          <span style="color: #7d7979"-->
+        <!--            >已经到尽头啦 可以尝试发表一下文章哦！</span-->
+        <!--          >-->
+        <!--        </div>-->
+        <!--        <a-spin v-else-if="bottom === 0" />-->
+        <!--        <div v-else-if="bottom === 2">-->
+        <!--          <a-empty />-->
+        <!--        </div>-->
       </template>
       <template #item="{ item }">
         <a-list-item
@@ -131,10 +131,8 @@ const loadMyPostData = async () => {
     return;
   }
   myPostData.value.splice(0);
-  console.log("list", res.data.list);
   myPostData.value = myPostData.value.concat(res.data.list);
   paginationProps.total = res.data.total;
-  console.log("myPostData", myPostData.value);
 };
 /**
  * 只要页号等变量发生改变时 就会触发loadData的调用 获取到当前页对应的数据
@@ -158,7 +156,6 @@ const clickPostHandle = (id: number) => {
 
 // 处理文章操作
 const handlePostOps = async (id: any, key: any) => {
-  console.log(id, key);
   if ("编辑文章" === key) {
     router.push({
       path: "/txing/post/update",

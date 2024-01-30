@@ -8,7 +8,6 @@
             id="titleInputId"
             v-model="form.title"
             placeholder="请输入标题..."
-            @blur="onBlur"
             :max-length="40"
           />
           <a-popover title="发布文章" :trigger="'click'">
@@ -129,7 +128,6 @@ onMounted(() => {
 });
 
 const loadPostOldData = async () => {
-  console.log("家哟！", route.query.id);
   const id = route.query.id;
   if (!id) {
     return;
@@ -164,7 +162,6 @@ let appendData = ref({
 //   };
 // };
 const onChange = async (_: any, currentFile: any) => {
-  console.log("currentFile", currentFile);
   // if (currentFile.length == 2) {
   //   currentFile.splice(0, 1);
   // }
@@ -178,11 +175,6 @@ const onChange = async (_: any, currentFile: any) => {
   }
   form.value.coverImg = response.data;
   appendData.value.oldImg = response.data;
-  console.log(
-    "form.value.coverImg",
-    form.value.coverImg,
-    appendData.value.oldImg
-  );
   file.value = {
     ...currentFile,
     url: response.data,

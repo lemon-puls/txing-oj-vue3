@@ -27,7 +27,6 @@ import { PageVO, QuestionSubmitControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 
 onMounted(() => {
-  console.log("SubmitRecordView.vue执行了");
   loadRecordData();
 });
 
@@ -47,7 +46,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   questionId: () => 0,
   clickRow: (record: any) => {
-    console.log("触发默认实现", record);
+    // console.log("触发默认实现", record);
   },
   scrollX: () => "120%",
   scrollY: () => "100%",
@@ -158,7 +157,6 @@ const loadRecordData = async () => {
   } else {
     data.value.splice(0);
     data.value = data.value.concat(res.data.list);
-    console.log("---", data.value);
   }
 };
 </script>

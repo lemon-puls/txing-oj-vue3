@@ -68,12 +68,12 @@ const form = reactive({
 const handleSubmit = async () => {
   const res = await UserControllerService.userLoginUsingPost(form);
   if (res.code === 0) {
+    localStorage.setItem("TOKEN", res.data.token);
     // 等获取登录信息成功后 再跳转到主页
     await useUserStore().getLoginUser();
     // alert("恭喜你！登录成功" + JSON.stringify(res.data));
     // 保存Token
-    useUserStore().loginUser.token = res.data.token;
-    localStorage.setItem("TOKEN", res.data.token);
+    // useUserStore().loginUser.token = res.data.token;
     // 建立websocket
     globalStore.ws = await new Ws();
     router.push({

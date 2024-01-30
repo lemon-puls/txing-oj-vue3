@@ -106,7 +106,7 @@
             <!--            />-->
             <SubmitRecordView
               style="width: 90%; margin: 0 auto"
-              :user-id="useUserStore().loginUser.id"
+              :user-id="Number(useUserStore().loginUser.id)"
             ></SubmitRecordView>
           </a-tab-pane>
           <a-tab-pane key="4">
@@ -500,7 +500,7 @@ const images = [
   "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp",
 ];
 const handleChange = (value: string) => {
-  console.log(value);
+  // console.log(value);
 };
 </script>
 

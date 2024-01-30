@@ -7,8 +7,8 @@
 <template>
   <div id="AvatarPopover">
     <a-popover
-      trigger="contextMenu"
-      style="width: 300px !important; border-radius: 10px"
+      :trigger="trigger"
+      style="width: 250px !important; border-radius: 10px"
     >
       <slot name="target"></slot>
       <template #content>
@@ -23,7 +23,7 @@
             <span class="person-info-name-font">{{ userName }}</span>
           </div>
           <div class="person-info-sign">
-            <span class="person-info-sign-font">{{ sign }}</span>
+            <span class="person-info-sign-font">Ta说：{{ sign }}</span>
           </div>
           <a-divider />
           <div class="person-info-ops">
@@ -131,6 +131,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  trigger: {
+    type: String,
+    default: "contextMenu",
+  },
 });
 
 // const curUserId = ref<number>();
@@ -164,6 +168,7 @@ const onSendMessage = () => {
     );
     // message.error("找不到当前联系人对应的会话信息");
   }
+  chatStore.showModal = true;
   chatStore.navFlag = 0;
 };
 

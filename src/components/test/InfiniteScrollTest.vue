@@ -9,7 +9,6 @@ import { ref } from "vue";
 
 const count = ref(10);
 const load = () => {
-  console.log("load");
   count.value += 2;
 };
 </script>

@@ -5,7 +5,6 @@
       style="max-width: 100%; margin: 0 auto"
       :columns="columns"
       :data="data"
-      :row-key="id"
       @rowClick="clickRow"
       :pagination="{
         pageSize: searchParams.page.pageSize,
@@ -40,15 +39,14 @@ import {
 import message from "@arco-design/web-vue/es/message";
 
 onMounted(() => {
-  console.log("SubmitRecordView.vue执行了");
-  if (props.questionId !== 0) {
+  if (props?.questionId !== 0) {
     searchParams.value.filter?.push({
       fieldName: "questionId",
       queryType: "eq",
       value: props.questionId + "",
     });
   }
-  if (props.userId !== 0) {
+  if (props?.userId !== 0) {
     searchParams.value.filter?.push({
       fieldName: "userId",
       queryType: "eq",
@@ -60,16 +58,16 @@ onMounted(() => {
 
 interface Props {
   // data: Array<object>;
-  questionId: number;
+  questionId?: number | string;
   userId: number;
-  clickRow: (record: any) => void;
+  clickRow?: (record: any) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   questionId: () => 0,
   userId: () => 0,
   clickRow: (record: any) => {
-    console.log("触发默认实现", record);
+    // console.log("触发默认实现", record);
   },
 });
 

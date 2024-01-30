@@ -76,6 +76,7 @@
     <template #title> 测试用例</template>
     <div>
       <json-viewer
+        v-if="currentJudgeCase"
         :value="currentJudgeCase"
         style="width: 100%; min-width: 3.125rem"
         :expand-depth="3"
@@ -256,7 +257,6 @@ const doDelete = async (question: Question) => {
   } else {
     message.error("删除失败：" + res.message);
   }
-  console.log(question);
 };
 
 const router = useRouter();
@@ -265,7 +265,6 @@ const router = useRouter();
  * @param question
  */
 const doUpdate = (question: Question) => {
-  console.log(question);
   router.push({
     path: "/txing/update/question",
     query: {

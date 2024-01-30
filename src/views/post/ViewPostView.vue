@@ -3,7 +3,7 @@
     <div id="leftBar">
       <a-space :size="'large'" direction="vertical" fill>
         <div title="收藏作品">
-          <a-badge :count="postInfo.favourNum" max-count="999">
+          <a-badge :count="postInfo.favourNum" :max-count="999">
             <icon-star-fill
               v-if="postInfo.hasFavour"
               size="40"
@@ -13,7 +13,7 @@
           </a-badge>
         </div>
         <div title="点赞作品">
-          <a-badge :count="postInfo.thumbNum" max-count="999">
+          <a-badge :count="postInfo.thumbNum" :max-count="999">
             <icon-thumb-up-fill
               v-if="postInfo.hasThumb"
               size="40"
@@ -23,7 +23,7 @@
           </a-badge>
         </div>
         <div title="评论作品" @click="handleClick">
-          <a-badge :count="postInfo.commentNum" max-count="999">
+          <a-badge :count="postInfo.commentNum" :max-count="999">
             <icon-message :size="40" />
           </a-badge>
         </div>
@@ -42,15 +42,26 @@
           "
         >
           <a-space :size="'small'">
-            <img
-              :src="postInfo.user.userAvatar"
-              style="
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                margin-right: 10px;
-              "
-            />
+            <AvatarPopover
+              :user-name="postInfo.user?.userName"
+              :user-avatar="postInfo.user?.userAvatar"
+              :sign="postInfo.user?.personSign"
+              :is-friend="contactStore.isFriend(postInfo.user.id)"
+              :user-id="Number(postInfo.user?.id)"
+              trigger="hover"
+            >
+              <template #target>
+                <img
+                  :src="postInfo.user.userAvatar"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                  "
+                />
+              </template>
+            </AvatarPopover>
             <span>{{ postInfo.user.userName }}</span>
             <span>{{ postInfo.createTime }}</span>
           </a-space>
@@ -175,6 +186,10 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import _ from "lodash";
 import { onUnmounted } from "vue/dist/vue";
+import AvatarPopover from "@/components/user/AvatarPopover.vue";
+import { useContactStore } from "@/store/contact";
+
+const contactStore = useContactStore();
 
 onMounted(async () => {
   await loadPostInfo();
@@ -229,7 +244,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 // 加载文章详情
 const loadPostInfo = async () => {
-  console.log("噜啦啦考虑", props.id);
   const res = await PostControllerService.getPostVoByIdUsingGet(
     props.id as any
   );
@@ -299,7 +313,6 @@ const pageCount = ref(-1);
 const bottom = ref(0);
 
 const fetchData = async () => {
-  console.log("reach bottom!");
   if (
     (pageCount.value === -1 || current.value < pageCount.value) &&
     bottom.value === 0
@@ -364,7 +377,6 @@ const handleClick = async () => {
   // scrollArea.value.addEventListener("scroll", handleScroll);
   // window.addEventListener("scroll", handleScroll);
   // const target = findParentElement(scrollArea.value, "#desiredParentId");
-  console.log("获取到了没：", targetElement);
   targetElement?.addEventListener("scroll", scrollThrottle);
   // }
 };
@@ -374,7 +386,6 @@ const handleCancel = () => {
 };
 
 const handleScroll = () => {
-  console.log("到达底部触发");
   if (bottom.value !== 0) {
     return;
   }
@@ -382,13 +393,6 @@ const handleScroll = () => {
   const { scrollTop, scrollHeight, clientHeight } = targetElement;
   // 判断是否滑到了底部
   if (scrollTop + clientHeight + 1 >= scrollHeight) {
-    console.log(
-      "scrollTop, clientHeight, scrollHeight",
-      scrollTop,
-      clientHeight,
-      scrollHeight,
-      scrollTop + clientHeight + 1 >= scrollHeight
-    );
     // 触底，调用加载数据的方法
     throttle();
   }

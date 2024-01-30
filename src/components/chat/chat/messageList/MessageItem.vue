@@ -156,7 +156,6 @@ import MessageRender from "@/components/chat/MessageRender/indexRender.vue";
 import { MsgTypeEnum } from "@/enume";
 
 const cacheStore = useCacheStore();
-console.log("cacheUserList:", cacheStore.cachedUserList);
 const props = withDefaults(
   defineProps<{
     // 消息

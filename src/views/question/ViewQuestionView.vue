@@ -37,10 +37,10 @@
                 <div id="questionFavourId">
                   <icon-star-fill
                     v-if="isFavour"
-                    size="30"
+                    :size="30"
                     @click="clickFavour"
                   />
-                  <icon-star v-else size="30" @click="clickFavour"></icon-star>
+                  <icon-star v-else :size="30" @click="clickFavour"></icon-star>
                   <span style="margin-left: 5px">收藏</span>
                 </div>
                 <template #extra>
@@ -111,7 +111,7 @@
                     :max-length="{ length: 200, errorOnly: false }"
                     :show-word-limit="true"
                   />
-                  <a-divider size="0" />
+                  <a-divider :size="0" />
                   <a-button
                     type="primary"
                     status="success"
@@ -135,7 +135,7 @@
             >
               <SubmitRecordView
                 :question-id="props.id"
-                :user-id="useUserStore().loginUser.id"
+                :user-id="Number(useUserStore().loginUser.id)"
                 :click-row="clickSubmitRecord"
               ></SubmitRecordView>
             </a-tab-pane>
@@ -371,8 +371,6 @@ const searchCommentParams = ref<PageVO>({
   // ],
 });
 const loadCommentData = async (current: number) => {
-  console.log("加载评论数据");
-  console.log(question.value?.id);
   const questionId = question.value?.id;
   const res = await QuestionCommentControllerService.listUsingPost1({
     ...searchCommentParams.value,
@@ -435,7 +433,6 @@ const bottom = ref(0);
 const scrollbar = ref(true);
 
 const fetchData = async () => {
-  console.log("reach bottom!");
   if (
     (pageCount.value === -1 || current.value < pageCount.value) &&
     bottom.value === 0
@@ -587,7 +584,6 @@ const form = ref<QuestionSubmitDoRequest>({
     "}",
 });
 const changeCode = (value: string) => {
-  console.log(value);
   form.value.code = value;
 };
 const doSubmit = async () => {
@@ -619,16 +615,13 @@ const timer = (sumbitId: number) => {
   let i = 0;
   const intervalId = setInterval(async () => {
     // 在这里执行每秒要执行的任务
-    console.log("定时器执行中...");
     const res = await QuestionSubmitControllerService.getExecResultUsingGet(
       sumbitId
     );
-    console.log("res.data:", res);
     // 检查满足条件的逻辑
     if (res.data != "{}") {
       // 条件满足，清除定时器
       clearInterval(intervalId);
-      console.log("执行结果：", res.data);
       const data = JSON.parse(res.data);
       resultData[0].value = `${data.time} MS`;
       resultData[1].value = `${(data.memory / (1024 * 1024)).toFixed(2)} MB`;

@@ -263,8 +263,6 @@ export const useChatStore = defineStore("chat", () => {
     if (totalGroup) {
       sessionList.unshift(totalGroup);
     }
-
-    console.log("排完序了SessionList:", sessionList);
   };
 
   // 更新会话
@@ -275,10 +273,8 @@ export const useChatStore = defineStore("chat", () => {
     const oldSession = sessionList.find(
       (item) => item.roomId.toString() === roomId.toString()
     );
-    console.log("before:", oldSession, newSessionItem, roomId);
     delete newSessionItem.unreadCount;
     oldSession && newSessionItem && Object.assign(oldSession, newSessionItem);
-    console.log("after:", oldSession, newSessionItem);
     sortAndUniqueSessionList();
   };
   // 更新会话活跃时间
@@ -295,11 +291,9 @@ export const useChatStore = defineStore("chat", () => {
         unreadCount: oldSession.unreadCount,
         activeTime: Date.now(),
       });
-      console.log("更新后：", oldSession);
     } else if (newSessionItem) {
       const temp = cloneDeep(newSessionItem);
       temp.unreadCount = 0;
-      console.log("temp:", temp, "new:", newSessionItem);
       temp.activeTime = Date.now();
       sessionList.unshift(temp);
     }
@@ -308,12 +302,8 @@ export const useChatStore = defineStore("chat", () => {
 
   // 发送消息
   const pushMsg = async (msg: MessageShow) => {
-    // alert(msg.message.id);
     const currentMsgMap = messageMap.get(Number(msg.message.roomId));
-    console.log("前 roomId:", msg.message.roomId, messageMap.get(1));
-    console.log("前：", currentMsgMap, msg);
     currentMsgMap?.set(msg.message.id, msg);
-    console.log("后：", currentMsgMap);
     // 加载相关用户信息至缓存中
     const userId = msg.fromUser?.userId;
     const cacheUser = cacheStore.cachedUserList[userId];
@@ -325,7 +315,6 @@ export const useChatStore = defineStore("chat", () => {
     //   globalStore.currentSession.roomId.toString() !==
     //     msg.message.roomId.toString()
     // ) {
-    console.log("刷新会话列表----");
     // let result = undefined;
     // if (!showModal.value || navFlag.value !== 0) {
     //   globalStore.currentSession.roomId = msg.message.roomId;
@@ -339,7 +328,6 @@ export const useChatStore = defineStore("chat", () => {
     // }
     const res = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
     // updateSession(msg.message.roomId, res.data);
-    console.log("res.data", res.data);
     updateSessionLastActiveTime(msg.message.roomId, res?.data);
     // }
 
@@ -357,7 +345,6 @@ export const useChatStore = defineStore("chat", () => {
         (item) => item.roomId.toString() === msg.message.roomId.toString()
       );
       if (item) {
-        console.log("糟了 +1了");
         item.unreadCount += 1;
       }
     }
@@ -368,7 +355,6 @@ export const useChatStore = defineStore("chat", () => {
       globalStore.currentSession.roomId.toString() !==
         msg.message.roomId.toString()
     ) {
-      console.log("总未读消息数： +1");
       globalStore.unReadMark.newMessageUnreadCount += 1;
     }
     // 如果正打开当前会话 则需要向后端报告阅读时间 以免下次重新打开系统时未读消息数不正确
@@ -390,7 +376,6 @@ export const useChatStore = defineStore("chat", () => {
     //   chatListToBottomAction.value?.();
     // });
     chatListToBottomAction.value?.();
-    console.log("刷新会话列表结束");
   };
 
   const loadMore = async (size?: number) => {

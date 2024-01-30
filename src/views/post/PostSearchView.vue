@@ -20,12 +20,7 @@
       >
     </div>
 
-    <a-list
-      class="list-demo-action-layout"
-      :bordered="false"
-      :data="data"
-      :pagination-props="paginationProps"
-    >
+    <a-list class="list-demo-action-layout" :bordered="false" :data="data">
       <template #scroll-loading>
         <div v-if="bottom === 1">
           <span style="color: #7d7979"
@@ -109,13 +104,11 @@ const loadData = async (current: number) => {
     message.error(res.msg);
     return;
   }
-  console.log("res.data", res.data);
   return res;
 };
 // 搜索文章
 const searchPost = async () => {
   const res = await loadData(1);
-  console.log("搜索0：", res);
   data.value.splice(0);
   if (res === undefined || res.data === null || res.data.list.length === 0) {
     bottom.value = 2;
@@ -128,7 +121,6 @@ const searchPost = async () => {
   if (current.value === pageCount.value) {
     bottom.value = 1;
   }
-  console.log("搜索：", data.value);
 };
 // 分页查询
 const current = ref(0);
@@ -138,7 +130,6 @@ const totalCount = ref(0);
 const scrollbar = ref(true);
 
 const fetchData = async () => {
-  console.log("reach bottom!");
   if (
     (pageCount.value === -1 || current.value < pageCount.value) &&
     bottom.value === 0
@@ -186,7 +177,6 @@ onUnmounted(() => {
 });
 
 const handleScroll = () => {
-  console.log("到达底部触发");
   if (bottom.value !== 0) {
     return;
   }
@@ -195,15 +185,7 @@ const handleScroll = () => {
     document.documentElement.scrollTop || document.body.scrollTop;
   const scrollHeight =
     document.documentElement.scrollHeight || document.body.scrollHeight;
-  console.log(
-    "windowHeight, scrollTop, scrollHeight",
-    windowHeight,
-    scrollTop,
-    scrollHeight,
-    scrollTop + windowHeight + 1 >= scrollHeight
-  );
   if (scrollTop + windowHeight + 1 >= scrollHeight) {
-    console.log("加载数据啦");
     throttle();
   }
 };

@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import GlobalHeader from "@/components/GlobalHeader";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import ChatBox from "@/components/chat/ChatBox.vue";
 import { useUserStore } from "@/store/user";
 import { useGlobalStore } from "@/store/global";
@@ -48,13 +48,15 @@ onMounted(async () => {
   //   "loginUser:",
   //   userStore.loginUser
   // );
-  if (userStore.isSign && globalStore.ws === undefined) {
-    console.log("用户刷新页面 重新建立websocket连接");
-    if (globalStore.ws) {
-      globalStore.ws.closeWsConnection();
+  nextTick(() => {
+    if (userStore.isSign && globalStore.ws === undefined) {
+      console.log("用户刷新页面 重新建立websocket连接");
+      if (globalStore.ws) {
+        globalStore.ws.closeWsConnection();
+      }
+      globalStore.ws = new Ws();
     }
-    globalStore.ws = new Ws();
-  }
+  });
 });
 
 const handleScroll = () => {

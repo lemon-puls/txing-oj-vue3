@@ -16,6 +16,7 @@ import { notify } from "@/utils/notification";
 import { useContactStore } from "@/store/contact";
 import { formatTimestamp, timeToStr } from "@/utils/computeTime";
 import { UserApplyControllerService } from "../../generated";
+import AccessEnum from "@/access/accessEnum";
 
 class Ws {
   // 是否已建立ws连接
@@ -28,7 +29,6 @@ class Ws {
   constructor() {
     this.worker = new Worker(new URL("./worker.ts", import.meta.url));
     this.initConnect();
-    console.log("执行构造函数了");
     // 收到消息
     this.worker.addEventListener("message", this.onWorkerMsg);
     // 后台重试次数达到上限后 tab获取焦点后再尝试连接
@@ -131,7 +131,6 @@ class Ws {
       JSON.parse(value);
     switch (params.type) {
       case WsResponseMsgType.UserLoginSuccess: {
-        console.log("前端收到用户登录成功ws");
         const { token, ...rest } = params.data as UserLoginSuccessResponse;
         localStorage.setItem("TOKEN", token);
         dealToken.clear();
@@ -151,16 +150,6 @@ class Ws {
         break;
       }
       case WsResponseMsgType.Message: {
-        console.log(
-          "ws: 接收到新消息",
-          chatStore.chatMessageList,
-          chatStore.messageMap,
-          "params:",
-          params,
-          "value:",
-          value
-        );
-        // alert("接受到新消息：" + (params.data as MessageShow).message.id);
         chatStore.pushMsg(params.data as MessageShow);
         break;
       }
@@ -171,9 +160,11 @@ class Ws {
         break;
       }
       case WsResponseMsgType.UserTokenInvalid: {
+        console.log("ws接受到token失效消息");
         userStore.isSign = false;
-        userStore.loginUser.userRole = undefined;
-        localStorage.removeItem("TOKEN");
+        userStore.loginUser.userRole = AccessEnum.NOT_LOGIN;
+        userStore.loginUser.userName = "";
+        // localStorage.removeItem("TOKEN");
         break;
       }
       case WsResponseMsgType.RequestAddFriend: {

@@ -41,7 +41,6 @@ const hasLoadError = ref(false);
 const isLoading = ref(true);
 
 const props = defineProps<{ body: ImageBody }>();
-console.log("ImageBody:", props.body);
 
 const getImageHeight = computed(() => {
   const { width, height } = props.body;

@@ -12,7 +12,6 @@ export const cos = new COS({
 
     FileControllerService.getCosCredentialsUsingGet().then((res) => {
       if (res.code !== 0) {
-        console.log("获取Cos临时秘钥失败: ", res.msg);
         return;
       }
       const data = res.data;

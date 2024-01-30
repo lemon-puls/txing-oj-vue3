@@ -38,7 +38,7 @@
               placeholder="请输入用时限制..."
               mode="button"
               size="large"
-              min="0"
+              :min="0"
             />
           </a-form-item>
           <!--          <a-form-item field="judgeConfig.stackLimit" label="堆栈限制">-->
@@ -56,7 +56,7 @@
               placeholder="请输入内存限制..."
               mode="button"
               size="large"
-              min="0"
+              :min="0"
             />
           </a-form-item>
         </a-space>
@@ -156,7 +156,6 @@ const loadData = async () => {
       ];
     } else {
       form.value.judgeCase = JSON.parse(form.value.judgeCase as any);
-      console.log("lallaa", form.value.judgeCase);
     }
     if (!form.value.judgeConfig) {
       form.value.judgeConfig = {
@@ -201,7 +200,6 @@ const handleDelete = (index: number) => {
  * 提交
  */
 const doSubmit = async () => {
-  console.log(form.value);
   if (updatePage) {
     // 更新
     const res = await QuestionControllerService.updateQuestionUsingPost(

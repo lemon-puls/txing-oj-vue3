@@ -224,6 +224,8 @@ const handleLogout = async () => {
   }
   // 更新本地登录用户数据
   useUserStore().getLoginUser();
+  // 删除token
+  localStorage.removeItem("TOKEN");
   // 断开ws连接
   globalStore.ws?.closeWsConnection();
   globalStore.ws = undefined;
@@ -247,7 +249,6 @@ const handleSelect = (key: any) => {
 // 打开聊天框
 const openChatBox = () => {
   useChatStore().showModal = true;
-  console.log("打开聊天框", useChatStore().showModal);
 };
 
 /**

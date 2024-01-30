@@ -24,7 +24,13 @@
         <span class="person-info-name-font">{{ user.userName }}</span>
       </div>
       <div class="person-info-sign">
-        <span class="person-info-sign-font">Ta说：{{ user.personSign }}</span>
+        <span class="person-info-sign-font"
+          >Ta说：{{
+            user.personSign.length > 40
+              ? user.personSign.substring(0, 40) + "..."
+              : user.personSign
+          }}</span
+        >
       </div>
     </div>
     <a-divider />
