@@ -14,11 +14,11 @@ export const useUserStore = defineStore("user", () => {
   });
   const isSign = computed({
     get: () => {
-      return loginUser.value.id !== -1;
+      return loginUser.value.userRole !== ACCESS_ENUM.NOT_LOGIN;
     },
     set: (val) => {
       if (!val) {
-        loginUser.value.id = -1;
+        loginUser.value.userRole = ACCESS_ENUM.NOT_LOGIN;
       }
     },
   });

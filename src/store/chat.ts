@@ -195,6 +195,7 @@ export const useChatStore = defineStore("chat", () => {
     sessionOptions.isLoading = true;
     const res = await Service.getSessionPageByCursorUsingPost({
       pageSize: sessionList.length > pageSize ? sessionList.length : pageSize,
+      // pageSize: 10,
       cursor:
         isFresh || !sessionOptions.cursor ? undefined : sessionOptions.cursor,
     }).catch(() => {

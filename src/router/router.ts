@@ -16,6 +16,7 @@ import ViewPostView from "@/views/post/ViewPostView.vue";
 import PostSearchView from "@/views/post/PostSearchView.vue";
 import VirtualListTest from "@/views/test/VirtualListTest.vue";
 import InfiniteScrollTest from "@/components/test/InfiniteScrollTest.vue";
+import ManageView from "@/views/manage/ManageView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -113,6 +114,12 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       hideInMenu: true,
     },
+  },
+
+  {
+    path: "/txing/manage",
+    name: "后台管理",
+    component: ManageView,
   },
   // {
   //   path: "/admin",

@@ -59,8 +59,8 @@
     height: 99%;
     margin: 0 auto;
     /// / 100 % 时谷歌浏览器会出现无法滚动问题
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
     overflow-y: auto;
     flex: 1;
   }

@@ -27,7 +27,7 @@
         </a-menu-item>
         <a-menu-item
           key="adminCenter"
-          v-if="checkAccess(useUserStore().loginUser, AccessEnum.ADMIN)"
+          v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"
         >
           <a-dropdown
             @select="doMenuClick"
@@ -115,17 +115,12 @@
         >
           <a-popover id="headDialogBox">
             <a-avatar>
-              <img
-                alt="avatar"
-                :src="useUserStore().loginUser?.userAvatar ?? ''"
-              />
+              <img alt="avatar" :src="userStore.loginUser?.userAvatar ?? ''" />
             </a-avatar>
             <template #content>
               <a-space class="wrapper" direction="vertical">
                 <a-button
-                  v-if="
-                    useUserStore().loginUser.userRole != AccessEnum.NOT_LOGIN
-                  "
+                  v-if="userStore.loginUser.userRole != AccessEnum.NOT_LOGIN"
                   type="primary"
                   long
                   @click="handleLogout"
@@ -141,7 +136,7 @@
               </a-space>
             </template>
           </a-popover>
-          {{ useUserStore().loginUser?.userName ?? "未登录" }}
+          {{ userStore.loginUser?.userName ?? "未登录" }}
         </div>
       </div>
     </a-col>
@@ -167,6 +162,7 @@ import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
 
 const router = useRouter();
+const userStore = useUserStore();
 const loginUser = useUserStore().loginUser;
 const globalStore = useGlobalStore();
 // 默认主页
@@ -197,9 +193,9 @@ router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];
 });
 
-setTimeout(() => {
-  useUserStore().getLoginUser();
-}, 3000);
+// setTimeout(() => {
+//   useUserStore().getLoginUser();
+// }, 3000);
 
 const visibleRoutes = computed(() => {
   return routes.filter((item, index) => {
@@ -207,7 +203,7 @@ const visibleRoutes = computed(() => {
       return false;
     }
     // 根据用户是否具有权限过滤菜单
-    if (!checkAccess(useUserStore().loginUser, item?.meta?.access as string)) {
+    if (!checkAccess(userStore.loginUser, item?.meta?.access as string)) {
       return false;
     }
     return true;
@@ -223,7 +219,7 @@ const handleLogout = async () => {
     message.error(res.msg);
   }
   // 更新本地登录用户数据
-  useUserStore().getLoginUser();
+  userStore.getLoginUser();
   // 删除token
   localStorage.removeItem("TOKEN");
   // 断开ws连接
@@ -248,7 +244,11 @@ const handleSelect = (key: any) => {
  */
 // 打开聊天框
 const openChatBox = () => {
-  useChatStore().showModal = true;
+  if (userStore.isSign) {
+    useChatStore().showModal = true;
+  } else {
+    message.warning("请先登录！");
+  }
 };
 
 /**

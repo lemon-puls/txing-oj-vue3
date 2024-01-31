@@ -228,7 +228,6 @@ export default class Virtual {
         high = middle - 1;
       }
     }
-
     return low > 0 ? --low : 0;
   }
 

@@ -7,7 +7,13 @@
 <template>
   <div id="SessionMemberList">
     <div class="session-search-parent">
-      <a-input-search class="session-search" placeholder="快速查找" />
+      <a-input-search
+        class="session-search"
+        placeholder="快速查找"
+        allow-clear
+        v-model="queryKey"
+        @input="onQueryInputChange"
+      />
     </div>
     <div class="online-count-parent">
       <span class="online-count"
@@ -20,7 +26,9 @@
     <ul class="member-list">
       <li
         class="member-list-item"
-        v-for="(item, index) in groupStore.userList"
+        v-for="(item, index) in queryKey.length === 0
+          ? groupStore.userList
+          : tempMemberList"
         :key="index"
       >
         <!--        <a-dropdown-->
@@ -212,6 +220,8 @@ import AvatarPopover from "@/components/user/AvatarPopover.vue";
 import SvgIcon from "@/icons/SvgIcon";
 import { GroupMemberRoleEnum } from "@/enume";
 import { Service } from "../../../../../generated";
+import { reactive } from "vue";
+import { SessionItem, UserItem } from "@/service/types";
 
 const groupStore = useGroupStore();
 const cacheStore = useCacheStore();
@@ -277,5 +287,24 @@ const onRemoveMember = async () => {
   message.success("操作成功");
   groupStore.getGroupMemberList(true);
   groupStore.getGroupDetail();
+};
+
+// 会话搜索框
+const queryKey = ref<string>("");
+// 临时会话列表 用于存储搜索结果
+let tempMemberList = reactive<UserItem[]>([]);
+const onQueryInputChange = () => {
+  if (queryKey.value.length === 0) {
+    tempMemberList.splice(0, tempMemberList.length);
+    return;
+  }
+  tempMemberList = groupStore.userList.filter((item) => {
+    if (item.userId) {
+      const userItem = cachedUserList.value[item.userId];
+      return userItem?.userName?.includes(queryKey.value);
+    } else {
+      return false;
+    }
+  });
 };
 </script>

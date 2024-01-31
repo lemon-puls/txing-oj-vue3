@@ -15,7 +15,7 @@
         allow-clear
       />
     </div>
-    <ul id="SessionList" v-infinite-scroll="load">
+    <ul id="SessionList" ref="scrollElement">
       <li
         v-for="(item, index) in queryKey.length === 0
           ? chatStore.sessionList
@@ -198,13 +198,10 @@ import { Service } from "../../../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { RoomTypeEnum } from "@/enume";
 import MyContextMenu from "@/components/chat/chat/sessionlist/ContextMenu/MyContextMenu.vue";
+import _ from "lodash";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
-// onMounted(() => {
-//   chatStore.getSessionList();
-//   console.log("sessionList:", chatStore.sessionList);
-// });
 // 当前选中会话
 const currentSession = computed(() => globalStore.currentSession);
 
@@ -271,4 +268,21 @@ const onRemoveSession = async (roomId: number) => {
   chatStore.sessionList.splice(index, 1);
   message.success("移除成功");
 };
+
+/**
+ * 通过监听滚动事件 实现分页加载会话记录
+ */
+let scrollElement = ref<HTMLElement>();
+const handleScroll = () => {
+  if (scrollElement.value) {
+    const { scrollTop, scrollHeight, clientHeight } = scrollElement.value;
+    if (scrollTop + clientHeight + 100 >= scrollHeight) {
+      chatStore.getSessionList();
+    }
+  }
+};
+const scrollThrottle = _.throttle(handleScroll, 100); //引入lodash功能
+onMounted(() => {
+  scrollElement.value?.addEventListener("scroll", scrollThrottle);
+});
 </script>

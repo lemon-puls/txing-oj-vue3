@@ -54,6 +54,7 @@
       :contenteditable="true"
       @input="onInputText"
       autofocus
+      @paste="onPaste"
     ></div>
     <div class="sendMsg">
       <a-button
@@ -368,4 +369,23 @@ const selectAndUploadFile = async (files?: FileList | null) => {
   await uploadFile(file, "chat");
 };
 onChange(selectAndUploadFile);
+
+// 处理粘贴
+// 拦截粘贴，只允许粘贴文本
+const onPaste = (e: ClipboardEvent) => {
+  e.preventDefault();
+  let pastedText;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (window.clipboardData && window.clipboardData.getData) {
+    // IE
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    pastedText = window.clipboardData.getData("Text");
+  } else if (e.clipboardData && e.clipboardData.getData) {
+    pastedText = e.clipboardData.getData("text/plain");
+  }
+  document.execCommand("insertHTML", false, pastedText);
+  return false;
+};
 </script>
