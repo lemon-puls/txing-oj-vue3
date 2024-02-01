@@ -64,37 +64,30 @@
             </a-descriptions-item>
           </a-descriptions>
         </a-space>
-        <p style="font-size: 20px">个性签名：{{ form.personSign }}</p>
+        <p style="font-size: 15px; margin-right: 20px">
+          Ta说：{{ form.personSign }}
+        </p>
       </div>
-      <div style="padding-top: 50px">
+      <div style="padding-top: 10px">
         <a-tabs size="large" :lazy-load="true">
           <a-tab-pane key="3">
             <template #title>
-              <icon-book size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >我的文章</span
-              >
+              <icon-book size="15" />
+              <span style="font-size: 15px; margin-left: 10px">我的文章</span>
             </template>
             <PostView />
           </a-tab-pane>
           <a-tab-pane key="2">
             <template #title>
-              <icon-star-fill size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >题目收藏</span
-              >
+              <icon-star-fill size="15" />
+              <span style="font-size: 15px; margin-left: 10px">题目收藏</span>
             </template>
             <QuestionFavourRecordView />
           </a-tab-pane>
           <a-tab-pane key="1">
             <template #title>
-              <icon-pen-fill size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >提交记录</span
-              >
+              <icon-pen-fill size="15" />
+              <span style="font-size: 15px; margin-left: 10px">提交记录</span>
             </template>
             <!--            <a-table-->
             <!--              id="submitRecordTable"-->
@@ -111,11 +104,8 @@
           </a-tab-pane>
           <a-tab-pane key="4">
             <template #title>
-              <icon-bookmark size="28" />
-              <span
-                style="font-size: 25px; font-weight: bold; margin-left: 10px"
-                >文章收藏</span
-              >
+              <icon-bookmark size="15" />
+              <span style="font-size: 15px; margin-left: 10px">文章收藏</span>
             </template>
             <PostFavourView />
           </a-tab-pane>

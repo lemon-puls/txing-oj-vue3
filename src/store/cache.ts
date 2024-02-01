@@ -16,14 +16,19 @@ export const useCacheStore = defineStore("cache", () => {
     [currentRoomId.value]: [],
   });
   // 批量刷新用户信息缓存
-  const refreshCachedUserVOBatch = async (userIds: number[]) => {
+  const refreshCachedUserVOBatch = async (
+    userIds: number[],
+    refresh = false
+  ) => {
     const result = userIds
       .map((userId) => {
         const cacheUser = cachedUserList[userId];
         return { userId, lastModifyTime: cacheUser?.lastModifyTime };
       })
       .filter((item) => {
-        return !item.lastModifyTime || isDiffNow10Min(item.lastModifyTime);
+        return (
+          refresh || !item.lastModifyTime || isDiffNow10Min(item.lastModifyTime)
+        );
       });
     if (!result.length) return;
     const res = await UserControllerService.getUserVoBatchUsingPost({

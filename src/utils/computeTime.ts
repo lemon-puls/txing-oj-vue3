@@ -18,7 +18,7 @@ export const isDiffNow = ({
 };
 
 export const isDiffNow10Min = (time: ConfigType): boolean => {
-  return isDiffNow({ time, unit: "minute", diff: 10 });
+  return isDiffNow({ time, unit: "minute", diff: 5 });
 };
 
 export const computedTimeNode = (list: MessageShow[], needFirst = true) => {

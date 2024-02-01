@@ -71,7 +71,11 @@
 
       <template #tags="{ record }">
         <a-space wrap>
-          <a-tag v-for="(tag, index) of record.tags" :key="index" color="green"
+          <a-tag
+            v-for="(tag, index) of record.tags"
+            :key="index"
+            color="green"
+            size="small"
             >{{ tag }}
           </a-tag>
         </a-space>

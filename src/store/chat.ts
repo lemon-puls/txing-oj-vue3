@@ -405,7 +405,7 @@ export const useChatStore = defineStore("chat", () => {
 
   // 标记会话未读消息数为0
   const markSessionRead = (roomId: number) => {
-    const session = sessionList.find((item) => item.roomId === roomId);
+    const session = sessionList.find((item) => item.roomId == roomId);
     const unreadCount = session?.unreadCount || 0;
     if (session) {
       session.unreadCount = 0;
@@ -430,7 +430,6 @@ export const useChatStore = defineStore("chat", () => {
         globalStore.unReadMark.newMessageUnreadCount - unreadCount;
       globalStore.unReadMark.newMessageUnreadCount =
         curTotalUnreadCount > 0 ? curTotalUnreadCount : 0;
-
       globalStore.isNeedNotify.messageNotify = false;
     }
     if (showModal.value && navFlag.value === 1) {

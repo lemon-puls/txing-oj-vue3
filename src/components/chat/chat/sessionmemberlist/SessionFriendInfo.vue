@@ -13,22 +13,22 @@
           dot
           :dotStyle="{ width: '10px', height: '10px' }"
           :offset="[-3, 3]"
-          :class="[{ memberOnline: user.activeStatus === 1 }]"
+          :class="[{ memberOnline: user?.activeStatus === 1 }]"
         >
           <a-avatar :size="80">
-            <img alt="avatar" :src="user.userAvatar" />
+            <img alt="avatar" :src="user?.userAvatar" />
           </a-avatar>
         </a-badge>
       </div>
       <div class="person-info-name">
-        <span class="person-info-name-font">{{ user.userName }}</span>
+        <span class="person-info-name-font">{{ user?.userName }}</span>
       </div>
       <div class="person-info-sign">
         <span class="person-info-sign-font"
           >Ta说：{{
-            user.personSign.length > 40
-              ? user.personSign.substring(0, 40) + "..."
-              : user.personSign
+            user?.personSign.length > 40
+              ? user?.personSign.substring(0, 40) + "..."
+              : user?.personSign
           }}</span
         >
       </div>
@@ -46,7 +46,7 @@
       <span v-else class="group-ops-add" @click="onAddFriend">添加好友</span>
     </div>
   </div>
-  <AddFriendModal :userId="user.id" v-model:visible="visible" />
+  <AddFriendModal :userId="user?.id" v-model:visible="visible" />
 </template>
 
 <style lang="scss">
@@ -111,7 +111,7 @@
 </style>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useCacheStore } from "@/store/cache";
 import { useGlobalStore } from "@/store/global";
 import { useChatStore } from "@/store/chat";
@@ -126,9 +126,20 @@ const globalStore = useGlobalStore();
 const chatStore = useChatStore();
 const contactStore = useContactStore();
 
+onMounted(() => {
+  if (chatStore.currentSessionItem) {
+    cachedStore.refreshCachedUserVOBatch(
+      [chatStore.currentSessionItem.userId],
+      true
+    );
+  }
+});
+
 const user = computed(() => {
   if (chatStore.currentSessionItem) {
-    return cachedStore.getUserById(chatStore.currentSessionItem.userId);
+    const userId = chatStore.currentSessionItem.userId;
+    const user = cachedStore.cachedUserList[Number(userId)];
+    return user;
   } else {
     return null;
   }

@@ -116,11 +116,11 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
 
-  {
-    path: "/txing/manage",
-    name: "后台管理",
-    component: ManageView,
-  },
+  // {
+  //   path: "/txing/manage",
+  //   name: "后台管理",
+  //   component: ManageView,
+  // },
   // {
   //   path: "/admin",
   //   name: "管理员可见",
@@ -163,9 +163,9 @@ export const routes: Array<RouteRecordRaw> = [
       hideInMenu: true,
     },
   },
-  {
-    path: "/txing/virtualList/test",
-    name: "虚拟列表",
-    component: VirtualListTest,
-  },
+  // {
+  //   path: "/txing/virtualList/test",
+  //   name: "虚拟列表",
+  //   component: VirtualListTest,
+  // },
 ];

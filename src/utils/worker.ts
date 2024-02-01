@@ -1,12 +1,12 @@
 // ws连接
 let connection: WebSocket;
 // 心跳定时器
-let heartTimer: number | null = null;
+let heartTimer: NodeJS.Timeout | null = null;
 // 重连次数限制
 const reconnectCountLimit = 100;
 let reconnectCount = 0;
 // 重连定时器
-let reconnectTimer: null | number = null;
+let reconnectTimer: NodeJS.Timeout | null = null;
 // 重连锁标识
 let reconnectLock = false;
 // 用户token
@@ -24,6 +24,7 @@ const initWsConnection = () => {
   connection?.removeEventListener("error", onConnectError);
   // 建立连接
   const path =
+    // "ws://124.71.1.148:8090" +
     "ws://localhost:8090" +
     "?token=" +
     (token ? token : "") +
@@ -50,9 +51,9 @@ const onConnectOpen = () => {
 };
 const setHeartPackSendTimer = () => {
   // 10s内发送一次
-  // heartTimer = window.setInterval(() => {
-  //   wsConnectionSend({ type: 2 });
-  // }, 9900);
+  heartTimer = setInterval(() => {
+    wsConnectionSend({ type: 0 });
+  }, 9900);
 };
 
 // ws连接 关闭监听器
@@ -81,11 +82,11 @@ const onCloseHandler = () => {
     return;
   }
   // 断线重连
-  // reconnectTimer = window.setTimeout(() => {
-  //   initWsConnection();
-  //   reconnectCount++;
-  //   reconnectLock = false;
-  // }, 2000);
+  reconnectTimer = setTimeout(() => {
+    initWsConnection();
+    reconnectCount++;
+    reconnectLock = false;
+  }, 2000);
 };
 /**
  * ws连接 error监听器

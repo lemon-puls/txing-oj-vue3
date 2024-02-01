@@ -22,7 +22,7 @@
         <a-menu-item
           v-for="item in visibleRoutes"
           :key="item.path"
-          style="font-size: 20px"
+          style="font-size: 15px"
           >{{ item.name }}
         </a-menu-item>
         <a-menu-item
@@ -34,19 +34,19 @@
             :popup-max-height="false"
             style="z-index: 10000"
           >
-            <a-button style="font-size: 20px"
+            <a-button style="font-size: 15px"
               >管理中心
               <icon-down />
             </a-button>
             <template #content>
               <div>
-                <a-doption style="font-size: 20px">
+                <a-doption style="font-size: 15px">
                   <a-button type="primary">创建题目</a-button>
                 </a-doption>
                 <a-divider
                   style="margin: 5px 0; padding: 0px; width: 100%"
                 ></a-divider>
-                <a-doption style="font-size: 20px">
+                <a-doption style="font-size: 15px">
                   <a-button type="primary">管理题目</a-button>
                 </a-doption>
               </div>
@@ -58,29 +58,31 @@
     <a-col flex="500px" style="text-align: right">
       <div
         style="
-          font-size: 20px;
+          font-size: 15px;
           display: flex;
-          justify-content: space-around;
+          justify-content: flex-end;
           align-items: center;
+          column-gap: 20px;
+          margin-right: 5px;
         "
       >
-        <a-popover style="z-index: 10000">
-          <span style="font-size: 20px; display: flex; align-items: center"
-            ><icon-google :size="25" style="color: #ff3700" />源码</span
-          >
-          <template #content>
-            <a-link
-              href="https://gitee.com/lemon_plus/txing-oj"
-              style="display: block; font-size: 15px"
-              >前端地址
-            </a-link>
-            <a-link
-              href="https://gitee.com/lemon_plus/txing-oj-backend"
-              style="display: block; font-size: 15px"
-              >后端地址
-            </a-link>
-          </template>
-        </a-popover>
+        <!--        <a-popover style="z-index: 10000">-->
+        <!--          <span style="font-size: 20px; display: flex; align-items: center"-->
+        <!--            ><icon-google :size="25" style="color: #ff3700" />源码</span-->
+        <!--          >-->
+        <!--          <template #content>-->
+        <!--            <a-link-->
+        <!--              href="https://gitee.com/lemon_plus/txing-oj"-->
+        <!--              style="display: block; font-size: 15px"-->
+        <!--              >前端地址-->
+        <!--            </a-link>-->
+        <!--            <a-link-->
+        <!--              href="https://gitee.com/lemon_plus/txing-oj-backend"-->
+        <!--              style="display: block; font-size: 15px"-->
+        <!--              >后端地址-->
+        <!--            </a-link>-->
+        <!--          </template>-->
+        <!--        </a-popover>-->
 
         <a-badge
           :count="
@@ -101,10 +103,10 @@
         <a-button
           type="primary"
           size="large"
-          style="font-size: 20px; border-radius: 20px"
+          style="font-size: 15px; border-radius: 20px"
           @click="doMenuClick('/txing/post/add')"
-          >我要创作
-          <icon-edit style="margin-left: 10px" />
+          >创作
+          <icon-edit style="margin-left: 5px" />
         </a-button>
         <div
           @click="
@@ -226,6 +228,8 @@ const handleLogout = async () => {
   globalStore.ws?.closeWsConnection();
   globalStore.ws = undefined;
   console.log("用户已退出登录 断开了ws连接");
+  // 清楚pinia store数据
+  // useChatStore().$reset();
   // 重定向到登录页
   router.push({
     path: "/txing/user/login",
@@ -271,7 +275,7 @@ setInterval(function () {
 }
 
 .logo {
-  height: 48px;
+  height: 40px;
 }
 
 #modifyInfoModal {
