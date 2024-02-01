@@ -63,6 +63,7 @@
                   :scrollbar="scrollbar"
                   :bordered="false"
                   :split="false"
+                  style="width: 100%"
                 >
                   <a-list-item
                     v-for="(item, index) of commentData"

@@ -89,7 +89,7 @@
       </div>
       <div class="group-name-content">
         <span class="group-name-content-span">{{ groupInfo.groupName }}</span>
-        <svg-icon icon="modify" size="20px"></svg-icon>
+        <!--        <svg-icon icon="modify" size="20px"></svg-icon>-->
       </div>
     </div>
     <a-divider />

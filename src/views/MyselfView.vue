@@ -15,6 +15,7 @@
       :show-file-list="false"
       :with-credentials="true"
       @change="handleChange1"
+      :headers="{ TOKEN: token }"
     >
       <template #upload-button>
         <a-avatar
@@ -492,6 +493,9 @@ const images = [
 const handleChange = (value: string) => {
   // console.log(value);
 };
+
+// 用户token
+const token = localStorage.getItem("TOKEN");
 </script>
 
 <style>

@@ -9,7 +9,11 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   let loginUser = userStore.loginUser;
   // 没登录就自动登录
-  if (!loginUser || !loginUser.userRole) {
+  if (
+    !loginUser ||
+    !loginUser.userRole ||
+    loginUser.userRole === ACCESS_ENUM.NOT_LOGIN
+  ) {
     // await可以使得用户登录成功之后 再执行后续的代码
     await userStore.getLoginUser();
     loginUser = userStore.loginUser;

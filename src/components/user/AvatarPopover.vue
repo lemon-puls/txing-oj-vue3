@@ -189,5 +189,5 @@ const onRemoveMember = async () => {
 };
 
 // 选中的是否是当前用户自己
-const isCurrent = props.userId.toString() === userStore.loginUser.id.toString();
+const isCurrent = props.userId == userStore.loginUser.id;
 </script>

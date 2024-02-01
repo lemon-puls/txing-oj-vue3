@@ -24,6 +24,7 @@ export const useChatStore = defineStore("chat", () => {
   const cacheStore = useCacheStore();
   const groupStore = useGroupStore();
   const contactStore = useContactStore();
+  const cachedStore = useCacheStore();
 
   const showModal = ref(false);
   // 聊天导航选择 0: 聊天 1： 联系人
@@ -439,6 +440,15 @@ export const useChatStore = defineStore("chat", () => {
         contactStore.friendApplyList[0].readStatus = 1;
       }
     }
+    // if (
+    //   globalStore.currentSession.type === RoomTypeEnum.SINGLE &&
+    //   currentSessionItem.value
+    // ) {
+    //   cachedStore.refreshCachedUserVOBatch(
+    //     [currentSessionItem.value.userId],
+    //     true
+    //   );
+    // }
   });
 
   // 聊天输入草稿

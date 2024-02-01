@@ -25,6 +25,7 @@
                   @progress="onProgress"
                   :data="appendData"
                   with-credentials
+                  :headers="{ TOKEN: token }"
                 >
                   <template #upload-button>
                     <div
@@ -238,6 +239,9 @@ const onContentChange = (value: string) => {
     message.warning("文章已达到最大长度10000，请勿继续输入！");
   }
 };
+
+// 用户token
+const token = localStorage.getItem("TOKEN");
 </script>
 <style>
 #addPostView {

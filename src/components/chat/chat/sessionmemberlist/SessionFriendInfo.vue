@@ -126,14 +126,14 @@ const globalStore = useGlobalStore();
 const chatStore = useChatStore();
 const contactStore = useContactStore();
 
-onMounted(() => {
-  if (chatStore.currentSessionItem) {
-    cachedStore.refreshCachedUserVOBatch(
-      [chatStore.currentSessionItem.userId],
-      true
-    );
-  }
-});
+// onMounted(() => {
+//   if (chatStore.currentSessionItem) {
+//     cachedStore.refreshCachedUserVOBatch(
+//       [chatStore.currentSessionItem.userId],
+//       true
+//     );
+//   }
+// });
 
 const user = computed(() => {
   if (chatStore.currentSessionItem) {

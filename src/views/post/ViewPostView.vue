@@ -437,7 +437,7 @@ const publishComment = async () => {
       bottom.value = 1;
     }
   } else {
-    message.error("评论发表失败 请稍后重试！");
+    message.error(res.msg);
   }
 };
 
@@ -496,6 +496,7 @@ const onLikeChange = async (index: number) => {
   );
   if (res.code != 0) {
     message.error(res.msg);
+    return;
   }
   commentData.value[index].isFavour = !commentData.value[index].isFavour;
   if (commentData.value[index].isFavour) {

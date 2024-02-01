@@ -26,6 +26,8 @@
         width: '100%',
       }"
       :default-size="0.3"
+      :min="0.25"
+      :max="0.4"
     >
       <template #first>
         <SessionList />
@@ -38,6 +40,7 @@
           }"
           class="message-list-and-member-list"
           :default-size="0.8"
+          :min="400"
         >
           <template #first>
             <div>
@@ -45,6 +48,8 @@
                 direction="vertical"
                 :style="{ height: '40vw' }"
                 :default-size="0.7"
+                :min="0.2"
+                :max="0.9"
               >
                 <template #first>
                   <MessageList></MessageList>

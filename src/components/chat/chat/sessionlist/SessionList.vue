@@ -199,9 +199,11 @@ import message from "@arco-design/web-vue/es/message";
 import { RoomTypeEnum } from "@/enume";
 import MyContextMenu from "@/components/chat/chat/sessionlist/ContextMenu/MyContextMenu.vue";
 import _ from "lodash";
+import { useCacheStore } from "@/store/cache";
 
 const chatStore = useChatStore();
 const globalStore = useGlobalStore();
+const cacheStore = useCacheStore();
 // 当前选中会话
 const currentSession = computed(() => globalStore.currentSession);
 
@@ -228,6 +230,12 @@ const load = () => {
 const onSelectedSession = (roomId: number, type: number) => {
   globalStore.currentSession.roomId = roomId;
   globalStore.currentSession.type = type;
+  if (type === RoomTypeEnum.SINGLE && chatStore.currentSessionItem) {
+    cacheStore.refreshCachedUserVOBatch(
+      [chatStore.currentSessionItem.userId],
+      true
+    );
+  }
 };
 
 // 会话搜索框
