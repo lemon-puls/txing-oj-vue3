@@ -17,6 +17,9 @@ import PostSearchView from "@/views/post/PostSearchView.vue";
 import VirtualListTest from "@/views/test/VirtualListTest.vue";
 import InfiniteScrollTest from "@/components/test/InfiniteScrollTest.vue";
 import ManageView from "@/views/manage/ManageView.vue";
+import WeekMatchView from "@/views/competition/WeekMatchView/WeekMatchView.vue";
+import DoWeekMatchView from "@/views/competition/DoWeekMatchView/DoWeekMatchView.vue";
+import OnlinePkMatchView from "@/views/competition/OnlinePkMatchView/OnlinePkMatchView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -116,11 +119,11 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
 
-  // {
-  //   path: "/txing/manage",
-  //   name: "后台管理",
-  //   component: ManageView,
-  // },
+  {
+    path: "/txing/manage",
+    name: "后台管理",
+    component: ManageView,
+  },
   // {
   //   path: "/admin",
   //   name: "管理员可见",
@@ -168,4 +171,28 @@ export const routes: Array<RouteRecordRaw> = [
   //   name: "虚拟列表",
   //   component: VirtualListTest,
   // },
+  {
+    path: "/txing/match/center",
+    name: "比赛中心",
+    component: WeekMatchView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/match/week/do",
+    name: "进行周赛",
+    component: DoWeekMatchView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/match/online/pk",
+    name: "在线pk",
+    component: OnlinePkMatchView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
 ];

@@ -176,6 +176,9 @@
             :value="form.code as string"
             :language="form.language"
             :handleChange="changeCode"
+            :mystyle="{
+              height: '70vh',
+            }"
           />
           <a-divider :size="0" />
           <a-button type="primary" style="min-width: 200px" @click="doSubmit"

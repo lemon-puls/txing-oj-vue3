@@ -1,9 +1,5 @@
 <template>
-  <div
-    id="code-editor"
-    ref="codeEditorRef"
-    style="min-height: 400px; height: 70vh; max-width: 40vw"
-  />
+  <div id="code-editor" ref="codeEditorRef" :style="props.mystyle" />
 </template>
 
 <script setup lang="ts">
@@ -22,6 +18,7 @@ interface Props {
   value: string;
   handleChange: (v: string) => void;
   language?: string;
+  mystyle?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
     // console.log(v);
   },
   language: () => "java",
+  mystyle: () => "",
 });
 
 const codeEditorRef = ref();
