@@ -13,10 +13,10 @@ const AvatarPopoverOld = defineComponent({
   },
   template: `
       <a-popover :title="title">
-        <slot name="buttonContent"></slot>
-        <template #content>
-          <slot name="mycontent"></slot>
-        </template>
+      <slot name="buttonContent"></slot>
+      <template #content>
+        <slot name="mycontent"></slot>
+      </template>
       </a-popover>
     `,
   props: {

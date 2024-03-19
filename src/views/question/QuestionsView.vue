@@ -103,6 +103,7 @@ import {
   Question,
   QuestionControllerService,
   PageVO,
+  PostControllerService,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
@@ -142,14 +143,22 @@ const searchParams = ref<PageVO>({
 });
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listUsingPost2(
-    searchParams.value
-  );
-  if (res.code === 0) {
+  // 重新三次 防止服务器由于太久没访问而出现第一次访问失败的情况
+  let retrys = 3;
+  let res;
+  while (retrys > 0) {
+    res = await QuestionControllerService.listUsingPost2(searchParams.value);
+    if (res.code !== 0) {
+      retrys--;
+    } else {
+      break;
+    }
+  }
+  if (res?.code === 0) {
     dataList.value = res.data.list;
     total.value = res.data.total;
   } else {
-    message.error("加载题目数据失败:" + res.msg);
+    message.error("加载题目数据失败:" + res?.msg);
   }
 };
 /**

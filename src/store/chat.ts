@@ -311,23 +311,6 @@ export const useChatStore = defineStore("chat", () => {
     const cacheUser = cacheStore.cachedUserList[userId];
     cacheStore.refreshCachedUserVOBatch([userId]);
 
-    // 刷新会话列表
-    // if (
-    //   globalStore.currentSession &&
-    //   globalStore.currentSession.roomId.toString() !==
-    //     msg.message.roomId.toString()
-    // ) {
-    // let result = undefined;
-    // if (!showModal.value || navFlag.value !== 0) {
-    //   globalStore.currentSession.roomId = msg.message.roomId;
-    //   // TODO  为什么是私聊
-    //   globalStore.currentSession.type = RoomTypeEnum.SINGLE;
-    // if (!currentMsgMap) {
-    //   result = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
-    // }
-    //   showModal.value = true;
-    //   navFlag.value = 0;
-    // }
     const res = await Service.getDetailByRoomIdUsingGet(msg.message.roomId);
     // updateSession(msg.message.roomId, res.data);
     updateSessionLastActiveTime(msg.message.roomId, res?.data);
@@ -372,11 +355,7 @@ export const useChatStore = defineStore("chat", () => {
     if (!showModal.value || navFlag.value === 1) {
       globalStore.isNeedNotify.messageNotify = true;
     }
-
     // 聊天消息列表滚动到底部
-    // setTimeout(() => {
-    //   chatListToBottomAction.value?.();
-    // });
     chatListToBottomAction.value?.();
   };
 

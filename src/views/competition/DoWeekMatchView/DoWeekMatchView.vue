@@ -5,7 +5,7 @@
 -->
 
 <template>
-  <a-spin :loading="false" tip="请稍等，正在排队发放试题..." dot>
+  <a-spin :loading="isLoading" tip="请稍等，正在排队发放试题..." dot>
     <div id="DoWeekMatchView">
       <!--    头部区域-->
       <div class="header">
@@ -47,7 +47,9 @@
                 <div
                   v-for="i in 5"
                   :style="{
-                    border: `${i === 1 ? 'green' : '#979797'} solid 1px`,
+                    border: `${
+                      i === questionNo ? 'green' : '#979797'
+                    } solid 1px`,
                     borderRadius: '50%',
                     height: '30px',
                     width: '30px',
@@ -56,6 +58,7 @@
                     justifyContent: 'center',
                   }"
                   :key="i"
+                  @click="onSelectQuestion(i)"
                 >
                   {{ i }}
                 </div>
@@ -72,7 +75,7 @@
                 font-size: 20px;
               "
             >
-              <span>第 385 场周赛</span>
+              <span>{{ matchDetailData?.name }}</span>
             </div>
           </a-col>
           <a-col flex="20%" style="height: 100%">
@@ -86,11 +89,18 @@
                 margin-right: 10px;
               "
             >
-              <a-button type="outline" status="success" shape="round"
-                >交卷
-              </a-button>
+              <a-popconfirm
+                content="确认要交卷吗?"
+                type="success"
+                @ok="submitAll"
+              >
+                <a-button type="outline" status="success" shape="round"
+                  >交卷
+                </a-button>
+              </a-popconfirm>
               <a-countdown
-                :value="Date.now() + 1000 * 60 * 60 * 2"
+                v-if="!isLoading"
+                :value="Date.parse(matchDetailData?.endTime)"
                 :now="Date.now()"
               />
             </div>
@@ -108,20 +118,21 @@
         :default-size="0.4"
       >
         <template #first>
-          <a-card :title="question.title">
+          <a-card :title="question?.title">
             <a-descriptions title="题目限制" :column="{ xs: 1, md: 2, lg: 3 }">
               <a-descriptions-item label="时间限制">
-                {{ question.judgeConfig.timeLimit ?? 0 }} ms
+                {{ question?.judgeConfig.timeLimit ?? 0 }} ms
               </a-descriptions-item>
               <a-descriptions-item label="内存限制">
                 {{
-                  `${(question.judgeConfig.memoryLimit / (1024 * 1024)).toFixed(
-                    2
-                  )} MB`
+                  `${(
+                    question?.judgeConfig.memoryLimit /
+                    (1024 * 1024)
+                  ).toFixed(2)} MB`
                 }}
               </a-descriptions-item>
             </a-descriptions>
-            <MdViewer :value="question.content || ''" />
+            <MdViewer :value="question?.content || ''" />
             <!--          <div id="questionFavourId">-->
             <!--            <icon-star-fill v-if="isFavour" :size="30" @click="clickFavour" />-->
             <!--            <icon-star v-else :size="30" @click="clickFavour"></icon-star>-->
@@ -130,7 +141,7 @@
             <template #extra>
               <a-space wrap>
                 <a-tag
-                  v-for="(tag, index) of question.tags"
+                  v-for="(tag, index) of question?.tags"
                   :key="index"
                   color="green"
                   >{{ tag }}
@@ -160,7 +171,7 @@
                       style="min-width: 240px"
                     >
                       <a-select
-                        v-model="java"
+                        v-model="language"
                         :style="{ width: '320px' }"
                         placeholder="选择语言"
                         @change="onlanguagechange"
@@ -172,8 +183,10 @@
                     </a-form-item>
                   </a-form>
                   <CodeEditor
-                    value="helloworld"
-                    language="java"
+                    :key="questionNo"
+                    ref="codeEditorRef"
+                    :value="code"
+                    :language="language"
                     :handleChange="changeCode"
                     style="height: 100%"
                   />
@@ -182,7 +195,12 @@
               <template #second>
                 <div
                   style="height: 100%; padding: 10px; box-sizing: border-box"
+                  :class="{
+                    'loading-container': true,
+                    'is-loading': isJudgeLoading,
+                  }"
                 >
+                  <div v-if="isJudgeLoading" class="loading-spinner"></div>
                   <div
                     class="exec-area-head"
                     style="
@@ -194,18 +212,35 @@
                   >
                     <span style="color: green">执行结果</span>
                     <div style="display: flex; column-gap: 10px">
-                      <a-button type="outline" status="success">运行</a-button>
-                      <a-button type="outline" status="success"
+                      <!--                      <a-button type="outline" status="success">运行</a-button>-->
+                      <a-button
+                        type="outline"
+                        status="success"
+                        @click="submitSingle"
                         >提交并保存
                       </a-button>
-                      <a-button type="outline" status="success"
+                      <a-button
+                        :disabled="questionNo === 5"
+                        type="outline"
+                        status="success"
+                        @click="onSelectQuestion(questionNo + 1)"
                         >下一题
                       </a-button>
                     </div>
                   </div>
                   <hr />
                   <div class="exec-area-result">
-                    <span>执行成功</span>
+                    <div
+                      id="execResultDiv"
+                      v-if="resultData.get(questionNo) !== undefined"
+                    >
+                      <!--                      resultData.get(questionNo)[0]?.value != ''-->
+                      <a-descriptions
+                        style="margin-top: 20px"
+                        :data="resultData.get(questionNo)"
+                        :column="1"
+                      />
+                    </div>
                   </div>
                 </div>
               </template>
@@ -220,6 +255,7 @@
 <style lang="scss">
 #DoWeekMatchView {
   //height: 100vh;
+  width: 100vw;
 
   .header {
     height: 50px;
@@ -231,6 +267,42 @@
   .arco-space-horizontal .arco-space-item {
     margin-bottom: 0 !important;
   }
+
+  .exec-area-result {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+
+.loading-container {
+  position: relative;
+}
+
+.is-loading {
+  background-color: rgba(109, 101, 101, 0.1) !important;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #333;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: rotateAnimation 1s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes rotateAnimation {
+  from {
+    transform: rotate(0deg); /* 从 0 度开始旋转 */
+  }
+  to {
+    transform: rotate(360deg); /* 旋转到 360 度 */
+  }
 }
 </style>
 
@@ -238,46 +310,191 @@
 import MdViewer from "@/components/MdViewer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import SvgIcon from "@/icons/SvgIcon";
+import { computed, onMounted, ref, toRaw } from "vue";
+import {
+  MatchWeekAppControllerService,
+  Question,
+  QuestionSubmitControllerService,
+  QuestionVO,
+} from "../../../../generated";
+import message from "@arco-design/web-vue/es/message";
+import { useMatchStore } from "@/store/match";
+import { useRouter } from "vue-router";
 
-const question = {
-  id: "1732346680676282369",
-  title: "两数相加",
-  content:
-    '给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。\n\n请你将两个数相加，并以相同形式返回一个表示和的链表。\n\n你可以假设除了数字 0 之外，这两个数都不会以 0 开头。\n\n示例 1：\n\n\n![image.png](https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/common/1726766580186198017/TeyMC1xd-image.png "image.png")\n输入：l1 = [2,4,3], l2 = [5,6,4]\n输出：[7,0,8]\n解释：342 + 465 = 807.\n\n示例 2：\n\n输入：l1 = [0], l2 = [0]\n输出：[0]\n\n示例 3：\n\n输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]\n输出：[8,9,9,9,0,0,0,1]\n\n提示：\n每个链表中的节点数在范围 [1, 100] 内\n0 <= Node.val <= 9\n题目数据保证列表表示的数字不含前导零',
-  answer:
-    '```java\nimport java.util.*;\n/**\n * @author lemon123456\n * @date 2023-12-06 23:40:17\n */\npublic class Main {\n\n    public static void main(String[] args) {\n        // 请开始您的作答\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        ListNode head1 = new ListNode(-1);\n        ListNode head2 = new ListNode(-1);\n        ListNode tail1 = head1;\n        ListNode tail2 = head2;\n        for (int i = 0; i < n; i++) {\n            tail1.next = new ListNode(scanner.nextInt());\n            tail1 = tail1.next;\n        }\n        for (int i = 0; i < m; i++) {\n            tail2.next = new ListNode(scanner.nextInt());\n            tail2 = tail2.next;\n        }\n        head1 = head1.next;\n        head2 = head2.next;\n        ListNode head = null, tail = null;\n        int carry = 0;\n        while (head1 != null || head2 != null) {\n            int n1 = head1 != null ? head1.val : 0;\n            int n2 = head2 != null ? head2.val : 0;\n            int sum = n1 + n2 + carry;\n            if (head == null) {\n                head = tail = new ListNode(sum % 10);\n            } else {\n                tail.next = new ListNode(sum % 10);\n                tail = tail.next;\n            }\n            carry = sum / 10;\n            if (head1 != null) {\n                head1 = head1.next;\n            }\n            if (head2 != null) {\n                head2 = head2.next;\n            }\n        }\n        if (carry > 0) {\n            tail.next = new ListNode(carry);\n        }\n        ListNode curr = head;\n        while (curr != null) {\n            System.out.print(curr.val + " ");\n            curr = curr.next;\n        }\n    }\n}\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode() {\n    }\n    ListNode(int val) {\n        this.val = val;\n    }\n    ListNode(int val, ListNode next) {\n        this.val = val;\n        this.next = next;\n    }\n}',
-  tags: ["基础题", "算法"],
-  submitNum: 4,
-  acceptedNum: 2,
-  judgeConfig: {
-    timeLimit: "10000",
-    memoryLimit: "5000000",
+const router = useRouter();
+
+const isLoading = ref(true);
+const matchDetailData = ref();
+const codeEditorRef = ref();
+const loadMatchDetailData = async () => {
+  const res = await MatchWeekAppControllerService.startMatchUsingGet();
+  if (res.code !== 0) {
+    message.error("比赛数据加载失败：", res.msg);
+    return;
+  }
+  matchDetailData.value = res.data;
+  question.value = matchDetailData.value.questions[0];
+  const questionIds = matchDetailData.value.questions.map((item: any) => {
+    return item.id;
+  });
+  matchStore.initSubmits(questionIds);
+  questionNo.value = 1;
+  isLoading.value = false;
+};
+
+onMounted(() => {
+  loadMatchDetailData();
+});
+
+// 当前选中题号
+const questionNo = ref<number>(-1);
+const onSelectQuestion = (i: number) => {
+  questionNo.value = i;
+  question.value = matchDetailData.value.questions[i - 1];
+};
+
+const question = ref<QuestionVO>();
+
+// 作答记录
+const matchStore = useMatchStore();
+const code = computed({
+  get: () => {
+    return matchStore.matchSubmits[questionNo.value - 1]?.code ?? "";
   },
-  thumbNum: 0,
-  favourNum: 0,
-  userId: "1",
-  createTime: "2023-12-06T10:30:09.000+00:00",
-  updateTime: "2024-02-01T05:27:53.000+00:00",
-  userVO: {
-    id: "1",
-    userName: "lemon123456",
-    userAvatar:
-      "https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/PYorLjF1-往昔汗水_The sweat of the past_1_SaYoii_来自小红书网页版.jpg",
-    userProfile: null,
-    userRole: "admin",
-    createTime: "2023-11-21T00:56:49.000+00:00",
-    school: "育才大学",
-    profession: "网络工程",
-    workExperience: null,
-    questionCount: 340,
-    acceptedRate: 0.75,
-    submitCount: 156,
-    acceptedCount: 101,
-    personSign: "那年 我双手插兜 不知道什么是对手",
-    needRefresh: true,
-    lastOpsTime: "2024-02-17T15:52:00.000+00:00",
-    activeStatus: 1,
+  set: (val: any) => {
+    matchStore.matchSubmits[questionNo.value - 1].code = val;
   },
-  isFavour: false,
+});
+const language = computed({
+  get: () => {
+    return matchStore.matchSubmits[questionNo.value - 1]?.language;
+  },
+  set: (val: any) => {
+    matchStore.matchSubmits[questionNo.value - 1].language = val;
+  },
+});
+const questionId = computed({
+  get: () => {
+    return matchStore.matchSubmits[questionNo.value - 1]?.questionId;
+  },
+  set: (val: any) => {
+    matchStore.matchSubmits[questionNo.value - 1].questionId = val;
+  },
+});
+
+// 编程语言选项值发生改变
+const onlanguagechange = (value: string) => {
+  if (value !== "java") {
+    message.info("目前判题系统仅支持Java语言 对其他语言的支持正在开发中...");
+  }
+};
+const changeCode = (value: string) => {
+  code.value = value;
+};
+
+// 提交单条题目
+const submitSingle = async () => {
+  if (
+    code.value === undefined ||
+    language.value === undefined ||
+    questionId.value === undefined
+  ) {
+    message.warning("代码、编程语言、题目ID不得为空");
+  }
+  const res = await MatchWeekAppControllerService.submitSingleUsingPost({
+    ...matchStore.matchSubmits[questionNo.value - 1],
+    matchId: matchDetailData.value.id,
+  });
+  if (res.code !== 0) {
+    message.error("提交失败 请稍后重试：" + res.message);
+    return;
+  }
+  if (res.data == -1) {
+    message.warning("代码无改动 无需重复提交");
+    return;
+  }
+  isJudgeLoading.value = true;
+  timer(res.data);
+};
+// 定时器 查询代码执行结果
+const timer = (sumbitId: number) => {
+  let i = 0;
+  const intervalId = setInterval(async () => {
+    // 在这里执行每秒要执行的任务
+    const res = await QuestionSubmitControllerService.getExecResultUsingGet(
+      sumbitId
+    );
+    // 检查满足条件的逻辑
+    if (res.code === 0 && res.data != "{}") {
+      // 条件满足，清除定时器
+      clearInterval(intervalId);
+      const data = JSON.parse(res.data);
+      if (resultData.value.get(questionNo.value) === undefined) {
+        resultData.value.set(questionNo.value, getResultColumn());
+      }
+      resultData.value.get(questionNo.value)[0].value = `${data.time} MS`;
+      resultData.value.get(questionNo.value)[1].value = `${(
+        data.memory /
+        (1024 * 1024)
+      ).toFixed(2)} MB`;
+      resultData.value.get(questionNo.value)[2].value = data.message;
+      resultData.value.get(questionNo.value)[3].value =
+        (data.acceptedRate * 100).toFixed(2) + "%";
+      // loading.value = false;
+      // visible.value = true;
+      isJudgeLoading.value = false;
+      message.success("代码已保存成功");
+    }
+  }, 1000); // 每秒执行一次，间隔时间为 1000 毫秒
+};
+
+const getResultColumn = () => {
+  return [
+    {
+      label: "执行用时",
+      value: "",
+    },
+    {
+      label: "内存消耗",
+      value: "",
+    },
+    {
+      label: "执行结果",
+      value: "",
+    },
+    {
+      label: "通过用例",
+      value: 0,
+    },
+  ];
+};
+
+const resultData = ref<Map<number, any>>(new Map([]));
+
+// 判题加载中标志
+const isJudgeLoading = ref(false);
+
+/**
+ * 交卷
+ */
+const submitAll = async () => {
+  const res = await MatchWeekAppControllerService.submitAllUsingPost({
+    matchId: matchDetailData.value.id,
+    submits: toRaw(matchStore.matchSubmits),
+  });
+  // console.log("最终作答：", {
+  //   matchId: matchDetailData.value.id,
+  //   submits: toRaw(matchStore.matchSubmits),
+  // });
+  if (res.code !== 0) {
+    message.error("提交失败，请稍后重试！");
+    return;
+  }
+  console.log("reset前：", matchStore.matchSubmits);
+  matchStore.resetMatchSubmits();
+  console.log("reset后：", matchStore.matchSubmits);
+  router.push({
+    path: "/txing/match/submit/success",
+  });
 };
 </script>

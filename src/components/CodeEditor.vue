@@ -11,6 +11,7 @@ import {
   withDefaults,
   defineProps,
   watchEffect,
+  defineExpose,
   watch,
 } from "vue";
 
@@ -56,6 +57,10 @@ onMounted(() => {
   if (!codeEditorRef.value) {
     return;
   }
+  initCodeEditor();
+});
+
+const initCodeEditor = () => {
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
     theme: "vs-dark", // 主题
     value: props.value, // 默认显示的值
@@ -83,7 +88,9 @@ onMounted(() => {
   codeEditor.value.onDidChangeModelContent(() => {
     props.handleChange(toRaw(codeEditor.value).getValue());
   });
-});
+};
+
+defineExpose({ initCodeEditor });
 </script>
 
 <style scoped></style>

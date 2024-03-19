@@ -14,6 +14,7 @@
       <!--      </a-layout-footer>-->
     </a-layout>
     <chat-box></chat-box>
+    <VideoPlayerDialog v-if="videoStore.visible" />
   </div>
 
   <a-image-preview-group
@@ -32,9 +33,12 @@ import { useUserStore } from "@/store/user";
 import { useGlobalStore } from "@/store/global";
 import Ws from "@/utils/websocket";
 import { useImgPreviewStore } from "@/store/preview";
+import VideoPlayerDialog from "@/components/course/VideoPlayerDialog.vue";
+import { useVideoStore } from "@/store/video";
 
 const userStore = useUserStore();
 const globalStore = useGlobalStore();
+const videoStore = useVideoStore();
 onMounted(async () => {
   if (!userStore.isSign) {
     await userStore.getLoginUser();

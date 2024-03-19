@@ -195,7 +195,9 @@
       <a-descriptions style="margin-top: 20px" :data="resultData" :column="1" />
       <h2 v-if="resultData[2].value === 'Accepted'">
         恭喜你 超越了
-        <span :style="{ color: 'red' }">{{ exceedPercent * 100 }}%</span>
+        <span :style="{ color: 'red' }"
+          >{{ (exceedPercent * 100).toFixed(1) }}%</span
+        >
         的用户!
       </h2>
     </div>
@@ -665,7 +667,8 @@ const timer = (sumbitId: number) => {
 <style>
 #ViewQuestionView {
   max-width: 1280px;
-  width: 90vw;
+  width: 100vw;
+  box-sizing: border-box;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.8);
   /*padding-right: 10px;*/

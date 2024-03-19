@@ -220,6 +220,8 @@
 import MdViewer from "@/components/MdViewer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import SvgIcon from "@/icons/SvgIcon";
+import { useRouter } from "vue-router";
+import { onBeforeUnmount, onMounted } from "vue";
 
 const question = {
   id: "1732346680676282369",
@@ -262,4 +264,53 @@ const question = {
   },
   isFavour: false,
 };
+
+onMounted(() => {
+  console.log("用户进入了赛场");
+});
+onBeforeUnmount(() => {
+  console.log("用户离开了赛场");
+});
+
+document.addEventListener("visibilitychange", function () {
+  if (document.hidden) {
+    // 当页面失去焦点时执行的操作
+    console.log("页面失去焦点，执行特定操作");
+  } else {
+    // 当页面重新获得焦点时执行的操作
+    console.log("页面重新获得焦点");
+  }
+});
+// 监听 window 的 blur 事件
+window.addEventListener("blur", () => {
+  // 判断焦点移出页面
+  if (!document.hasFocus()) {
+    // 执行你想要的操作
+    console.log("Focus moved outside the page");
+  }
+});
+// const router = useRouter();
+// router.beforeEach((to, from, next) => {
+//   if (to.name !== "/txing/match/online/pk") {
+//     // 进入目标页面时执行的操作
+//     console.log("用户离开了赛场");
+//   } else {
+//     console.log("用户进入了赛场");
+//   }
+//   next();
+// });
+// onBeforeRouteLeave((to, from, next) => {
+//   if (to.name !== "/txing/match/online/pk") {
+//     // 进入目标页面时执行的操作
+//     console.log("用户离开了赛场");
+//   }
+//   next();
+// });
+// onBeforeRouteUpdate((to, from, next) => {
+//   if (to.name !== "/txing/match/online/pk") {
+//     // 进入目标页面时执行的操作
+//     console.log("用户离开了赛场 update");
+//   }
+//   next();
+// });
 </script>

@@ -20,6 +20,11 @@ import ManageView from "@/views/manage/ManageView.vue";
 import WeekMatchView from "@/views/competition/WeekMatchView/WeekMatchView.vue";
 import DoWeekMatchView from "@/views/competition/DoWeekMatchView/DoWeekMatchView.vue";
 import OnlinePkMatchView from "@/views/competition/OnlinePkMatchView/OnlinePkMatchView.vue";
+import SubmitSuccessView from "@/views/competition/SubmitSuccessView.vue";
+import VideoTest from "@/views/course/VideoTest.vue";
+import CourseSearchView from "@/views/course/CourseSearchView/index.vue";
+import CourseVideoPlayView from "@/views/course/CourseVideoPlayView/index.vue";
+import CoursePublishView from "@/views/course/CoursePublishView/index.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -118,12 +123,6 @@ export const routes: Array<RouteRecordRaw> = [
       hideInMenu: true,
     },
   },
-
-  {
-    path: "/txing/manage",
-    name: "后台管理",
-    component: ManageView,
-  },
   // {
   //   path: "/admin",
   //   name: "管理员可见",
@@ -194,5 +193,41 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       hideInMenu: true,
     },
+  },
+  {
+    path: "/txing/manage",
+    name: "后台管理",
+    component: ManageView,
+  },
+  {
+    path: "/txing/match/submit/success",
+    name: "交卷成功",
+    component: SubmitSuccessView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/course/video/play/test",
+    name: "视频播放",
+    component: VideoTest,
+  },
+  {
+    path: "/txing/course/search",
+    name: "在线课程",
+    component: CourseSearchView,
+  },
+  {
+    path: "/txing/course/video/play",
+    name: "课程播放页",
+    component: CourseVideoPlayView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/course/publish",
+    name: "发布课程",
+    component: CoursePublishView,
   },
 ];

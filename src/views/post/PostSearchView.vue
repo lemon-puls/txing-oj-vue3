@@ -95,13 +95,23 @@ const data = ref([]);
 const searchText = ref<string>();
 // 查询
 const loadData = async (current: number) => {
-  const res = await PostControllerService.searchPostVoByPageUsingPost({
-    searchText: searchText.value,
-    pageSize: 20,
-    current: current,
-  });
-  if (res.code !== 0) {
-    message.error(res.msg);
+  // 重新三次 防止服务器由于太久没访问而出现第一次访问失败的情况
+  let retrys = 3;
+  let res;
+  while (retrys > 0) {
+    res = await PostControllerService.searchPostVoByPageUsingPost({
+      searchText: searchText.value,
+      pageSize: 20,
+      current: current,
+    });
+    if (res.code !== 0) {
+      retrys--;
+    } else {
+      break;
+    }
+  }
+  if (res?.code !== 0) {
+    message.error(res?.msg);
     return;
   }
   return res;
@@ -164,7 +174,7 @@ const fetchData = async () => {
     bottom.value = 1;
   }
 };
-const throttle = _.throttle(fetchData, 3000); //引入lodash功能
+const throttle = _.throttle(fetchData, 1000); //引入lodash功能
 
 // 滚动检测
 onMounted(async () => {

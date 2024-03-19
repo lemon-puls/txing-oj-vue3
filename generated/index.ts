@@ -18,6 +18,8 @@ export type { GroupMemberRequest } from './models/GroupMemberRequest';
 export type { ItemRequest } from './models/ItemRequest';
 export type { JudgeCase } from './models/JudgeCase';
 export type { JudgeConfig } from './models/JudgeConfig';
+export type { MatchSubmitBatchRequest } from './models/MatchSubmitBatchRequest';
+export type { MatchSubmitSingleRequest } from './models/MatchSubmitSingleRequest';
 export type { MessagePageRequest } from './models/MessagePageRequest';
 export type { Page } from './models/Page';
 export type { PageVO } from './models/PageVO';
@@ -53,6 +55,7 @@ export type { UserVOBatchRequest } from './models/UserVOBatchRequest';
 
 export { Service } from './services/Service';
 export { FileControllerService } from './services/FileControllerService';
+export { MatchWeekAppControllerService } from './services/MatchWeekAppControllerService';
 export { PostCommentControllerService } from './services/PostCommentControllerService';
 export { PostControllerService } from './services/PostControllerService';
 export { PostFavourControllerService } from './services/PostFavourControllerService';
