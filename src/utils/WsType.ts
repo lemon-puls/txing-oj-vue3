@@ -48,6 +48,10 @@ export enum WsResponseMsgType {
    * "好友申请同意通知"
    */
   FriendApplyAgree,
+  /**
+   * 在线PK匹配成功通知
+   */
+  PkMatchSuccessNOTIFY,
 }
 
 /**
@@ -68,4 +72,8 @@ export type WsUserStatusChangeVO = {
 export type WsFriendApplyVO = {
   friendApplyVO: FriendApplyItem;
   unreadCount: number;
+};
+
+export type WsOnlinePkTeamUpVO = {
+  matchId: number;
 };

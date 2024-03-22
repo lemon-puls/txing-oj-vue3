@@ -3,6 +3,7 @@ import { useUserStore } from "@/store/user";
 import {
   UserLoginSuccessResponse,
   WsFriendApplyVO,
+  WsOnlinePkTeamUpVO,
   WsRequestMsgContentType,
   WsResponseMsgType,
 } from "@/utils/WsType";
@@ -14,9 +15,11 @@ import { ContactItem, MessageShow } from "@/service/types";
 import { useGlobalStore } from "@/store/global";
 import { notify } from "@/utils/notification";
 import { useContactStore } from "@/store/contact";
-import { formatTimestamp, timeToStr } from "@/utils/computeTime";
+import { formatTimestamp } from "@/utils/computeTime";
 import { UserApplyControllerService } from "../../generated";
 import AccessEnum from "@/access/accessEnum";
+import { useRouter } from "vue-router";
+import { usePkStore } from "@/store/pk";
 
 class Ws {
   // 是否已建立ws连接
@@ -198,6 +201,18 @@ class Ws {
       case WsResponseMsgType.FriendApplyAgree: {
         // alert("接收到同意申请消息");
         contactStore.contactList.unshift(params.data as ContactItem);
+        break;
+      }
+      case WsResponseMsgType.PkMatchSuccessNOTIFY: {
+        // PK赛成功匹配到对手通知
+        const pkTeamUpVO = params.data as WsOnlinePkTeamUpVO;
+        // 为什么在这里不可以使用
+        // useRouter().push({
+        //   path: "/txing/match/pk/" + pkTeamUpVO.matchId,
+        // });
+        // alert("匹配成功");
+        // console.log("匹配成功");
+        usePkStore().updatePkMatchData(true, pkTeamUpVO.matchId);
         break;
       }
       default: {

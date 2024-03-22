@@ -55,6 +55,7 @@ export type { UserVOBatchRequest } from './models/UserVOBatchRequest';
 
 export { Service } from './services/Service';
 export { FileControllerService } from './services/FileControllerService';
+export { MatchOnlinepkAppControllerService } from './services/MatchOnlinepkAppControllerService';
 export { MatchWeekAppControllerService } from './services/MatchWeekAppControllerService';
 export { PostCommentControllerService } from './services/PostCommentControllerService';
 export { PostControllerService } from './services/PostControllerService';

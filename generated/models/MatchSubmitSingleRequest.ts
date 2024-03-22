@@ -5,6 +5,7 @@
 
 export type MatchSubmitSingleRequest = {
     code?: string;
+    finished?: boolean;
     language?: string;
     matchId?: number;
     questionId?: number;

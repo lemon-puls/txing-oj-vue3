@@ -69,14 +69,34 @@
               </a-button>
               <template #content>
                 <div>
-                  <a-doption style="font-size: 15px">
-                    <a-button type="primary">周赛</a-button>
+                  <a-doption
+                    style="
+                      font-size: 15px;
+                      display: flex;
+                      justify-content: center;
+                      column-gap: 10px;
+                    "
+                  >
+                    <!--                    <a-button type="primary">周赛</a-button>-->
+                    <div class="menu-match-sub">
+                      <SvgIcon icon="trophy" size="25"></SvgIcon>
+                      <span style="margin-left: 5px">周赛</span>
+                    </div>
                   </a-doption>
-                  <a-divider
-                    style="margin: 5px 0; padding: 0px; width: 100%"
-                  ></a-divider>
-                  <a-doption style="font-size: 15px">
-                    <a-button type="primary">在线PK</a-button>
+                  <!--                  <a-divider-->
+                  <!--                    style="margin: 5px 0; padding: 0px; width: 100%"-->
+                  <!--                  ></a-divider>-->
+                  <a-doption
+                    style="
+                      font-size: 15px;
+                      display: flex;
+                      justify-content: center;
+                    "
+                  >
+                    <div class="menu-match-sub">
+                      <SvgIcon icon="pk" size="25"></SvgIcon>
+                      <span style="margin-left: 5px">PK</span>
+                    </div>
                   </a-doption>
                 </div>
               </template>
@@ -199,6 +219,7 @@ import {
 } from "@arco-design/web-vue/es/icon";
 import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
+import SvgIcon from "@/icons/SvgIcon";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -219,8 +240,8 @@ const doMenuClick = (key: string) => {
   if ("周赛" === key) {
     key = "/txing/match/center";
   }
-  if ("在线PK" === key) {
-    key = "/txing/match/online/pk";
+  if ("PK" === key) {
+    key = "/txing/match/pk/matching";
   }
   router.push({
     path: key,
@@ -358,6 +379,16 @@ setInterval(function () {
 
   .arco-menu-horizontal .arco-menu-item:not(:first-child) {
     margin-left: 0 !important;
+  }
+}
+
+.menu-match-sub {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    color: #007bff;
   }
 }
 </style>

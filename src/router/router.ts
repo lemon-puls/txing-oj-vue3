@@ -25,6 +25,8 @@ import VideoTest from "@/views/course/VideoTest.vue";
 import CourseSearchView from "@/views/course/CourseSearchView/index.vue";
 import CourseVideoPlayView from "@/views/course/CourseVideoPlayView/index.vue";
 import CoursePublishView from "@/views/course/CoursePublishView/index.vue";
+import FindOpponentView from "@/views/competition/OnlinePkMatchView/FindOpponentView/index.vue";
+import PkResultView from "@/views/competition/OnlinePkMatchView/PkResultView/index.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -187,9 +189,18 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/txing/match/online/pk",
+    path: "/txing/match/pk/:id",
     name: "在线pk",
     component: OnlinePkMatchView,
+    props: true,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/match/pk/matching",
+    name: "在线pk匹配对手中",
+    component: FindOpponentView,
     meta: {
       hideInMenu: true,
     },
@@ -229,5 +240,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/txing/course/publish",
     name: "发布课程",
     component: CoursePublishView,
+  },
+  {
+    path: "/txing/match/pk/result/:matchId",
+    name: "PK结果",
+    props: true,
+    component: PkResultView,
   },
 ];

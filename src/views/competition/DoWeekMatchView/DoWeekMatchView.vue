@@ -318,7 +318,7 @@ import {
   QuestionVO,
 } from "../../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import { useMatchStore } from "@/store/match";
+import { useWeekMatchStore } from "@/store/weekmatch";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -356,7 +356,7 @@ const onSelectQuestion = (i: number) => {
 const question = ref<QuestionVO>();
 
 // 作答记录
-const matchStore = useMatchStore();
+const matchStore = useWeekMatchStore();
 const code = computed({
   get: () => {
     return matchStore.matchSubmits[questionNo.value - 1]?.code ?? "";
@@ -400,6 +400,7 @@ const submitSingle = async () => {
     questionId.value === undefined
   ) {
     message.warning("代码、编程语言、题目ID不得为空");
+    return;
   }
   const res = await MatchWeekAppControllerService.submitSingleUsingPost({
     ...matchStore.matchSubmits[questionNo.value - 1],

@@ -287,3 +287,9 @@ export type FriendApplyItem = {
    */
   readStatus: number;
 };
+
+export type UserShowVO = {
+  id: number;
+  userName: string;
+  userAvatar: string;
+};
