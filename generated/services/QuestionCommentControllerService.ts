@@ -18,7 +18,7 @@ export class QuestionCommentControllerService {
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingPost1(
+    public static saveUsingPost4(
 questionCommentAddRequest: QuestionCommentAddRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -39,7 +39,7 @@ questionCommentAddRequest: QuestionCommentAddRequest,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingPost(
+    public static deleteUsingPost3(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -60,7 +60,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingGet(
+    public static infoUsingGet3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -130,7 +130,7 @@ questionId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingPost(
+    public static updateUsingPost3(
 questionComment: QuestionComment,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

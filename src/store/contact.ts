@@ -41,7 +41,7 @@ export const useContactStore = defineStore("contact", () => {
       }
     }
     contactsOptions.isLoading = true;
-    const res = await UserFriendControllerService.listUsingPost5({
+    const res = await UserFriendControllerService.listUsingPost6({
       pageSize: myPageSize,
       cursor:
         isFresh || !contactsOptions.cursor ? undefined : contactsOptions.cursor,
@@ -140,7 +140,7 @@ export const useContactStore = defineStore("contact", () => {
     if (!userId) {
       return;
     }
-    const res = await UserFriendControllerService.deleteUsingGet2(userId);
+    const res = await UserFriendControllerService.deleteUsingGet5(userId);
     if (res.code !== 0) {
       message.error("删除失败，请稍后重试！");
     }

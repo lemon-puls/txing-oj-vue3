@@ -179,7 +179,7 @@ const handlePostOps = async (id: any, key: any) => {
 };
 </script>
 
-<style>
+<style lang="scss">
 #postViewId {
   margin-bottom: 30px;
 }
@@ -205,7 +205,7 @@ const handlePostOps = async (id: any, key: any) => {
 }
 
 .arco-list-wrapper {
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 

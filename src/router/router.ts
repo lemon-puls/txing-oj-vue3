@@ -27,6 +27,8 @@ import CourseVideoPlayView from "@/views/course/CourseVideoPlayView/index.vue";
 import CoursePublishView from "@/views/course/CoursePublishView/index.vue";
 import FindOpponentView from "@/views/competition/OnlinePkMatchView/FindOpponentView/index.vue";
 import PkResultView from "@/views/competition/OnlinePkMatchView/PkResultView/index.vue";
+import ForumPostPublish from "@/views/forum/ForumPostPublish.vue";
+import ForumSearchView from "@/views/forum/ForumSearchView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -134,15 +136,6 @@ export const routes: Array<RouteRecordRaw> = [
   //   },
   // },
   {
-    path: "/txing/myself",
-    name: "我的主页",
-    component: MyselfView,
-    meta: {
-      // hideInMenu: true,
-      access: ACCESS_ENUM.USER,
-    },
-  },
-  {
     path: "/txing/post/add",
     name: "写文章",
     component: AddPostView,
@@ -189,6 +182,15 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/txing/match/week/simulate/:matchId",
+    name: "周赛模拟",
+    component: DoWeekMatchView,
+    props: true,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
     path: "/txing/match/pk/:id",
     name: "在线pk",
     component: OnlinePkMatchView,
@@ -205,11 +207,11 @@ export const routes: Array<RouteRecordRaw> = [
       hideInMenu: true,
     },
   },
-  {
-    path: "/txing/manage",
-    name: "后台管理",
-    component: ManageView,
-  },
+  // {
+  //   path: "/txing/manage",
+  //   name: "后台管理",
+  //   component: ManageView,
+  // },
   {
     path: "/txing/match/submit/success",
     name: "交卷成功",
@@ -218,19 +220,25 @@ export const routes: Array<RouteRecordRaw> = [
       hideInMenu: true,
     },
   },
-  {
-    path: "/txing/course/video/play/test",
-    name: "视频播放",
-    component: VideoTest,
-  },
+  // {
+  //   path: "/txing/course/video/play/test",
+  //   name: "视频播放",
+  //   component: VideoTest,
+  // },
   {
     path: "/txing/course/search",
     name: "在线课程",
     component: CourseSearchView,
   },
   {
-    path: "/txing/course/video/play",
+    path: "/txing/forum/search",
+    name: "论坛中心",
+    component: ForumSearchView,
+  },
+  {
+    path: "/txing/course/video/play/:courseId",
     name: "课程播放页",
+    props: true,
     component: CourseVideoPlayView,
     meta: {
       hideInMenu: true,
@@ -240,11 +248,42 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/txing/course/publish",
     name: "发布课程",
     component: CoursePublishView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/course/update",
+    name: "更新课程",
+    component: CoursePublishView,
+    meta: {
+      hideInMenu: true,
+    },
   },
   {
     path: "/txing/match/pk/result/:matchId",
     name: "PK结果",
     props: true,
     component: PkResultView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/myself",
+    name: "我的主页",
+    component: MyselfView,
+    meta: {
+      // hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+    },
+  },
+  {
+    path: "/txing/forum/post/publish",
+    name: "论坛帖子发布",
+    component: ForumPostPublish,
+    meta: {
+      hideInMenu: true,
+    },
   },
 ];

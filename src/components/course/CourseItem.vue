@@ -1,29 +1,36 @@
 <template>
   <div id="courseItemId">
     <div class="container">
-      <img src="../../assets/course.jpg" />
-      <span>117:16:23</span>
+      <img :src="props.course.coverUrl" />
+      <span>{{ formatSecondsToTime(props.course.times) }}</span>
     </div>
     <div class="title">
-      <span>【尚硅谷】Golang入门到实战教程丨一套精通GO语言</span>
+      <span>{{ props.course.name }}</span>
     </div>
     <div class="footer">
       <div class="footer-author">
         <SvgIcon class="footer-author-icon" icon="author"></SvgIcon>
-        <span class="footer-author-name">热爱生活的气瓶</span>
+        <span class="footer-author-name">{{
+          props.course.userShowVO.userName
+        }}</span>
       </div>
-      <span class="footer-date">2024-01-22</span>
+      <span class="footer-date">{{
+        formatTimeToDateStr(props.course.createTime)
+      }}</span>
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { defineProps, onMounted } from "vue";
 import SvgIcon from "@/icons/SvgIcon";
+import { formatSecondsToTime, formatTimeToDateStr } from "@/utils/computeTime";
 
-export default defineComponent({
-  components: { SvgIcon },
-});
+// onMounted(() => {
+//   console.log("获取到了,", props.course);
+// });
+
+const props = defineProps(["course"]);
 </script>
 
 <style lang="scss" scoped>

@@ -293,3 +293,15 @@ export type UserShowVO = {
   userName: string;
   userAvatar: string;
 };
+
+// 课程小节信息
+export type VideoBaseInfo = {
+  id?: number;
+  courseId?: number;
+  fileId?: number;
+  videoUrl?: string;
+  coverUrl?: string;
+  times?: number;
+  name?: string;
+  orderNo?: number;
+};

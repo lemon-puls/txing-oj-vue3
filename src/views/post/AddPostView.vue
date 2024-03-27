@@ -114,7 +114,6 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import { useRoute } from "vue-router";
 import { IconEdit, IconPlus } from "@arco-design/web-vue/es/icon";
-import store from "@/store/index.ts-old";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

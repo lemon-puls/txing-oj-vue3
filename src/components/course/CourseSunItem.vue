@@ -1,29 +1,42 @@
 <template>
   <div id="courseSunItemId">
     <div class="left">
-      <span>1</span>
-      <span>001_尚硅谷_Golang可以做什么</span>
+      <span>{{ video.orderNo }}</span>
+      <span>{{ video.name }}</span>
     </div>
     <div class="right">
-      <SvgIcon class="icon" icon="edit" size="15"></SvgIcon>
-      <SvgIcon class="icon" icon="delete" size="15"></SvgIcon>
+      <SvgIcon class="icon" icon="edit" size="15" @click="onEdit"></SvgIcon>
+      <SvgIcon class="icon" icon="delete" size="15" @click="onDelete"></SvgIcon>
       <div class="right-img" @click="openVideoDialog">
-        <img src="../../assets/course.jpg" />
-        <span class="times">117:16:23</span>
+        <img :src="video.coverUrl" />
+        <span class="times">{{ formatSecondsToTime(video.times) }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref } from "vue";
+import { defineComponent, defineEmits, ref, defineProps } from "vue";
 import SvgIcon from "@/icons/SvgIcon";
 import { useVideoStore } from "@/store/video";
 import VideoPlayerDialog from "@/components/course/VideoPlayerDialog.vue";
+import { VideoBaseInfo } from "@/service/types";
+import { formatSecondsToTime } from "../../utils/computeTime";
 
 const videoStore = useVideoStore();
+
+const props = defineProps(["video", "index"]);
+
 const openVideoDialog = () => {
-  videoStore.show();
+  videoStore.show(props.video.fileId);
+};
+
+let $emit = defineEmits(["onEdit", "onDelete"]);
+const onEdit = () => {
+  $emit("onEdit", props.video, props.index);
+};
+const onDelete = () => {
+  $emit("onDelete", props.video, props.index);
 };
 </script>
 

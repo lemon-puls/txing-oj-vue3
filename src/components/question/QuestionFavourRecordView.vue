@@ -2,7 +2,7 @@
   <div id="QuestionFavourRecordViewId">
     <a-table
       id="favourRecordTableId"
-      style="max-width: 90%; margin: 0 auto"
+      style="max-width: 95%; margin: 0 auto"
       :columns="columns"
       :data="data"
       @rowClick="clickRow"

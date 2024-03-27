@@ -73,22 +73,24 @@
         <a-tabs size="large" :lazy-load="true">
           <a-tab-pane key="3">
             <template #title>
-              <icon-book size="15" />
-              <span style="font-size: 15px; margin-left: 10px">我的文章</span>
+              <SvgIcon icon="article1" :size="20" />
+              <span style="font-size: 15px; margin-left: 10px">文章中心</span>
             </template>
-            <PostView />
+            <!--            <PostView />-->
+            <PostMyself />
           </a-tab-pane>
           <a-tab-pane key="2">
             <template #title>
-              <icon-star-fill size="15" />
-              <span style="font-size: 15px; margin-left: 10px">题目收藏</span>
+              <SvgIcon icon="question" :size="20" />
+              <span style="font-size: 15px; margin-left: 10px">做题中心</span>
             </template>
-            <QuestionFavourRecordView />
+            <!--            <QuestionFavourRecordView />-->
+            <QuestionMySelf />
           </a-tab-pane>
           <a-tab-pane key="1">
             <template #title>
-              <icon-pen-fill size="15" />
-              <span style="font-size: 15px; margin-left: 10px">提交记录</span>
+              <SvgIcon icon="trophy1" :size="20" />
+              <span style="font-size: 15px; margin-left: 10px">比赛中心</span>
             </template>
             <!--            <a-table-->
             <!--              id="submitRecordTable"-->
@@ -98,17 +100,27 @@
             <!--              :columns="recordColumns"-->
             <!--              :data="records"-->
             <!--            />-->
-            <SubmitRecordView
-              style="width: 90%; margin: 0 auto"
-              :user-id="Number(useUserStore().loginUser.id)"
-            ></SubmitRecordView>
+
+            <!--            <SubmitRecordView-->
+            <!--              style="width: 90%; margin: 0 auto"-->
+            <!--              :user-id="Number(useUserStore().loginUser.id)"-->
+            <!--            ></SubmitRecordView>-->
+            <MatchMyself />
           </a-tab-pane>
           <a-tab-pane key="4">
             <template #title>
-              <icon-bookmark size="15" />
-              <span style="font-size: 15px; margin-left: 10px">文章收藏</span>
+              <SvgIcon icon="video1" :size="20" />
+              <span style="font-size: 15px; margin-left: 10px">视频中心</span>
             </template>
-            <PostFavourView />
+            <!--            <PostFavourView />-->
+            <CourseMyself />
+          </a-tab-pane>
+          <a-tab-pane key="5">
+            <template #title>
+              <SvgIcon icon="forum1" :size="20" />
+              <span style="font-size: 15px; margin-left: 10px">论坛中心</span>
+            </template>
+            <ForumMyself />
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -249,6 +261,12 @@ import { useRouter } from "vue-router";
 import QuestionFavourRecordView from "@/components/question/QuestionFavourRecordView.vue";
 import PostView from "@/components/post/PostView.vue";
 import PostFavourView from "@/components/post/PostFavourView.vue";
+import PostMyself from "@/components/post/PostMyself.vue";
+import QuestionMySelf from "@/components/question/QuestionMySelf.vue";
+import MatchMyself from "@/components/match/MatchMyself.vue";
+import CourseMyself from "@/components/course/CourseMyself.vue";
+import SvgIcon from "@/icons/SvgIcon";
+import ForumMyself from "@/components/forum/ForumMyself.vue";
 
 const router = useRouter();
 

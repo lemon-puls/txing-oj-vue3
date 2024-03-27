@@ -1,14 +1,19 @@
 <template>
   <div id="videoPlayerDialogId">
-    <video
-      :id="tcPlayerId"
+    <!--    <video-->
+    <!--      :id="tcPlayerId"-->
+    <!--      class="videos"-->
+    <!--      preload="auto"-->
+    <!--      :style="{ width: '60vw', height: 'calc((540 / 960) * 60vw)' }"-->
+    <!--      playsinline-->
+    <!--      webkit-playsinline-->
+    <!--      x5-playsinline-->
+    <!--    ></video>-->
+    <VideoPlayer
       class="videos"
-      preload="auto"
-      :style="{ width: '60vw', height: 'calc((540 / 960) * 60vw)' }"
-      playsinline
-      webkit-playsinline
-      x5-playsinline
-    ></video>
+      :tc-player-id="tcPlayerId"
+      :file-id="videoStore.fileId"
+    />
     <SvgIcon
       @click="handleClickOutside"
       class="icon"
@@ -23,6 +28,7 @@ import { useVideoStore } from "@/store/video";
 import { defineProps, onMounted } from "vue";
 import TCPlayer from "tcplayer.js";
 import SvgIcon from "@/icons/SvgIcon";
+import VideoPlayer from "@/components/course/VideoPlayer.vue";
 
 let tcPlayerId = "tcPlayer" + Date.now();
 
@@ -66,6 +72,7 @@ onMounted(() => {
   z-index: 10000;
 
   .videos {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

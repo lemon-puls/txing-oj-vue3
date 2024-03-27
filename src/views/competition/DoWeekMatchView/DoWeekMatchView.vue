@@ -31,10 +31,23 @@
                 color: #979797;
               "
             >
-              <div>
-                <svg-icon icon="back" size="18px" />
-                <span>放弃竞赛</span>
-              </div>
+              <a-popconfirm
+                content="确认要放弃本场比赛吗"
+                position="bl"
+                @ok="onGiveUpMatch"
+              >
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    column-gap: 5px;
+                    cursor: pointer;
+                  "
+                >
+                  <svg-icon icon="back1" size="25px" />
+                  <span>放弃竞赛</span>
+                </div>
+              </a-popconfirm>
               <div
                 style="
                   height: 100%;
@@ -56,6 +69,7 @@
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    cursor: 'pointer',
                   }"
                   :key="i"
                   @click="onSelectQuestion(i)"
@@ -75,7 +89,10 @@
                 font-size: 20px;
               "
             >
-              <span>{{ matchDetailData?.name }}</span>
+              <span
+                >{{ matchDetailData?.name
+                }}{{ isSimulate ? "(模拟)" : "" }}</span
+              >
             </div>
           </a-col>
           <a-col flex="20%" style="height: 100%">
@@ -100,8 +117,17 @@
               </a-popconfirm>
               <a-countdown
                 v-if="!isLoading"
-                :value="Date.parse(matchDetailData?.endTime)"
+                :value="
+                  isSimulate
+                    ? new Date(matchDetailData?.simulateStartTime).setHours(
+                        new Date(
+                          matchDetailData?.simulateStartTime
+                        ).getHours() + 2
+                      )
+                    : Date.parse(matchDetailData?.endTime)
+                "
                 :now="Date.now()"
+                @finish="handleTimeOut"
               />
             </div>
           </a-col>
@@ -310,7 +336,7 @@
 import MdViewer from "@/components/MdViewer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import SvgIcon from "@/icons/SvgIcon";
-import { computed, onMounted, ref, toRaw } from "vue";
+import { computed, onMounted, ref, toRaw, defineProps } from "vue";
 import {
   MatchWeekAppControllerService,
   Question,
@@ -319,18 +345,31 @@ import {
 } from "../../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useWeekMatchStore } from "@/store/weekmatch";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
-
+const route = useRoute();
+const isSimulate = route.path.includes("simulate");
+const props = defineProps(["matchId"]);
 const isLoading = ref(true);
 const matchDetailData = ref();
 const codeEditorRef = ref();
 const loadMatchDetailData = async () => {
-  const res = await MatchWeekAppControllerService.startMatchUsingGet();
+  let res;
+  if (isSimulate) {
+    // 模拟
+    res = await MatchWeekAppControllerService.startMatchUsingGet(props.matchId);
+  } else {
+    // 正式
+    res = await MatchWeekAppControllerService.startMatchUsingGet();
+  }
   if (res.code !== 0) {
     message.error("比赛数据加载失败：", res.msg);
     return;
+  }
+  console.log(isSimulate, res.data.id, props.matchId);
+  if (isSimulate && res.data.id != props.matchId) {
+    message.warning("你的上一场模拟赛还未完成 现在继续完成！");
   }
   matchDetailData.value = res.data;
   question.value = matchDetailData.value.questions[0];
@@ -491,11 +530,30 @@ const submitAll = async () => {
     message.error("提交失败，请稍后重试！");
     return;
   }
-  console.log("reset前：", matchStore.matchSubmits);
   matchStore.resetMatchSubmits();
-  console.log("reset后：", matchStore.matchSubmits);
   router.push({
     path: "/txing/match/submit/success",
+    query: {
+      joinId: res.data,
+    },
+  });
+};
+// 时间到自动交卷
+const handleTimeOut = () => {
+  submitAll();
+};
+// 放弃比赛
+const onGiveUpMatch = async () => {
+  const res = await MatchWeekAppControllerService.giveUpMatchUsingGet(
+    matchDetailData.value.id
+  );
+  if (res.code != 0) {
+    message.error(res.msg + ", 请刷新重试！");
+    return;
+  }
+  message.success("已成功放弃本场比赛");
+  router.push({
+    path: "/txing/match/center",
   });
 };
 </script>

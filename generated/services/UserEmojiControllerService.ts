@@ -16,7 +16,7 @@ export class UserEmojiControllerService {
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingGet1(
+    public static deleteUsingGet4(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -37,7 +37,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingHead(
+    public static deleteUsingHead3(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -57,7 +57,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingPost2(
+    public static deleteUsingPost5(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -78,7 +78,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingPut(
+    public static deleteUsingPut3(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -99,7 +99,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingDelete(
+    public static deleteUsingDelete3(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -119,7 +119,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingOptions(
+    public static deleteUsingOptions3(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -139,7 +139,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingPatch(
+    public static deleteUsingPatch3(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -159,7 +159,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingGet3(
+    public static infoUsingGet6(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -182,7 +182,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingHead(
+    public static infoUsingHead3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -204,7 +204,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingPost(
+    public static infoUsingPost3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -227,7 +227,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingPut(
+    public static infoUsingPut3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -250,7 +250,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingDelete(
+    public static infoUsingDelete3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -272,7 +272,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingOptions(
+    public static infoUsingOptions3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -294,7 +294,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingPatch(
+    public static infoUsingPatch3(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -316,7 +316,7 @@ id: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingGet(
+    public static saveUsingGet3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -337,7 +337,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingHead(
+    public static saveUsingHead3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -357,7 +357,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingPost3(
+    public static saveUsingPost6(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -378,7 +378,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingPut(
+    public static saveUsingPut3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -399,7 +399,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingDelete(
+    public static saveUsingDelete3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -419,7 +419,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingOptions(
+    public static saveUsingOptions3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -439,7 +439,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingPatch(
+    public static saveUsingPatch3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -459,7 +459,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingGet(
+    public static updateUsingGet3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -480,7 +480,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingHead(
+    public static updateUsingHead3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -500,7 +500,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingPost2(
+    public static updateUsingPost5(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -521,7 +521,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingPut(
+    public static updateUsingPut3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -542,7 +542,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingDelete(
+    public static updateUsingDelete3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -562,7 +562,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingOptions(
+    public static updateUsingOptions3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -582,7 +582,7 @@ userEmoji: UserEmoji,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingPatch(
+    public static updateUsingPatch3(
 userEmoji: UserEmoji,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

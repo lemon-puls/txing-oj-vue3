@@ -29,6 +29,7 @@ export const useUpload = () => {
   // 文件信息
   const fileInfo = ref<FileInfo | null>(null);
   const { on: onChange, trigger } = createEventHook();
+  const { on: onProgressChange, trigger: progressTrigger } = createEventHook();
   const onStart = createEventHook<any>();
 
   // 上传文件
@@ -59,6 +60,7 @@ export const useUpload = () => {
             progress.value = Math.round(
               (progressData.loaded / progressData.total) * 100
             );
+            progressTrigger(progress.value);
           }
         },
       },
@@ -142,6 +144,7 @@ export const useUpload = () => {
     fileInfo,
     onStart,
     onChange,
+    onProgressChange,
   };
 };
 

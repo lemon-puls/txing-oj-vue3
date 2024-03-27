@@ -16,7 +16,7 @@ export class UserFriendControllerService {
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingGet2(
+    public static deleteUsingGet5(
 friendId: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -39,7 +39,7 @@ friendId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static listUsingPost5(
+    public static listUsingPost6(
 cursorPageBaseRequest: CursorPageBaseRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

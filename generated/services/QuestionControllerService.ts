@@ -62,7 +62,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingGet1(
+    public static infoUsingGet4(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -127,7 +127,7 @@ queryVo: PageVO,
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingPost2(
+    public static saveUsingPost5(
 question: Question,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

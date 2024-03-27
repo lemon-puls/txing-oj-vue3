@@ -26,34 +26,34 @@
             style="font-size: 15px"
             >{{ item.name }}
           </a-menu-item>
-          <a-menu-item
-            key="adminCenter"
-            v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"
-          >
-            <a-dropdown
-              @select="doMenuClick"
-              :popup-max-height="false"
-              style="z-index: 10000"
-            >
-              <a-button style="font-size: 15px"
-                >管理中心
-                <icon-down />
-              </a-button>
-              <template #content>
-                <div>
-                  <a-doption style="font-size: 15px">
-                    <a-button type="primary">创建题目</a-button>
-                  </a-doption>
-                  <a-divider
-                    style="margin: 5px 0; padding: 0px; width: 100%"
-                  ></a-divider>
-                  <a-doption style="font-size: 15px">
-                    <a-button type="primary">管理题目</a-button>
-                  </a-doption>
-                </div>
-              </template>
-            </a-dropdown>
-          </a-menu-item>
+          <!--          <a-menu-item-->
+          <!--            key="adminCenter"-->
+          <!--            v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"-->
+          <!--          >-->
+          <!--            <a-dropdown-->
+          <!--              @select="doMenuClick"-->
+          <!--              :popup-max-height="false"-->
+          <!--              style="z-index: 10000"-->
+          <!--            >-->
+          <!--              <a-button style="font-size: 15px"-->
+          <!--                >管理中心-->
+          <!--                <icon-down />-->
+          <!--              </a-button>-->
+          <!--              <template #content>-->
+          <!--                <div>-->
+          <!--                  <a-doption style="font-size: 15px">-->
+          <!--                    <a-button type="primary">创建题目</a-button>-->
+          <!--                  </a-doption>-->
+          <!--                  <a-divider-->
+          <!--                    style="margin: 5px 0; padding: 0px; width: 100%"-->
+          <!--                  ></a-divider>-->
+          <!--                  <a-doption style="font-size: 15px">-->
+          <!--                    <a-button type="primary">管理题目</a-button>-->
+          <!--                  </a-doption>-->
+          <!--                </div>-->
+          <!--              </template>-->
+          <!--            </a-dropdown>-->
+          <!--          </a-menu-item>-->
           <a-menu-item
             key="weekMatch"
             v-if="checkAccess(userStore.loginUser, AccessEnum.NOT_LOGIN)"
@@ -64,7 +64,7 @@
               style="z-index: 10000; width: 100px"
             >
               <a-button style="font-size: 15px"
-                >竞赛
+                >竞赛中心
                 <icon-down />
               </a-button>
               <template #content>
@@ -143,24 +143,47 @@
             dot
             :offset="[2, -2]"
           >
-            <IconNotification
-              @click="openChatBox"
-              :style="{
-                color: '#888',
-                fontSize: '25px',
-                verticalAlign: '-3px',
-              }"
-            />
+            <SvgIcon @click="openChatBox" icon="bell" :size="25" />
           </a-badge>
 
-          <a-button
-            type="primary"
-            size="large"
-            style="font-size: 15px; border-radius: 20px"
-            @click="doMenuClick('/txing/post/add')"
-            >创作
-            <icon-edit style="margin-left: 5px" />
-          </a-button>
+          <!--          <a-button-->
+          <!--            type="primary"-->
+          <!--            size="large"-->
+          <!--            style="font-size: 15px; border-radius: 20px"-->
+          <!--            @click="doMenuClick('/txing/post/add')"-->
+          <!--            >创作-->
+          <!--            <icon-edit style="margin-left: 5px" />-->
+          <!--          </a-button>-->
+          <a-popover position="bottom">
+            <SvgIcon icon="create" :size="50" />
+            <template #content>
+              <div class="create-center">
+                <div
+                  class="create-center-item"
+                  @click="doMenuClick('/txing/post/add')"
+                >
+                  <SvgIcon icon="write" :size="40" />
+                  <span>发表文章</span>
+                </div>
+                <a-divider direction="vertical" />
+                <div
+                  class="create-center-item"
+                  @click="doMenuClick('/txing/course/publish')"
+                >
+                  <SvgIcon icon="createvideo" :size="40" />
+                  <span>发布课程</span>
+                </div>
+                <a-divider direction="vertical" />
+                <div
+                  class="create-center-item"
+                  @click="doMenuClick('/txing/forum/post/publish')"
+                >
+                  <SvgIcon icon="forum" :size="40" />
+                  <span>发表帖子</span>
+                </div>
+              </div>
+            </template>
+          </a-popover>
           <div
             @click="
               router.push({
@@ -389,6 +412,26 @@ setInterval(function () {
 
   &:hover {
     color: #007bff;
+  }
+}
+
+.create-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    row-gap: 5px;
+
+    &:hover {
+      background-color: #d0d0d0;
+    }
   }
 }
 </style>

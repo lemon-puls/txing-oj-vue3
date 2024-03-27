@@ -7,7 +7,8 @@
         route.path.startsWith('/txing/post/update') ||
         route.path.startsWith('/txing/match/week/do') ||
         route.path.startsWith('/txing/match/pk') ||
-        route.path.startsWith('/txing/match/submit/success')
+        route.path.startsWith('/txing/match/submit/success') ||
+        route.path.startsWith('/txing/match/week/simulate/')
       "
     >
       <router-view />

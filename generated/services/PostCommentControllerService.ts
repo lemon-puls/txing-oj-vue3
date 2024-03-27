@@ -17,7 +17,7 @@ export class PostCommentControllerService {
      * @returns any OK
      * @throws ApiError
      */
-    public static saveUsingPost(
+    public static saveUsingPost3(
 postCommentAddRequest: PostCommentAddRequest,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -39,7 +39,7 @@ postCommentAddRequest: PostCommentAddRequest,
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingGet(
+    public static deleteUsingGet3(
 commentId: number,
 postId: number,
 ): CancelablePromise<Record<string, any>> {

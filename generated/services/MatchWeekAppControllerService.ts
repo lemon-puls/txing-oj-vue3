@@ -12,6 +12,29 @@ import { request as __request } from '../core/request';
 export class MatchWeekAppControllerService {
 
     /**
+     * giveUpMatch
+     * @param matchId matchId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static giveUpMatchUsingGet(
+matchId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/match/week/giveup',
+            query: {
+                'matchId': matchId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * getWeekMatchHistory
      * @returns any OK
      * @throws ApiError
@@ -20,6 +43,23 @@ export class MatchWeekAppControllerService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/match/week/history/get',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getLastWeekMatch
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getLastWeekMatchUsingGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/match/week/last/get',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -64,13 +104,19 @@ export class MatchWeekAppControllerService {
 
     /**
      * startMatch
+     * @param matchId matchId
      * @returns any OK
      * @throws ApiError
      */
-    public static startMatchUsingGet(): CancelablePromise<Record<string, any>> {
+    public static startMatchUsingGet(
+matchId?: number,
+): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/match/week/start',
+            query: {
+                'matchId': matchId,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

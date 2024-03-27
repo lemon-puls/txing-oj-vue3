@@ -1,5 +1,5 @@
 <template>
-  <div id="postViewId">
+  <div id="postFavourViewId">
     <a-list
       class="list-demo-action-layout"
       :bordered="false"
@@ -159,8 +159,8 @@ const cancelPostFavour = async (id: any) => {
 };
 </script>
 
-<style>
-#postViewId {
+<style lang="scss">
+#postFavourViewId {
   margin-bottom: 30px;
 }
 
@@ -185,15 +185,19 @@ const cancelPostFavour = async (id: any) => {
 }
 
 .arco-list-wrapper {
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 
-#postViewId .arco-list-item-action > li {
-  width: 100% !important;
+#postFavourViewId {
+  .arco-list-item-action {
+    > li {
+      width: 100% !important;
+    }
+  }
 }
 
-#postViewId .arco-list-item-meta-description {
+#postFavourViewId .arco-list-item-meta-description {
   height: 40px;
 }
 </style>

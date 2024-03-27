@@ -30,18 +30,24 @@
       </div>
       <div class="latest-match-ops">
         <span
-          v-if="matchData?.status === 0"
+          v-if="matchStatus === 1"
           style="color: #fcf743; font-size: 17px"
           @click="onJoinMatch"
           >点击参加</span
         >
-        <span v-else style="color: #fcf743; font-size: 17px"> 未开始 </span>
+        <span
+          v-else-if="matchStatus === 0"
+          style="color: #fcf743; font-size: 17px"
+        >
+          未开始
+        </span>
+        <span v-else style="color: #fcf743; font-size: 17px"> 已结束 </span>
       </div>
     </div>
     <div class="match-rank-and-back">
       <div class="match-rank">
-        <div class="match-rank-title"><span>本周排名</span></div>
-        <div class="match-rank-content">
+        <div class="match-rank-title"><span>本周排名（第2场周赛）</span></div>
+        <div class="match-rank-content" v-if="weekRankData">
           <div
             class="match-rank-content-item"
             v-for="item in weekRankData"
@@ -69,10 +75,11 @@
             </div>
           </div>
         </div>
+        <a-empty v-else />
       </div>
       <div class="match-back">
         <div class="match-back-title"><span>往期赛事</span></div>
-        <div class="match-back-content">
+        <div class="match-back-content" v-if="historyMatchData">
           <div
             class="match-back-content-item"
             v-for="item in historyMatchData"
@@ -81,48 +88,52 @@
             <a-divider />
             <div class="match-back-content-item-info">
               <div class="match-back-content-item-info-session">
+                <SvgIcon icon="week" :size="25" />
                 <span>{{ item.name }}</span>
               </div>
               <div class="match-back-content-item-info-time">
-                <span
-                  >{{ matchData?.startTime }} - {{ matchData?.endTime }}</span
-                >
+                <SvgIcon icon="clock" :size="25" />
+                <span>{{ item?.startTime }} - {{ item?.endTime }}</span>
               </div>
               <div class="match-back-content-item-info-ops">
-                <a-button type="primary" status="warning" shape="round"
-                  >模拟
-                </a-button>
+                <!--                <a-button type="primary" status="warning" shape="round"-->
+                <!--                  >模拟-->
+                <!--                </a-button>-->
+                <span @click="onSimulate(item.id)">模拟</span>
               </div>
             </div>
           </div>
         </div>
+        <a-empty v-else />
       </div>
     </div>
-    <!--    <div class="user-rank">-->
-    <!--      <div class="user-rank-title"><span>全国排名</span></div>-->
-    <!--      <div class="user-rank-content">-->
-    <!--        <div class="user-rank-content-item" v-for="i in 10" :key="i">-->
-    <!--          <div>-->
-    <!--            <a-divider />-->
-    <!--          </div>-->
-    <!--          <div class="user-rank-content-item-info">-->
-    <!--            <div class="user-rank-content-item-info-left">-->
-    <!--              <span>{{ i }}</span>-->
-    <!--              <img-->
-    <!--                style="border-radius: 50%; width: 25px; height: 25px"-->
-    <!--                height="20px"-->
-    <!--                width="20px"-->
-    <!--                src="https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/PYorLjF1-%E5%BE%80%E6%98%94%E6%B1%97%E6%B0%B4_The%20sweat%20of%20the%20past_1_SaYoii_%E6%9D%A5%E8%87%AA%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88.jpg"-->
-    <!--              />-->
-    <!--              <span>孤独的根号3</span>-->
-    <!--            </div>-->
-    <!--            <div class="user-rank-content-item-info-right">-->
-    <!--              <span>8000分</span>-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
+    <div class="user-rank">
+      <div class="user-rank-title"><span>全国排名</span></div>
+      <div class="user-rank-content" v-if="!nationalRankData">
+        <div class="user-rank-content-item" v-for="i in 10" :key="i">
+          <div>
+            <a-divider />
+          </div>
+          <div class="user-rank-content-item-info">
+            <div class="user-rank-content-item-info-left">
+              <span>{{ i }}</span>
+              <img
+                style="border-radius: 50%; width: 25px; height: 25px"
+                height="20px"
+                width="20px"
+                src="https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/PYorLjF1-%E5%BE%80%E6%98%94%E6%B1%97%E6%B0%B4_The%20sweat%20of%20the%20past_1_SaYoii_%E6%9D%A5%E8%87%AA%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88.jpg"
+              />
+              <span>孤独的根号3</span>
+            </div>
+            <div class="user-rank-content-item-info-right">
+              <SvgIcon icon="score" :size="25" />
+              <span>8000分</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a-empty v-else />
+    </div>
   </div>
 </template>
 
@@ -178,15 +189,18 @@
 
     .match-rank {
       width: 35%;
-      background-color: #f2f2f2;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      //background-color: #f2f2f2;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
       border-radius: 10px;
 
       &-title {
-        color: #7d7979;
+        color: #383434;
         font-size: 20px;
         font-weight: bold;
         margin: 10px 10px;
+        background-image: linear-gradient(60deg, #abecd6 0%, #fbed96 100%);
+        padding: 10px;
+        border-radius: 10px;
       }
 
       &-content {
@@ -212,15 +226,23 @@
 
     .match-back {
       width: 47%;
-      background-color: #f2f2f2;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      //background-color: #f2f2f2;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
       border-radius: 10px;
 
       &-title {
-        color: #7d7979;
+        color: #383434;
         font-size: 20px;
         font-weight: bold;
         margin: 10px 10px;
+        background-image: linear-gradient(
+          -225deg,
+          #9efbd3 0%,
+          #57e9f2 48%,
+          #45d4fb 100%
+        );
+        padding: 10px;
+        border-radius: 10px;
       }
 
       &-content {
@@ -233,6 +255,26 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
+
+            &-time {
+              display: flex;
+              align-items: center;
+              column-gap: 10px;
+            }
+
+            &-session {
+              display: flex;
+              align-items: center;
+              column-gap: 10px;
+            }
+
+            &-ops {
+              cursor: pointer;
+
+              &:hover {
+                color: #007bff;
+              }
+            }
           }
         }
       }
@@ -241,16 +283,21 @@
 
   //用户竞赛总分排名样式
   .user-rank {
-    width: 80%;
-    background-color: #f2f2f2;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 81%;
+    //background-color: #f2f2f2;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
 
     &-title {
-      color: #7d7979;
+      color: #383434;
       font-size: 20px;
       font-weight: bold;
       margin: 10px 10px;
+      background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+      padding: 10px;
+      border-radius: 10px;
     }
 
     &-content {
@@ -267,6 +314,12 @@
             display: flex;
             column-gap: 10px;
             align-items: center;
+          }
+
+          &-right {
+            display: flex;
+            align-items: center;
+            column-gap: 10px;
           }
         }
       }
@@ -291,12 +344,13 @@ const onJoinMatch = () => {
 
 const matchData = ref();
 const weekRankData = ref();
+const nationalRankData = ref();
 const historyMatchData = ref();
 
 // 开始倒计时
 const now = Date.now();
 let startTime;
-
+let matchStatus = ref(0);
 const loadMatchData = async () => {
   const res = await MatchWeekAppControllerService.getNextMatchUsingGet();
   if (res.code != 0) {
@@ -304,7 +358,16 @@ const loadMatchData = async () => {
     return;
   }
   matchData.value = res.data;
+  const nowDate = Date.now();
   startTime = Date.parse(matchData.value.startTime);
+  const endTime = Date.parse(matchData.value.endTime);
+  if (nowDate < startTime) {
+    matchStatus.value = 0;
+  } else if (nowDate < endTime) {
+    matchStatus.value = 1;
+  } else {
+    matchStatus.value = 2;
+  }
 };
 const loadWeekRankData = async () => {
   const res = await MatchWeekAppControllerService.getMatchRankUsingGet();
@@ -327,4 +390,11 @@ onMounted(() => {
   loadWeekRankData();
   loadHistoryMatchData();
 });
+
+// 去模拟
+const onSimulate = async (matchId: number) => {
+  router.push({
+    path: "/txing/match/week/simulate/" + matchId,
+  });
+};
 </script>

@@ -18,7 +18,7 @@ export class QuestionSubmitControllerService {
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteUsingPost1(
+    public static deleteUsingPost4(
 ids: Array<number>,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -39,7 +39,7 @@ ids: Array<number>,
      * @returns any OK
      * @throws ApiError
      */
-    public static infoUsingGet2(
+    public static infoUsingGet5(
 id: number,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {
@@ -127,7 +127,7 @@ sumbitId: number,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUsingPost1(
+    public static updateUsingPost4(
 questionSubmit: QuestionSubmit,
 ): CancelablePromise<Record<string, any>> {
         return __request(OpenAPI, {

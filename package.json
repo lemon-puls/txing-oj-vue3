@@ -38,6 +38,7 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.69.5",
     "tcplayer.js": "^5.1.0",
+    "vod-js-sdk-v6": "^1.7.0",
     "vue": "^3.2.13",
     "vue-infinite-scroll": "^2.0.2",
     "vue-json-viewer": "^3.0.4",

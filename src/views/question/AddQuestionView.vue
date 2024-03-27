@@ -144,7 +144,7 @@ const loadData = async () => {
   if (!id) {
     return;
   }
-  const res = await QuestionControllerService.infoUsingGet1(id as any);
+  const res = await QuestionControllerService.infoUsingGet4(id as any);
   if (res.code === 0) {
     form.value = res.data as any;
     if (!form.value.judgeCase) {

@@ -2,15 +2,16 @@
   <div id="courseVideoPlayViewId">
     <div class="left">
       <div class="course-title">
-        <span>【尚硅谷】Golang入门到实战教程丨一套精通GO语言</span>
+        <span>{{ courseData?.name }}</span>
       </div>
       <div class="course-other-info">
-        <span>2019-10-27 11:58:34</span>
+        <span>{{ courseData?.createTime }}</span>
       </div>
-      <div class="course-video-player">
+      <div v-if="currentVideo?.fileId" class="course-video-player">
         <VideoPlayer
           :tc-player-id="tcPlayerId"
-          file-id="1397757887182254627"
+          :file-id="currentVideo.fileId"
+          :key="playerKey"
         ></VideoPlayer>
         <div class="player-footer">
           <icon-star-fill
@@ -26,24 +27,51 @@
     <div class="right">
       <div class="user-info">
         <div class="user-info-avatar">
-          <img src="../../../assets/course.jpg" />
+          <AvatarPopover
+            :user-name="userShowVO?.userName"
+            :user-avatar="userShowVO?.userAvatar"
+            :sign="userShowVO?.personSign"
+            :is-friend="isFriend(userShowVO?.id)"
+            :user-id="Number(userShowVO?.id)"
+            trigger="hover"
+          >
+            <template #target>
+              <div>
+                <img :src="courseData?.coverUrl" />
+              </div>
+            </template>
+          </AvatarPopover>
         </div>
         <div class="user-info-other">
-          <span class="name">热爱生活的气瓶</span>
-          <span class="sign"
-            >就业规划、简历模板、毕业设计，加小谷姐姐Q：312478...</span
-          >
+          <span class="name">{{ courseData?.name }}</span>
+          <span class="sign">{{ courseData?.intro }}</span>
         </div>
       </div>
       <div class="course-catalog">
         <div class="course-catalog-header">
           <span>视频选集 </span>
-          <span style="color: rgba(40, 30, 30, 0.5)">(1/388)</span>
+          <span style="color: rgba(40, 30, 30, 0.5)"
+            >({{ index + 1 }}/{{ courseData?.noduleCount }})</span
+          >
         </div>
         <hr />
-        <div class="course-catalog-item" v-for="i in 15" :key="i">
-          <span>P{{ i }} 001_尚硅谷_Golang可以做什么</span>
-          <span style="color: rgba(40, 30, 30, 0.5)">21:30</span>
+        <div
+          :class="{ courseCatalogItem: true, isPlaying: i == index }"
+          v-for="(video, i) in courseData?.videoVOS"
+          :key="video.id"
+          @click="onSelectNodule(i)"
+        >
+          <span
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+            >P{{ video.orderNo }} {{ video.name }}</span
+          >
+          <span style="color: rgba(40, 30, 30, 0.5)">{{
+            formatSecondsToTime(video.times)
+          }}</span>
         </div>
       </div>
     </div>
@@ -51,20 +79,63 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineProps, onMounted, ref } from "vue";
 import VideoPlayer from "@/components/course/VideoPlayer.vue";
 import { IconStarFill, IconStar } from "@arco-design/web-vue/es/icon";
+import { CourseAppControllerService } from "../../../../generated";
+import message from "@arco-design/web-vue/es/message";
+import { formatSecondsToTime } from "../../../utils/computeTime";
+import { useContactStore } from "@/store/contact";
+import { useUserStore } from "@/store/user";
+import AvatarPopover from "@/components/user/AvatarPopover.vue";
 
-let tcPlayerId = "tcPlayer" + Date.now();
+const props = defineProps(["courseId"]);
+
+const contactStore = useContactStore();
+const userStore = useUserStore();
+const isFriend = (userId: any) => {
+  return (
+    contactStore.contactList.find((cur) => cur.userId.toString() == userId) !==
+      undefined || userId == userStore.loginUser.id.toString()
+  );
+};
+
+let tcPlayerId = ref("tcPlayer" + Date.now());
 
 let playerKey = ref(1);
 onMounted(() => {
-  playerKey.value++;
+  loadCourseData();
 });
 
 const isFavour = ref(false);
 const onFavour = () => {
   isFavour.value = !isFavour.value;
+};
+
+// 加载数据
+const courseData = ref();
+const userShowVO = ref();
+const loadCourseData = async () => {
+  const res = await CourseAppControllerService.getVideoPlayVoUsingGet(
+    props.courseId
+  );
+  if (res.code != 0) {
+    message.error("数据加载失败：", res.msg);
+    return;
+  }
+  courseData.value = res.data;
+  userShowVO.value = res.data.userShowVO;
+  onSelectNodule(0);
+};
+
+// 正在播放的视频
+let index = 0;
+const currentVideo = ref();
+const onSelectNodule = (curIndex: number) => {
+  index = curIndex;
+  currentVideo.value = courseData.value?.videoVOS[index];
+  tcPlayerId.value = "tcPlayer" + Date.now();
+  playerKey.value++;
 };
 </script>
 
@@ -106,11 +177,11 @@ const onFavour = () => {
   .right {
     margin-left: 20px;
     margin-top: 20px;
-    max-width: 20vw;
+    width: 20vw;
 
     .user-info {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       column-gap: 10px;
       margin: 10px 0;
 
@@ -135,8 +206,8 @@ const onFavour = () => {
         .sign {
           color: #979797;
           font-size: 12px;
-          white-space: nowrap;
-          overflow: hidden;
+          //white-space: nowrap;
+          //overflow: hidden;
           text-overflow: ellipsis;
         }
       }
@@ -147,7 +218,7 @@ const onFavour = () => {
       border-radius: 10px;
       padding: 10px;
 
-      &-item {
+      .courseCatalogItem {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -159,6 +230,10 @@ const onFavour = () => {
         &:hover {
           background-color: white;
         }
+      }
+
+      .isPlaying {
+        background-color: white;
       }
     }
   }

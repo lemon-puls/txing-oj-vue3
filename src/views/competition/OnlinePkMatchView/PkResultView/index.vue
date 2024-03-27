@@ -11,55 +11,67 @@
         <SvgIcon v-else-if="!isWinner" icon="fail" :size="200" />
         <SvgIcon v-else-if="isWinner" icon="win" :size="200" />
       </div>
-
-      <div class="pk-info">
-        <div class="pk-info-left">
-          <div class="avatar-container" style="width: 700px">
-            <img
-              style="width: 200px; height: 200px; border-radius: 50%"
-              :src="userStore?.loginUser?.userAvatar"
-            />
-            <div class="user1-res-info">
-              <span>{{ score1 }}</span>
-            </div>
-          </div>
-          <span style="font-size: 20px">{{
-            userStore?.loginUser?.userName
-          }}</span>
-          <span
-            v-if="matchResult && matchResult.winnerId != 0"
-            style="font-size: 15px; color: red"
-            >{{
-              matchResult && userId == matchResult.winnerId
-                ? "恭喜你 胜出了比赛！"
-                : "可惜 差一点就赢了！"
-            }}</span
-          >
-        </div>
-        <div class="pk-info-right">
-          <div class="avatar-container" style="width: 700px">
-            <img
-              style="width: 200px; height: 200px; border-radius: 50%"
-              :src="matchStore.pkUserShowVO?.userAvatar"
-            />
-            <div class="user2-res-info">
-              <span>{{ score2 }}</span>
-            </div>
-          </div>
-          <span style="font-size: 20px">{{
-            matchStore.pkUserShowVO?.userName
-          }}</span>
-          <span
-            v-if="matchResult && matchResult.winnerId != 0"
-            style="font-size: 15px; color: red"
-            >{{
-              matchResult && !(userId == matchResult.winnerId)
-                ? "恭喜你 胜出了比赛！"
-                : "可惜 差一点就赢了！"
-            }}</span
-          >
-        </div>
-      </div>
+      <PkResult
+        :player1="{
+          userAvatar: userStore?.loginUser?.userAvatar,
+          userName: userStore?.loginUser?.userName,
+          score: score1,
+        }"
+        :player2="{
+          userAvatar: matchStore.pkUserShowVO?.userAvatar,
+          userName: matchStore.pkUserShowVO?.userName,
+          score: score2,
+        }"
+        :match-result="matchResult"
+      />
+      <!--      <div class="pk-info">-->
+      <!--        <div class="pk-info-left">-->
+      <!--          <div class="avatar-container" style="width: 700px">-->
+      <!--            <img-->
+      <!--              style="width: 200px; height: 200px; border-radius: 50%"-->
+      <!--              :src="userStore?.loginUser?.userAvatar"-->
+      <!--            />-->
+      <!--            <div class="user1-res-info">-->
+      <!--              <span>{{ score1 }}</span>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <span style="font-size: 20px">{{-->
+      <!--            userStore?.loginUser?.userName-->
+      <!--          }}</span>-->
+      <!--          <span-->
+      <!--            v-if="matchResult && matchResult.winnerId != 0"-->
+      <!--            style="font-size: 15px; color: red"-->
+      <!--            >{{-->
+      <!--              matchResult && userId == matchResult.winnerId-->
+      <!--                ? "恭喜你 胜出了比赛！"-->
+      <!--                : "可惜 差一点就赢了！"-->
+      <!--            }}</span-->
+      <!--          >-->
+      <!--        </div>-->
+      <!--        <div class="pk-info-right">-->
+      <!--          <div class="avatar-container" style="width: 700px">-->
+      <!--            <img-->
+      <!--              style="width: 200px; height: 200px; border-radius: 50%"-->
+      <!--              :src="matchStore.pkUserShowVO?.userAvatar"-->
+      <!--            />-->
+      <!--            <div class="user2-res-info">-->
+      <!--              <span>{{ score2 }}</span>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <span style="font-size: 20px">{{-->
+      <!--            matchStore.pkUserShowVO?.userName-->
+      <!--          }}</span>-->
+      <!--          <span-->
+      <!--            v-if="matchResult && matchResult.winnerId != 0"-->
+      <!--            style="font-size: 15px; color: red"-->
+      <!--            >{{-->
+      <!--              matchResult && !(userId == matchResult.winnerId)-->
+      <!--                ? "恭喜你 胜出了比赛！"-->
+      <!--                : "可惜 差一点就赢了！"-->
+      <!--            }}</span-->
+      <!--          >-->
+      <!--        </div>-->
+      <!--      </div>-->
       <div v-if="!matchResult || matchResult.winnerId == 0">
         <span
           v-if="matchResult && matchResult.winnerId == 0"
@@ -103,6 +115,7 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import { useMatchStore } from "@/store/match";
 import { usePkStore } from "@/store/pk";
+import PkResult from "@/components/match/PkResult.vue";
 
 const userStore = useUserStore();
 const matchStore = useMatchStore();
