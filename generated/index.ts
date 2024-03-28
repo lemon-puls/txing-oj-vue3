@@ -20,6 +20,7 @@ export type { CourseVO } from './models/CourseVO';
 export type { CursorPageBaseRequest } from './models/CursorPageBaseRequest';
 export type { DeleteRequest } from './models/DeleteRequest';
 export type { FilterVO } from './models/FilterVO';
+export type { ForumCursorPageRequest } from './models/ForumCursorPageRequest';
 export type { GroupAddRequest } from './models/GroupAddRequest';
 export type { GroupMemberRemoveRequest } from './models/GroupMemberRemoveRequest';
 export type { GroupMemberRequest } from './models/GroupMemberRequest';

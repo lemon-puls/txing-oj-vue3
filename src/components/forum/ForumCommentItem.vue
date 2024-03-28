@@ -9,30 +9,50 @@
     >
       <template #actions>
         <span class="action" @click="isShowMap.set(props.commentVO.id, true)">
-          <IconMessage /> 回复
+          <SvgIcon icon="reply" :size="15" /> 回复
         </span>
+        <span
+          class="action"
+          v-if="props.commentVO.userId === userStore.loginUser.id"
+          @click="onDelete(props.commentVO.id)"
+          ><SvgIcon icon="remove3" :size="15" /> 删除</span
+        >
       </template>
       <a-comment
         v-if="isShowMap.get(props.commentVO.id)"
         align="right"
-        avatar="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+        :avatar="userStore.loginUser.userAvatar"
       >
         <template #actions>
-          <a-button key="0" type="secondary"> Cancel</a-button>
+          <a-button
+            key="0"
+            type="secondary"
+            shape="round"
+            @click="onCancelReply(props.commentVO.id)"
+          >
+            取消
+          </a-button>
           <a-button
             key="1"
             type="primary"
-            @click="isShowMap.set(props.commentVO.id, false)"
+            shape="round"
+            @click="onReply(props.commentVO.id)"
           >
-            Reply
+            回复
           </a-button>
         </template>
         <template #content>
-          <a-input placeholder="Here is you content." />
+          <a-input v-model="commmentVal" placeholder="请输入你的回复吧..." />
         </template>
       </a-comment>
       <div
-        style="padding: 10px; border-radius: 10px; background-color: whitesmoke"
+        v-if="props.commentVO.replyList && props.commentVO.replyList.length > 0"
+        style="
+          padding: 10px;
+          border-radius: 10px;
+          background-color: whitesmoke;
+          margin-top: 10px;
+        "
       >
         <a-comment
           v-for="(reply, index) in props.commentVO.replyList"
@@ -46,20 +66,41 @@
             <span class="action" @click="isShowMap.set(reply.id, true)">
               <IconMessage /> 回复
             </span>
+            <span
+              class="action"
+              v-if="reply.userId === userStore.loginUser.id"
+              @click="onDelete(reply.id)"
+              ><SvgIcon icon="remove3" :size="15" /> 删除</span
+            >
           </template>
           <a-comment
             v-if="isShowMap.get(reply.id)"
             align="right"
-            avatar="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+            :avatar="userStore.loginUser.userAvatar"
           >
             <template #actions>
-              <a-button key="0" type="secondary"> Cancel</a-button>
-              <a-button key="1" type="primary" @click="onReply(reply.id)">
-                Reply
+              <a-button
+                key="0"
+                type="secondary"
+                shape="round"
+                @click="onCancelReply(reply.id)"
+              >
+                取消
+              </a-button>
+              <a-button
+                key="1"
+                type="primary"
+                shape="round"
+                @click="onReply(reply.id)"
+              >
+                回复
               </a-button>
             </template>
             <template #content>
-              <a-input placeholder="Here is you content." />
+              <a-input
+                v-model="commmentVal"
+                placeholder="请输入你的回复吧..."
+              />
             </template>
           </a-comment>
         </a-comment>
@@ -70,9 +111,18 @@
 
 <script lang="ts" setup>
 import { IconHeart, IconMessage, IconStar } from "@arco-design/web-vue/es/icon";
-import { ref, defineProps } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
+import { useUserStore } from "@/store/user";
+import { TopicAppControllerService } from "../../../generated";
+import { useForumStore } from "@/store/forum";
+import message from "@arco-design/web-vue/es/message";
+import SvgIcon from "@/icons/SvgIcon";
 
 const props = defineProps(["commentVO"]);
+let $emit = defineEmits(["loadTopicData"]);
+const userStore = useUserStore();
+const forumStore = useForumStore();
+const commmentVal = ref("");
 
 const isShowMap = ref<Map<number, boolean>>(new Map());
 const parentId = ref(props.commentVO.id);
@@ -82,10 +132,43 @@ props.commentVO.replyList.forEach((item: any) => {
 });
 
 const showReply = ref<boolean[]>(Array(2).fill(false));
-
-const onReply = (replyId: number) => {
+// 发送回复
+const onReply = async (replyId: number) => {
+  if (commmentVal.value.length == 0) {
+    message.error("评论内容不得为空！");
+    return;
+  }
+  const params = {
+    content: commmentVal.value,
+    replyId: replyId,
+    topicId: forumStore.currentTopicId,
+    id: undefined,
+  };
+  const res = await TopicAppControllerService.commentTopicUsingPost(params);
+  if (res.code != 0) {
+    message.error(res.msg + ", 请尝试刷新！");
+    return;
+  }
+  // 使父组件重新加载评论数据
+  $emit("loadTopicData");
+  commmentVal.value = "";
   isShowMap.value.set(replyId, false);
-  alert(replyId);
+};
+// 取消回复
+const onCancelReply = (topicId: number) => {
+  commmentVal.value = "";
+  isShowMap.value.set(topicId, false);
+};
+// 删除评论
+const onDelete = async (commentId: number) => {
+  const res = await TopicAppControllerService.deleteCommentUsingPost(commentId);
+  if (res.code != 0) {
+    message.error(res.msg + ", 请尝试重试！");
+    return;
+  }
+  message.success("删除成功");
+  // 使父组件重新加载评论数据
+  $emit("loadTopicData");
 };
 </script>
 

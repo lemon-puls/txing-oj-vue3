@@ -5,7 +5,8 @@
         :style="{ width: '40%' }"
         placeholder="搜搜你想要的帖子吧"
         search-button
-        @search="onSearch"
+        @search="loadForumTopicData"
+        v-model="keyWord"
         :allow-clear="true"
       >
         <template #button-icon>
@@ -44,9 +45,11 @@ const cursorPage = ref({
   pageSize: 20,
   isLast: false,
 });
+const keyWord = ref("");
 const loadForumTopicData = async () => {
   const res = await TopicAppControllerService.getTopicListByCursorUsingPost({
     ...cursorPage.value,
+    keyWord: keyWord.value,
   });
   if (res.code != 0) {
     message.error(res.msg + ", 请尝试刷新！");

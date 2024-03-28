@@ -19,7 +19,9 @@
             margin: 0 auto 30px;
           "
         >
-          {{ topicVO?.content }}
+          <pre style="white-space: pre-wrap; overflow-wrap: break-word">{{
+            topicVO?.content
+          }}</pre>
         </div>
       </div>
       <div class="imgs">
@@ -28,28 +30,38 @@
           :key="index"
           class="img"
           :src="img"
+          @click="onPreviewImg(img)"
         />
       </div>
       <div class="ops">
         <div class="ops-item">
-          <SvgIcon icon="thumb" :size="25" />
+          <SvgIcon @click="onThumb" v-if="!isThumb" icon="thumb" :size="25" />
+          <SvgIcon @click="onThumb" v-else icon="thumbfill" :size="25" />
           <span>{{ topicVO?.thumbNum }}</span>
         </div>
         <div class="ops-item">
-          <SvgIcon icon="favour2" :size="25" />
+          <SvgIcon
+            @click="onFavour"
+            v-if="!isFavour"
+            icon="favour2"
+            :size="25"
+          />
+          <SvgIcon @click="onFavour" v-else icon="favourfill2" :size="25" />
           <span>{{ topicVO?.favourNum }}</span>
         </div>
       </div>
       <div class="comment">
-        <a-comment
-          align="right"
-          avatar="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
-        >
+        <a-comment align="right" :avatar="userStore.loginUser.userAvatar">
           <template #actions>
-            <a-button key="1" type="primary"> 评论</a-button>
+            <a-button shape="round" key="1" type="primary" @click="onReply">
+              评论
+            </a-button>
           </template>
           <template #content>
-            <a-input placeholder="在这里输入你的评论吧！" />
+            <a-input
+              v-model="commentVal"
+              placeholder="在这里输入你的评论吧！"
+            />
           </template>
         </a-comment>
       </div>
@@ -61,6 +73,7 @@
           :comment-v-o="comment"
           v-for="(comment, index) in commentVOS"
           :key="index"
+          @load-topic-data="loadTopicData"
         />
       </div>
     </div>
@@ -74,8 +87,13 @@ import ForumCommentItem from "@/components/forum/ForumCommentItem.vue";
 import { useForumStore } from "@/store/forum";
 import { TopicAppControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
+import { useUserStore } from "@/store/user";
+import { useImgPreviewStore } from "@/store/preview";
 
 const forumStore = useForumStore();
+const userStore = useUserStore();
+const commentVal = ref("");
+const previewStore = useImgPreviewStore();
 
 onMounted(() => {
   loadTopicData();
@@ -83,6 +101,8 @@ onMounted(() => {
 
 const topicVO = ref();
 const commentVOS = ref();
+const isThumb = ref(false);
+const isFavour = ref(false);
 const loadTopicData = async () => {
   const res = await TopicAppControllerService.getTopicByIdUsingGet(
     forumStore.currentTopicId
@@ -93,6 +113,55 @@ const loadTopicData = async () => {
   }
   topicVO.value = res.data.topicVO;
   commentVOS.value = res.data.commentVOS;
+  isThumb.value = topicVO.value.thumb;
+  isFavour.value = topicVO.value.favour;
+};
+// 发送评论
+const onReply = async () => {
+  if (commentVal.value.length == 0) {
+    message.error("评论内容不得为空！");
+    return;
+  }
+  const params = {
+    content: commentVal.value,
+    topicId: forumStore.currentTopicId,
+  };
+  const res = await TopicAppControllerService.commentTopicUsingPost(params);
+  if (res.code != 0) {
+    message.error(res.msg + ", 请尝试刷新！");
+    return;
+  }
+  // 重新加载评论数据
+  loadTopicData();
+  commentVal.value = "";
+};
+// 预览图片
+const onPreviewImg = (imgUrl: string) => {
+  previewStore.show([imgUrl], 0);
+};
+// 点赞
+const onThumb = async () => {
+  const res = await TopicAppControllerService.doThumbUsingPost1({
+    postId: forumStore.currentTopicId,
+  });
+  if (res.code != 0) {
+    message.error(res.msg + "，请稍后重试！");
+    return;
+  }
+  topicVO.value.thumbNum += res.data;
+  isThumb.value = !isThumb.value;
+};
+// 收藏
+const onFavour = async () => {
+  const res = await TopicAppControllerService.doFavourUsingPost({
+    postId: forumStore.currentTopicId,
+  });
+  if (res.code != 0) {
+    message.error(res.msg + "，请稍后重试！");
+    return;
+  }
+  topicVO.value.favourNum += res.data;
+  isFavour.value = !isFavour.value;
 };
 </script>
 

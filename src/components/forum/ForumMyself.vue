@@ -75,6 +75,7 @@ const onClickMenu = (key: string) => {
   }
 
   .right {
+    flex: 1;
   }
 }
 </style>

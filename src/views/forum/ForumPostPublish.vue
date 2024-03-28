@@ -34,8 +34,8 @@
     </div>
     <div class="submit">
       <a-button type="primary" shape="round" @click="submitTopic"
-        >立即发布</a-button
-      >
+        >立即发布
+      </a-button>
     </div>
   </div>
 </template>
