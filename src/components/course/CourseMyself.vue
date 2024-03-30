@@ -22,13 +22,8 @@
       </a-menu>
     </div>
     <div class="right">
-      <!--      <SubmitRecordView-->
-      <!--        v-if="selectedMenuKey === 'weekRecord'"-->
-      <!--        style="width: 90%; margin: 0 auto"-->
-      <!--        :user-id="Number(userStore.loginUser.id)"-->
-      <!--      ></SubmitRecordView>-->
-      <!--      <QuestionFavourRecordView v-else-if="selectedMenuKey === 'favour'" />-->
-      <CourseWorks />
+      <CourseWorks v-if="selectedMenuKey === 'works'" />
+      <CourseFavour v-else-if="selectedMenuKey === 'favour'" />
       <!--      <a-empty />-->
     </div>
   </div>
@@ -41,6 +36,7 @@ import { ref } from "vue";
 import { useUserStore } from "@/store/user";
 import CourseWorks from "@/components/course/CourseWorks.vue";
 import SvgIcon from "@/icons/SvgIcon";
+import CourseFavour from "@/components/course/CourseFavour.vue";
 
 const userStore = useUserStore();
 

@@ -13,6 +13,7 @@
           :is-edit="true"
           :topic="item"
           :key="index"
+          @load-data="loadForumTopicData"
         />
       </template>
     </a-list>

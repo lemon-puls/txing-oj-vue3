@@ -31,6 +31,7 @@ export type { MatchSubmitBatchRequest } from './models/MatchSubmitBatchRequest';
 export type { MatchSubmitSingleRequest } from './models/MatchSubmitSingleRequest';
 export type { MessagePageRequest } from './models/MessagePageRequest';
 export type { Page } from './models/Page';
+export type { PageRequest } from './models/PageRequest';
 export type { PageVO } from './models/PageVO';
 export type { PostAddRequest } from './models/PostAddRequest';
 export type { PostCommentAddRequest } from './models/PostCommentAddRequest';

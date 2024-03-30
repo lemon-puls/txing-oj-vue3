@@ -6,6 +6,7 @@
       :data="data"
       :pagination-props="paginationProps"
       @pageChange="onPageChange"
+      v-if="data.length > 0"
     >
       <template #scroll-loading>
         <!--        <div v-if="bottom === 1">-->
@@ -68,6 +69,7 @@
         </a-list-item>
       </template>
     </a-list>
+    <a-empty v-else />
   </div>
 </template>
 
@@ -87,7 +89,6 @@ import {
   PostQueryRequest,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import store from "@/store/index.ts-old";
 import {
   IconStar,
   IconMessage,

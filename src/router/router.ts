@@ -286,4 +286,13 @@ export const routes: Array<RouteRecordRaw> = [
       hideInMenu: true,
     },
   },
+  {
+    path: "/txing/forum/post/update/:topicId",
+    name: "论坛帖子修改",
+    component: ForumPostPublish,
+    props: true,
+    meta: {
+      hideInMenu: true,
+    },
+  },
 ];

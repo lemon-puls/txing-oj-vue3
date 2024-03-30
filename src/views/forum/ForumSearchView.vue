@@ -5,7 +5,7 @@
         :style="{ width: '40%' }"
         placeholder="搜搜你想要的帖子吧"
         search-button
-        @search="loadForumTopicData"
+        @search="loadForumTopicData(true)"
         v-model="keyWord"
         :allow-clear="true"
       >
@@ -22,6 +22,9 @@
         :key="topic.id"
       />
     </div>
+    <div v-if="cursorPage.isLast" class="footer">
+      <span>———— 到尽头啦 快去发一下帖子吧！————</span>
+    </div>
   </div>
 </template>
 
@@ -31,32 +34,85 @@ import ForumPostItem from "@/components/forum/ForumPostItem.vue";
 import { onMounted, ref } from "vue";
 import {
   CursorPageBaseRequest,
+  Service,
   TopicAppControllerService,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
+import _ from "lodash";
+import { pageSize } from "@/store/chat";
 
 onMounted(() => {
-  loadForumTopicData();
+  loadForumTopicData(true);
 });
 
-const forumTopicData = ref();
+const forumTopicData = ref<any[]>([]);
 const cursorPage = ref({
   cursor: "",
-  pageSize: 20,
+  pageSize: 5,
   isLast: false,
+  isLoading: false,
 });
 const keyWord = ref("");
-const loadForumTopicData = async () => {
+const loadForumTopicData = async (isFresh = false) => {
+  if (!isFresh && (cursorPage.value.isLast || cursorPage.value.isLoading)) {
+    return;
+  }
+  // 标记为正在加载中
+  cursorPage.value.isLoading = true;
   const res = await TopicAppControllerService.getTopicListByCursorUsingPost({
     ...cursorPage.value,
     keyWord: keyWord.value,
+    cursor: isFresh ? undefined : cursorPage.value.cursor,
   });
-  if (res.code != 0) {
-    message.error(res.msg + ", 请尝试刷新！");
+  if (!res || res.code !== 0) {
+    message.error(res.msg);
     return;
   }
-  forumTopicData.value = res.data.list;
+  forumTopicData.value.push(...res.data.list);
+  isFresh
+    ? forumTopicData.value.splice(
+        0,
+        forumTopicData.value.length,
+        ...res.data.list
+      )
+    : forumTopicData.value.push(...res.data.list);
+  // 更新游标参数
+  cursorPage.value.cursor = res.data.cursor;
+  cursorPage.value.isLast = res.data.isLast;
+  cursorPage.value.isLoading = false;
+  // forumTopicData.value = res.data.list;
 };
+
+/**
+ * 通过监听滚动事件 实现分页加载会话记录
+ */
+const handleScroll = () => {
+  const windowHeight = window.innerHeight;
+  const scrollTop =
+    document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollHeight =
+    document.documentElement.scrollHeight || document.body.scrollHeight;
+  if (scrollTop + windowHeight + 100 >= scrollHeight) {
+    loadForumTopicData();
+  }
+
+  // if (scrollElement.value) {
+  //   console.log("滚动触发");
+  //   const { scrollTop, scrollHeight, clientHeight } = scrollElement.value;
+  //   if (scrollTop + clientHeight + 100 >= scrollHeight) {
+  //     console.log("触发加载");
+  //   }
+  // }
+};
+const scrollThrottle = _.throttle(handleScroll, 100); //引入lodash功能
+onMounted(() => {
+  // scrollElement.value = document.documentElement;
+  // if (scrollElement.value) {
+  //   alert("绑定滚动事件");
+  //   window.addEventListener("scroll", scrollThrottle);
+  // }
+  window.addEventListener("scroll", scrollThrottle);
+});
 </script>
 
 <style scoped lang="scss">
@@ -76,6 +132,14 @@ const loadForumTopicData = async () => {
   .post-list {
     width: 90%;
     margin: 0 auto;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #7d7979;
+    margin-top: 40px;
   }
 }
 </style>

@@ -30,11 +30,12 @@
       </div>
       <div class="latest-match-ops">
         <span
-          v-if="matchStatus === 1"
           style="color: #fcf743; font-size: 17px"
+          v-if="matchStatus === 1"
           @click="onJoinMatch"
           >点击参加</span
         >
+
         <span
           v-else-if="matchStatus === 0"
           style="color: #fcf743; font-size: 17px"
@@ -46,7 +47,9 @@
     </div>
     <div class="match-rank-and-back">
       <div class="match-rank">
-        <div class="match-rank-title"><span>本周排名（第2场周赛）</span></div>
+        <div class="match-rank-title">
+          <span>本周排名（{{ lastWeekMatch?.name }}）</span>
+        </div>
         <div class="match-rank-content" v-if="weekRankData">
           <div
             class="match-rank-content-item"
@@ -109,25 +112,29 @@
     </div>
     <div class="user-rank">
       <div class="user-rank-title"><span>全国排名</span></div>
-      <div class="user-rank-content" v-if="!nationalRankData">
-        <div class="user-rank-content-item" v-for="i in 10" :key="i">
+      <div class="user-rank-content" v-if="nationalRankData">
+        <div
+          class="user-rank-content-item"
+          v-for="item in nationalRankData"
+          :key="item.userId"
+        >
           <div>
             <a-divider />
           </div>
           <div class="user-rank-content-item-info">
             <div class="user-rank-content-item-info-left">
-              <span>{{ i }}</span>
+              <span>{{ item.rank }}</span>
               <img
                 style="border-radius: 50%; width: 25px; height: 25px"
                 height="20px"
                 width="20px"
-                src="https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/PYorLjF1-%E5%BE%80%E6%98%94%E6%B1%97%E6%B0%B4_The%20sweat%20of%20the%20past_1_SaYoii_%E6%9D%A5%E8%87%AA%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88.jpg"
+                :src="item.avatar"
               />
-              <span>孤独的根号3</span>
+              <span>{{ item.userName }}</span>
             </div>
             <div class="user-rank-content-item-info-right">
               <SvgIcon icon="score" :size="25" />
-              <span>8000分</span>
+              <span>{{ item.score }}分</span>
             </div>
           </div>
         </div>
@@ -206,6 +213,8 @@
       &-content {
         margin-bottom: 20px;
         height: 500px;
+        max-height: 600px;
+        overflow-y: auto;
 
         &-item {
           &-info {
@@ -249,6 +258,8 @@
         margin-bottom: 15px;
         height: 500px;
         overflow-y: scroll;
+        max-height: 600px;
+        overflow-y: auto;
 
         &-item {
           &-info {
@@ -314,12 +325,14 @@
             display: flex;
             column-gap: 10px;
             align-items: center;
+            flex: 8;
           }
 
           &-right {
             display: flex;
             align-items: center;
             column-gap: 10px;
+            flex: 1;
           }
         }
       }
@@ -331,7 +344,10 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
-import { MatchWeekAppControllerService } from "../../../../generated";
+import {
+  MatchWeekAppControllerService,
+  UserControllerService,
+} from "../../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import SvgIcon from "@/icons/SvgIcon";
 
@@ -346,6 +362,7 @@ const matchData = ref();
 const weekRankData = ref();
 const nationalRankData = ref();
 const historyMatchData = ref();
+const lastWeekMatch = ref();
 
 // 开始倒计时
 const now = Date.now();
@@ -385,10 +402,29 @@ const loadHistoryMatchData = async () => {
   }
   historyMatchData.value = res.data;
 };
+const loadNationalRankData = async () => {
+  const res = await UserControllerService.getUserScoreRankUsingGet();
+  if (res.code !== 0) {
+    message.error(res.msg);
+    return;
+  }
+  nationalRankData.value = res.data;
+};
+
+const loadLastWeekMatchData = async () => {
+  const res = await MatchWeekAppControllerService.getLastWeekMatchUsingGet();
+  if (res.code !== 0) {
+    message.error(res.msg);
+    return;
+  }
+  lastWeekMatch.value = res.data;
+};
 onMounted(() => {
   loadMatchData();
   loadWeekRankData();
   loadHistoryMatchData();
+  loadNationalRankData();
+  loadLastWeekMatchData();
 });
 
 // 去模拟

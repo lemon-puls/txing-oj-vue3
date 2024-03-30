@@ -223,7 +223,6 @@ const sessionList = ref([
 ]);
 // 加载会话
 const load = () => {
-  alert("触发");
   chatStore.getSessionList();
 };
 // 选中会话

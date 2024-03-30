@@ -7,7 +7,6 @@ export type CourseFavour = {
     courseId?: number;
     createTime?: string;
     id?: number;
-    isDelete?: number;
     updateTime?: string;
     userId?: number;
 };

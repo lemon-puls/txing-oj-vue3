@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ForumCursorPageRequest } from '../models/ForumCursorPageRequest';
+import type { PageRequest } from '../models/PageRequest';
 import type { PageVO } from '../models/PageVO';
 import type { PostFavourAddRequest } from '../models/PostFavourAddRequest';
 import type { PostThumbAddRequest } from '../models/PostThumbAddRequest';
@@ -83,6 +84,27 @@ topicId: number,
     }
 
     /**
+     * deleteTopic
+     * @param topicIds topicIds
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static deleteTopicUsingPost(
+topicIds: Array<number>,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/forum/topic/delete',
+            body: topicIds,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * getTopicById
      * @param id id
      * @returns any OK
@@ -118,6 +140,27 @@ postFavourAddRequest: PostFavourAddRequest,
             method: 'POST',
             url: '/api/forum/topic/favour',
             body: postFavourAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getUserFavour
+     * @param pageRequest pageRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getUserFavourUsingPost1(
+pageRequest: PageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/forum/topic/favour/user/get',
+            body: pageRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -202,6 +245,50 @@ postThumbAddRequest: PostThumbAddRequest,
             method: 'POST',
             url: '/api/forum/topic/thumb',
             body: postThumbAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * updateTopic
+     * @param request request
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static updateTopicUsingPost(
+request: TopicPublishRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/forum/topic/update',
+            body: request,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getTopicVOById
+     * @param topicId topicId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getTopicVoByIdUsingGet(
+topicId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/forum/topic/vo/get/id',
+            query: {
+                'topicId': topicId,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

@@ -14,13 +14,14 @@
           :key="playerKey"
         ></VideoPlayer>
         <div class="player-footer">
-          <icon-star-fill
+          <SvgIcon
             @click="onFavour"
             v-if="isFavour"
             style="color: #deac14"
+            icon="favourfill2"
             :size="30"
           />
-          <icon-star v-else @click="onFavour" :size="30" />
+          <SvgIcon v-else @click="onFavour" icon="favour2" :size="30" />
         </div>
       </div>
     </div>
@@ -82,12 +83,16 @@
 import { computed, defineProps, onMounted, ref } from "vue";
 import VideoPlayer from "@/components/course/VideoPlayer.vue";
 import { IconStarFill, IconStar } from "@arco-design/web-vue/es/icon";
-import { CourseAppControllerService } from "../../../../generated";
+import {
+  CourseAppControllerService,
+  TopicAppControllerService,
+} from "../../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { formatSecondsToTime } from "../../../utils/computeTime";
 import { useContactStore } from "@/store/contact";
 import { useUserStore } from "@/store/user";
 import AvatarPopover from "@/components/user/AvatarPopover.vue";
+import SvgIcon from "@/icons/SvgIcon";
 
 const props = defineProps(["courseId"]);
 
@@ -108,7 +113,15 @@ onMounted(() => {
 });
 
 const isFavour = ref(false);
-const onFavour = () => {
+const onFavour = async () => {
+  const res = await CourseAppControllerService.favourCourseUsingPost(
+    courseData.value.id
+  );
+  if (res.code != 0) {
+    message.error(res.msg);
+    return;
+  }
+  courseData.value.favourCount += res.data;
   isFavour.value = !isFavour.value;
 };
 
@@ -125,6 +138,7 @@ const loadCourseData = async () => {
   }
   courseData.value = res.data;
   userShowVO.value = res.data.userShowVO;
+  isFavour.value = courseData.value.favour;
   onSelectNodule(0);
 };
 

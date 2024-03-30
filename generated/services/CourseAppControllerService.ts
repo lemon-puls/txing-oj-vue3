@@ -5,6 +5,7 @@
 import type { CourseAddRequest } from '../models/CourseAddRequest';
 import type { CourseBaseUpdateRequest } from '../models/CourseBaseUpdateRequest';
 import type { CourseVideoUpdateOrAddRequest } from '../models/CourseVideoUpdateOrAddRequest';
+import type { PageRequest } from '../models/PageRequest';
 import type { PageVO } from '../models/PageVO';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -68,6 +69,50 @@ courseIds: Array<number>,
             method: 'POST',
             url: '/api/course/delete',
             body: courseIds,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * favourCourse
+     * @param courseId courseId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static favourCourseUsingPost(
+courseId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/course/favour/do/{courseId}',
+            path: {
+                'courseId': courseId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getUserFavour
+     * @param pageRequest pageRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getUserFavourUsingPost(
+pageRequest: PageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/course/favour/user/get',
+            body: pageRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

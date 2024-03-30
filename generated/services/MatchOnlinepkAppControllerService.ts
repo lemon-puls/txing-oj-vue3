@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { MatchSubmitSingleRequest } from '../models/MatchSubmitSingleRequest';
+import type { PageRequest } from '../models/PageRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -137,6 +138,27 @@ request: MatchSubmitSingleRequest,
             method: 'POST',
             url: '/api/match/online/pk/submit',
             body: request,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getPkRecordByUser
+     * @param pageRequest pageRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getPkRecordByUserUsingPost(
+pageRequest: PageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/match/online/pk/user/record/get',
+            body: pageRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

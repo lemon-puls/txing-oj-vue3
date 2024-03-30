@@ -22,13 +22,6 @@
       </a-menu>
     </div>
     <div class="right">
-      <!--      <SubmitRecordView-->
-      <!--        v-if="selectedMenuKey === 'weekRecord'"-->
-      <!--        style="width: 90%; margin: 0 auto"-->
-      <!--        :user-id="Number(userStore.loginUser.id)"-->
-      <!--      ></SubmitRecordView>-->
-      <!--      <QuestionFavourRecordView v-else-if="selectedMenuKey === 'favour'" />-->
-      <!--      <a-empty />-->
       <MatchWeekRecordList v-if="selectedMenuKey === 'weekRecord'" />
       <PkRecordList v-else-if="selectedMenuKey === 'pkRecord'" />
     </div>

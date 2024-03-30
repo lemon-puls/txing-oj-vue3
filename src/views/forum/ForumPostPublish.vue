@@ -44,17 +44,49 @@
 import { useUpload } from "@/hooks/useUpload";
 import { FileItem, RequestOption } from "@arco-design/web-vue";
 import { compressImage } from "@/utils/FileUtils";
-import { ref, toRaw } from "vue";
+import { ref, toRaw, defineProps, onMounted } from "vue";
 import message from "@arco-design/web-vue/es/message";
 import { TopicAppControllerService } from "../../../generated";
+import { useRoute, useRouter } from "vue-router";
+import { useForumStore } from "@/store/forum";
 
+const route = useRoute();
+const router = useRouter();
+const isUpdate = route.path.includes("update");
+const props = defineProps(["topicId"]);
+const forumStore = useForumStore();
+
+onMounted(() => {
+  if (isUpdate) {
+    loadOldTopicData();
+  }
+});
 // 标题
 const title = ref("");
 // 内容
 const content = ref("");
 
+const loadOldTopicData = async () => {
+  const res = await TopicAppControllerService.getTopicVoByIdUsingGet(
+    props.topicId
+  );
+  if (res.code != 0) {
+    message.error(res.msg);
+    return;
+  }
+  title.value = res.data.title;
+  content.value = res.data.content;
+  if (res.data.imgs != null) {
+    res.data.imgs.forEach((img: string) => {
+      fileList.value.push({
+        url: img,
+      });
+    });
+  }
+};
+
 // 文件上传
-const fileList = ref<FileItem[]>([]);
+const fileList = ref<any[]>([]);
 const {
   uploadFile,
   fileInfo,
@@ -104,24 +136,34 @@ const submitTopic = async () => {
     message.error("内容不得为空");
     return;
   }
+  // 收集配图链接
+  const imgs = fileList.value.map((fileItem) => fileItem.url);
   const params = {
     title: title.value,
     content: content.value,
-  };
-  // 收集配图链接
-  const imgs = fileList.value.map((fileItem) => fileItem.url);
-  // 发送请求
-  const res = await TopicAppControllerService.publishTopicUsingPost({
-    title: title.value,
-    content: content.value,
     imgs: imgs ? imgs : [],
-  });
+  };
+  let res;
+  if (isUpdate) {
+    res = await TopicAppControllerService.updateTopicUsingPost({
+      ...params,
+      id: props.topicId,
+    });
+  } else {
+    // 发送请求
+    res = await TopicAppControllerService.publishTopicUsingPost(params);
+  }
+
   if (res.code != 0) {
     message.error(res.msg + ", 请稍后重试！");
     return;
   }
   message.success("提交成功");
   // 跳转
+  router.push({
+    path: "/txing/forum/search",
+  });
+  forumStore.open(res.data);
 };
 </script>
 

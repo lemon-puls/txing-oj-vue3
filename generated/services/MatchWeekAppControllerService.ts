@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { MatchSubmitBatchRequest } from '../models/MatchSubmitBatchRequest';
 import type { MatchSubmitSingleRequest } from '../models/MatchSubmitSingleRequest';
+import type { PageRequest } from '../models/PageRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -159,6 +160,27 @@ matchSubmitSingleRequest: MatchSubmitSingleRequest,
             method: 'POST',
             url: '/api/match/week/submit/single',
             body: matchSubmitSingleRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getWeekMatchRecordByUserId
+     * @param pageRequest pageRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getWeekMatchRecordByUserIdUsingPost(
+pageRequest: PageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/match/week/user/record/get',
+            body: pageRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

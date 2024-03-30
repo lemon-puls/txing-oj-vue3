@@ -6,6 +6,7 @@
       :data="myPostData"
       :pagination-props="paginationProps"
       @pageChange="onPageChange"
+      v-if="myPostData.length > 0"
     >
       <template #scroll-loading>
         <!--        <div v-if="bottom === 1">-->
@@ -76,6 +77,7 @@
         </a-list-item>
       </template>
     </a-list>
+    <a-empty v-else />
   </div>
 </template>
 
