@@ -172,4 +172,8 @@ const onDelete = async (commentId: number) => {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.action {
+  cursor: pointer;
+}
+</style>

@@ -1,207 +1,469 @@
 <template>
   <div id="ViewQuestionView">
-    <a-spin :loading="loading" tip="判题中..." style="min-width: 100%">
-      <a-row :gutter="[24, 24]">
-        <a-col :md="12" :xs="24">
-          <a-tabs
-            type="card-gutter"
-            :editable="true"
-            @delete="handleDelete"
-            :show-add-button="false"
-            default-active-key="question"
-            :active-key="activeKey"
-            style="max-width: 100vh"
-            @tabClick="tabClick"
-            :lazy-load="true"
-            :animation="true"
-          >
-            <a-tab-pane :closable="false" key="question" title="题目">
-              <a-card v-if="question" :title="question.title">
-                <a-descriptions
-                  title="题目限制"
-                  :column="{ xs: 1, md: 2, lg: 3 }"
+    <!--    答题区域-->
+    <a-split
+      :style="{
+        width: '100%',
+        overflow: 'scroll',
+        height: 'calc(100vh - 74px)',
+        minWidth: '500px',
+      }"
+      :default-size="0.45"
+    >
+      <template #first>
+        <a-tabs
+          type="card-gutter"
+          :editable="true"
+          @delete="handleDelete"
+          :show-add-button="false"
+          default-active-key="question"
+          :active-key="activeKey"
+          style="max-width: 100vh"
+          @tabClick="tabClick"
+          :lazy-load="true"
+          :animation="true"
+        >
+          <a-tab-pane :closable="false" key="question" title="题目">
+            <a-card
+              style="overflow-y: auto"
+              v-if="question"
+              :title="question.title"
+              :bordered="false"
+            >
+              <a-descriptions
+                title="题目限制"
+                :column="{ xs: 1, md: 2, lg: 3 }"
+              >
+                <a-descriptions-item label="时间限制">
+                  {{ question.judgeConfig.timeLimit ?? 0 }} ms
+                </a-descriptions-item>
+                <a-descriptions-item label="内存限制">
+                  {{
+                    `${(
+                      question.judgeConfig.memoryLimit /
+                      (1024 * 1024)
+                    ).toFixed(2)} MB`
+                  }}
+                </a-descriptions-item>
+              </a-descriptions>
+              <MdViewer :value="question.content || ''" />
+              <div id="questionFavourId">
+                <icon-star-fill
+                  v-if="isFavour"
+                  :size="30"
+                  @click="clickFavour"
+                />
+                <icon-star v-else :size="30" @click="clickFavour"></icon-star>
+                <span style="margin-left: 5px">收藏</span>
+              </div>
+              <template #extra>
+                <a-space wrap>
+                  <a-tag
+                    v-for="(tag, index) of question.tags"
+                    :key="index"
+                    color="green"
+                    >{{ tag }}
+                  </a-tag>
+                </a-space>
+              </template>
+            </a-card>
+          </a-tab-pane>
+          <a-tab-pane :closable="false" key="commnet" title="评论">
+            <div>
+              <a-list
+                :max-height="300"
+                @reach-bottom="throttle"
+                :scrollbar="scrollbar"
+                :bordered="false"
+                :split="false"
+                style="width: 100%"
+              >
+                <a-list-item
+                  v-for="(item, index) of commentData"
+                  :key="item.id"
                 >
-                  <a-descriptions-item label="时间限制">
-                    {{ question.judgeConfig.timeLimit ?? 0 }} ms
-                  </a-descriptions-item>
-                  <a-descriptions-item label="内存限制">
-                    {{
-                      `${(
-                        question.judgeConfig.memoryLimit /
-                        (1024 * 1024)
-                      ).toFixed(2)} MB`
-                    }}
-                  </a-descriptions-item>
-                </a-descriptions>
-                <MdViewer :value="question.content || ''" />
-                <div id="questionFavourId">
-                  <icon-star-fill
-                    v-if="isFavour"
-                    :size="30"
-                    @click="clickFavour"
-                  />
-                  <icon-star v-else :size="30" @click="clickFavour"></icon-star>
-                  <span style="margin-left: 5px">收藏</span>
-                </div>
-                <template #extra>
-                  <a-space wrap>
-                    <a-tag
-                      v-for="(tag, index) of question.tags"
-                      :key="index"
-                      color="green"
-                      >{{ tag }}
-                    </a-tag>
-                  </a-space>
-                </template>
-              </a-card>
-            </a-tab-pane>
-            <a-tab-pane :closable="false" key="commnet" title="评论">
-              <div>
-                <a-list
-                  :max-height="300"
-                  @reach-bottom="throttle"
-                  :scrollbar="scrollbar"
-                  :bordered="false"
-                  :split="false"
-                  style="width: 100%"
-                >
-                  <a-list-item
-                    v-for="(item, index) of commentData"
-                    :key="item.id"
+                  <a-comment
+                    :author="item.userName"
+                    :datetime="item.createTime"
+                    align="right"
                   >
-                    <a-comment
-                      :author="item.userName"
-                      :datetime="item.createTime"
-                      align="right"
-                    >
-                      <template #actions>
-                        <span
-                          class="action"
-                          key="heart"
-                          @click="onLikeChange(index)"
-                        >
-                          <span v-if="item.isFavour">
-                            <IconHeartFill :style="{ color: '#f53f3f' }" />
-                          </span>
-                          <span v-else>
-                            <IconHeart />
-                          </span>
-                          <!--                        {{ 83 + (like ? 1 : 0) }}-->
-                          {{ item.favourNum }}
+                    <template #actions>
+                      <span
+                        class="action"
+                        key="heart"
+                        @click="onLikeChange(index)"
+                      >
+                        <span v-if="item.isFavour">
+                          <IconHeartFill :style="{ color: '#f53f3f' }" />
                         </span>
-                      </template>
-                      <template #avatar>
-                        <a-avatar>
-                          <img alt="avatar" :src="item.userAvatar" />
-                        </a-avatar>
-                      </template>
-                      <template #content>
-                        <div>
-                          {{ item.content }}
-                        </div>
-                      </template>
-                    </a-comment>
-                  </a-list-item>
-                </a-list>
-                <div id="commentInput">
-                  <a-textarea
-                    style="height: 100px"
-                    placeholder="快来发表一下评论吧 注意要友好哦！"
-                    allow-clear
-                    v-model="commentText"
-                    :max-length="{ length: 200, errorOnly: false }"
-                    :show-word-limit="true"
-                  />
-                  <a-divider :size="0" />
-                  <a-button
-                    type="primary"
-                    status="success"
-                    style="float: right"
-                    @click="publishComment"
-                    >发表评论
-                  </a-button>
+                        <span v-else>
+                          <IconHeart />
+                        </span>
+                        <!--                        {{ 83 + (like ? 1 : 0) }}-->
+                        {{ item.favourNum }}
+                      </span>
+                    </template>
+                    <template #avatar>
+                      <a-avatar>
+                        <img alt="avatar" :src="item.userAvatar" />
+                      </a-avatar>
+                    </template>
+                    <template #content>
+                      <div>
+                        {{ item.content }}
+                      </div>
+                    </template>
+                  </a-comment>
+                </a-list-item>
+              </a-list>
+              <div id="commentInput">
+                <a-textarea
+                  style="height: 100px"
+                  placeholder="快来发表一下评论吧 注意要友好哦！"
+                  allow-clear
+                  v-model="commentText"
+                  :max-length="{ length: 200, errorOnly: false }"
+                  :show-word-limit="true"
+                />
+                <a-divider :size="0" />
+                <a-button
+                  type="primary"
+                  status="success"
+                  style="float: right"
+                  @click="publishComment"
+                  >发表评论
+                </a-button>
+              </div>
+            </div>
+          </a-tab-pane>
+          <a-tab-pane :closable="false" key="answer" title="答案">
+            <a-card v-if="question" :title="question.title" :bordered="false">
+              <MdViewer :value="question.answer || ''" />
+            </a-card>
+          </a-tab-pane>
+          <a-tab-pane
+            :closable="false"
+            key="submitRecord"
+            title="提交记录"
+            :destroy-on-hide="true"
+          >
+            <SubmitRecordView
+              :question-id="props.id"
+              :user-id="Number(useUserStore().loginUser.id)"
+              :click-row="clickSubmitRecord"
+            ></SubmitRecordView>
+          </a-tab-pane>
+          <a-tab-pane
+            v-for="(item, index) of data"
+            :key="index"
+            :title="item.title"
+          >
+            <!--              {{ item?.content }}-->
+            <component
+              :is="item.component"
+              :questionSubmitDatail="submitRecordDetail"
+            />
+          </a-tab-pane>
+        </a-tabs>
+      </template>
+      <template #second>
+        <div>
+          <a-split
+            direction="vertical"
+            :default-size="0.7"
+            :style="{ height: 'calc(100vh - 90px)' }"
+          >
+            <template #first>
+              <!--              display: flex; flex-direction: column-->
+              <div style="height: 100%">
+                <a-form :model="form" layout="inline">
+                  <a-form-item
+                    field="title"
+                    label="编程语言"
+                    style="min-width: 240px"
+                  >
+                    <a-select
+                      v-model="form.language"
+                      :style="{ width: '320px' }"
+                      placeholder="选择语言"
+                      @change="onlanguagechange"
+                    >
+                      <a-option>java</a-option>
+                      <a-option>cpp</a-option>
+                      <a-option>go</a-option>
+                    </a-select>
+                  </a-form-item>
+                </a-form>
+                <CodeEditor
+                  :value="form.code as string"
+                  :language="form.language"
+                  :handleChange="changeCode"
+                  :mystyle="{
+                    height: '100%',
+                  }"
+                />
+              </div>
+            </template>
+            <template #second>
+              <div
+                style="height: 100%; padding: 10px; box-sizing: border-box"
+                :class="{
+                  'loading-container': true,
+                  'is-loading': isJudgeLoading,
+                }"
+              >
+                <div v-if="isJudgeLoading" class="loading-spinner"></div>
+                <div
+                  class="exec-area-head"
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-sizing: border-box;
+                  "
+                >
+                  <span style="color: green">执行结果</span>
+                  <div style="display: flex; column-gap: 10px">
+                    <!--                    <a-button type="outline" status="success">运行</a-button>-->
+                    <a-button
+                      @click="doSubmit(false)"
+                      type="outline"
+                      status="success"
+                      shape="round"
+                      >提交作答
+                    </a-button>
+                  </div>
+                </div>
+                <hr />
+                <div class="exec-area-result">
+                  <div id="execResultDiv" v-if="resultData[0].value !== ''">
+                    <!--                      resultData.get(questionNo)[0]?.value != ''-->
+                    <a-descriptions
+                      style="margin-top: 20px"
+                      :data="resultData"
+                      :column="1"
+                    />
+                    <h2
+                      class="exceed-percent"
+                      v-if="resultData[2].value === 'Accepted'"
+                    >
+                      恭喜你 超越了
+                      <span :style="{ color: 'red' }"
+                        >{{ (exceedPercent * 100).toFixed(1) }}%</span
+                      >
+                      的用户!
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </a-tab-pane>
-            <a-tab-pane :closable="false" key="answer" title="答案">
-              <a-card v-if="question" :title="question.title">
-                <MdViewer :value="question.answer || ''" />
-              </a-card>
-            </a-tab-pane>
-            <a-tab-pane
-              :closable="false"
-              key="submitRecord"
-              title="提交记录"
-              :destroy-on-hide="true"
-            >
-              <SubmitRecordView
-                :question-id="props.id"
-                :user-id="Number(useUserStore().loginUser.id)"
-                :click-row="clickSubmitRecord"
-              ></SubmitRecordView>
-            </a-tab-pane>
-            <a-tab-pane
-              v-for="(item, index) of data"
-              :key="index"
-              :title="item.title"
-            >
-              <!--              {{ item?.content }}-->
-              <component
-                :is="item.component"
-                :questionSubmitDatail="submitRecordDetail"
-              />
-            </a-tab-pane>
-          </a-tabs>
-        </a-col>
-        <a-col :md="12" :xs="24">
-          <a-form :model="form" layout="inline">
-            <a-form-item
-              field="title"
-              label="编程语言"
-              style="min-width: 240px"
-            >
-              <a-select
-                v-model="form.language"
-                :style="{ width: '320px' }"
-                placeholder="选择语言"
-                @change="onlanguagechange"
-              >
-                <a-option>java</a-option>
-                <a-option>cpp</a-option>
-                <a-option>go</a-option>
-              </a-select>
-            </a-form-item>
-          </a-form>
-          <CodeEditor
-            :value="form.code as string"
-            :language="form.language"
-            :handleChange="changeCode"
-            :mystyle="{
-              height: '70vh',
-            }"
-          />
-          <a-divider :size="0" />
-          <a-button type="primary" style="min-width: 200px" @click="doSubmit"
-            >提交代码
-          </a-button>
-        </a-col>
-      </a-row>
-    </a-spin>
+            </template>
+          </a-split>
+        </div>
+      </template>
+    </a-split>
+
+    <!--    <a-spin :loading="loading" tip="判题中..." style="min-width: 100%">-->
+    <!--      <a-row :gutter="[24, 24]">-->
+    <!--        <a-col :md="12" :xs="24">-->
+    <!--          <a-tabs-->
+    <!--            type="card-gutter"-->
+    <!--            :editable="true"-->
+    <!--            @delete="handleDelete"-->
+    <!--            :show-add-button="false"-->
+    <!--            default-active-key="question"-->
+    <!--            :active-key="activeKey"-->
+    <!--            style="max-width: 100vh"-->
+    <!--            @tabClick="tabClick"-->
+    <!--            :lazy-load="true"-->
+    <!--            :animation="true"-->
+    <!--          >-->
+    <!--            <a-tab-pane :closable="false" key="question" title="题目">-->
+    <!--              <a-card v-if="question" :title="question.title">-->
+    <!--                <a-descriptions-->
+    <!--                  title="题目限制"-->
+    <!--                  :column="{ xs: 1, md: 2, lg: 3 }"-->
+    <!--                >-->
+    <!--                  <a-descriptions-item label="时间限制">-->
+    <!--                    {{ question.judgeConfig.timeLimit ?? 0 }} ms-->
+    <!--                  </a-descriptions-item>-->
+    <!--                  <a-descriptions-item label="内存限制">-->
+    <!--                    {{-->
+    <!--                      `${(-->
+    <!--                        question.judgeConfig.memoryLimit /-->
+    <!--                        (1024 * 1024)-->
+    <!--                      ).toFixed(2)} MB`-->
+    <!--                    }}-->
+    <!--                  </a-descriptions-item>-->
+    <!--                </a-descriptions>-->
+    <!--                <MdViewer :value="question.content || ''" />-->
+    <!--                <div id="questionFavourId">-->
+    <!--                  <icon-star-fill-->
+    <!--                    v-if="isFavour"-->
+    <!--                    :size="30"-->
+    <!--                    @click="clickFavour"-->
+    <!--                  />-->
+    <!--                  <icon-star v-else :size="30" @click="clickFavour"></icon-star>-->
+    <!--                  <span style="margin-left: 5px">收藏</span>-->
+    <!--                </div>-->
+    <!--                <template #extra>-->
+    <!--                  <a-space wrap>-->
+    <!--                    <a-tag-->
+    <!--                      v-for="(tag, index) of question.tags"-->
+    <!--                      :key="index"-->
+    <!--                      color="green"-->
+    <!--                      >{{ tag }}-->
+    <!--                    </a-tag>-->
+    <!--                  </a-space>-->
+    <!--                </template>-->
+    <!--              </a-card>-->
+    <!--            </a-tab-pane>-->
+    <!--            <a-tab-pane :closable="false" key="commnet" title="评论">-->
+    <!--              <div>-->
+    <!--                <a-list-->
+    <!--                  :max-height="300"-->
+    <!--                  @reach-bottom="throttle"-->
+    <!--                  :scrollbar="scrollbar"-->
+    <!--                  :bordered="false"-->
+    <!--                  :split="false"-->
+    <!--                  style="width: 100%"-->
+    <!--                >-->
+    <!--                  <a-list-item-->
+    <!--                    v-for="(item, index) of commentData"-->
+    <!--                    :key="item.id"-->
+    <!--                  >-->
+    <!--                    <a-comment-->
+    <!--                      :author="item.userName"-->
+    <!--                      :datetime="item.createTime"-->
+    <!--                      align="right"-->
+    <!--                    >-->
+    <!--                      <template #actions>-->
+    <!--                        <span-->
+    <!--                          class="action"-->
+    <!--                          key="heart"-->
+    <!--                          @click="onLikeChange(index)"-->
+    <!--                        >-->
+    <!--                          <span v-if="item.isFavour">-->
+    <!--                            <IconHeartFill :style="{ color: '#f53f3f' }" />-->
+    <!--                          </span>-->
+    <!--                          <span v-else>-->
+    <!--                            <IconHeart />-->
+    <!--                          </span>-->
+    <!--                          &lt;!&ndash;                        {{ 83 + (like ? 1 : 0) }}&ndash;&gt;-->
+    <!--                          {{ item.favourNum }}-->
+    <!--                        </span>-->
+    <!--                      </template>-->
+    <!--                      <template #avatar>-->
+    <!--                        <a-avatar>-->
+    <!--                          <img alt="avatar" :src="item.userAvatar" />-->
+    <!--                        </a-avatar>-->
+    <!--                      </template>-->
+    <!--                      <template #content>-->
+    <!--                        <div>-->
+    <!--                          {{ item.content }}-->
+    <!--                        </div>-->
+    <!--                      </template>-->
+    <!--                    </a-comment>-->
+    <!--                  </a-list-item>-->
+    <!--                </a-list>-->
+    <!--                <div id="commentInput">-->
+    <!--                  <a-textarea-->
+    <!--                    style="height: 100px"-->
+    <!--                    placeholder="快来发表一下评论吧 注意要友好哦！"-->
+    <!--                    allow-clear-->
+    <!--                    v-model="commentText"-->
+    <!--                    :max-length="{ length: 200, errorOnly: false }"-->
+    <!--                    :show-word-limit="true"-->
+    <!--                  />-->
+    <!--                  <a-divider :size="0" />-->
+    <!--                  <a-button-->
+    <!--                    type="primary"-->
+    <!--                    status="success"-->
+    <!--                    style="float: right"-->
+    <!--                    @click="publishComment"-->
+    <!--                    >发表评论-->
+    <!--                  </a-button>-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--            </a-tab-pane>-->
+    <!--            <a-tab-pane :closable="false" key="answer" title="答案">-->
+    <!--              <a-card v-if="question" :title="question.title">-->
+    <!--                <MdViewer :value="question.answer || ''" />-->
+    <!--              </a-card>-->
+    <!--            </a-tab-pane>-->
+    <!--            <a-tab-pane-->
+    <!--              :closable="false"-->
+    <!--              key="submitRecord"-->
+    <!--              title="提交记录"-->
+    <!--              :destroy-on-hide="true"-->
+    <!--            >-->
+    <!--              <SubmitRecordView-->
+    <!--                :question-id="props.id"-->
+    <!--                :user-id="Number(useUserStore().loginUser.id)"-->
+    <!--                :click-row="clickSubmitRecord"-->
+    <!--              ></SubmitRecordView>-->
+    <!--            </a-tab-pane>-->
+    <!--            <a-tab-pane-->
+    <!--              v-for="(item, index) of data"-->
+    <!--              :key="index"-->
+    <!--              :title="item.title"-->
+    <!--            >-->
+    <!--              &lt;!&ndash;              {{ item?.content }}&ndash;&gt;-->
+    <!--              <component-->
+    <!--                :is="item.component"-->
+    <!--                :questionSubmitDatail="submitRecordDetail"-->
+    <!--              />-->
+    <!--            </a-tab-pane>-->
+    <!--          </a-tabs>-->
+    <!--        </a-col>-->
+    <!--        <a-col :md="12" :xs="24">-->
+    <!--          <a-form :model="form" layout="inline">-->
+    <!--            <a-form-item-->
+    <!--              field="title"-->
+    <!--              label="编程语言"-->
+    <!--              style="min-width: 240px"-->
+    <!--            >-->
+    <!--              <a-select-->
+    <!--                v-model="form.language"-->
+    <!--                :style="{ width: '320px' }"-->
+    <!--                placeholder="选择语言"-->
+    <!--                @change="onlanguagechange"-->
+    <!--              >-->
+    <!--                <a-option>java</a-option>-->
+    <!--                <a-option>cpp</a-option>-->
+    <!--                <a-option>go</a-option>-->
+    <!--              </a-select>-->
+    <!--            </a-form-item>-->
+    <!--          </a-form>-->
+    <!--          <CodeEditor-->
+    <!--            :value="form.code as string"-->
+    <!--            :language="form.language"-->
+    <!--            :handleChange="changeCode"-->
+    <!--            :mystyle="{-->
+    <!--              height: '70vh',-->
+    <!--            }"-->
+    <!--          />-->
+    <!--          <a-divider :size="0" />-->
+    <!--          <a-button type="primary" style="min-width: 200px" @click="doSubmit"-->
+    <!--            >提交代码-->
+    <!--          </a-button>-->
+    <!--        </a-col>-->
+    <!--      </a-row>-->
+    <!--    </a-spin>-->
   </div>
 
-  <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
-    <template #title> 执行结果</template>
-    <div id="execResultDiv">
-      <a-descriptions style="margin-top: 20px" :data="resultData" :column="1" />
-      <h2 v-if="resultData[2].value === 'Accepted'">
-        恭喜你 超越了
-        <span :style="{ color: 'red' }"
-          >{{ (exceedPercent * 100).toFixed(1) }}%</span
-        >
-        的用户!
-      </h2>
-    </div>
-  </a-modal>
+  <!--  <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">-->
+  <!--    <template #title> 执行结果</template>-->
+  <!--    <div id="execResultDiv">-->
+  <!--      <a-descriptions style="margin-top: 20px" :data="resultData" :column="1" />-->
+  <!--      <h2 v-if="resultData[2].value === 'Accepted'">-->
+  <!--        恭喜你 超越了-->
+  <!--        <span :style="{ color: 'red' }"-->
+  <!--          >{{ (exceedPercent * 100).toFixed(1) }}%</span-->
+  <!--        >-->
+  <!--        的用户!-->
+  <!--      </h2>-->
+  <!--    </div>-->
+  <!--  </a-modal>-->
 </template>
 
 <script setup lang="ts">
@@ -414,7 +676,7 @@ const publishComment = async () => {
     message.info("请输入评论内容");
     return;
   }
-  const res = await QuestionCommentControllerService.saveUsingPost1({
+  const res = await QuestionCommentControllerService.saveUsingPost4({
     content: commentText.value,
     questionId: question.value?.id,
   });
@@ -504,7 +766,7 @@ let submitRecordDetail = reactive({
 // 点击提交记录
 const clickSubmitRecord = async (record: any) => {
   // 向后端请求提交详细数据
-  const res = await QuestionSubmitControllerService.infoUsingGet2(record.id);
+  const res = await QuestionSubmitControllerService.infoUsingGet5(record.id);
   if (res.code != 0) {
     message.error("数据请求失败 请稍后再试！");
     return;
@@ -530,20 +792,20 @@ const clickSubmitRecord = async (record: any) => {
 /**
  * 判题结果对话框相关
  */
-const visible = ref(false);
-const handleClick = () => {
-  visible.value = true;
-};
-const handleOk = () => {
-  resultData[0].value = "";
-  resultData[1].value = "";
-  resultData[2].value = "";
-  visible.value = false;
-};
-const handleCancel = () => {
-  visible.value = false;
-};
-const resultData = [
+// const visible = ref(false);
+// const handleClick = () => {
+//   visible.value = true;
+// };
+// const handleOk = () => {
+//   resultData[0].value = "";
+//   resultData[1].value = "";
+//   resultData[2].value = "";
+//   visible.value = false;
+// };
+// const handleCancel = () => {
+//   visible.value = false;
+// };
+const resultData = ref([
   {
     label: "执行用时",
     value: "",
@@ -560,14 +822,14 @@ const resultData = [
     label: "通过用例",
     value: 0,
   },
-];
+]);
 // 超越了多少百分比的用户
 let exceedPercent = ref(0);
 
 /**
  * 提交代码相关
  */
-var loading = ref<boolean>(false);
+// var loading = ref<boolean>(false);
 const form = ref<QuestionSubmitDoRequest>({
   language: "java",
   code:
@@ -592,8 +854,9 @@ const form = ref<QuestionSubmitDoRequest>({
 const changeCode = (value: string) => {
   form.value.code = value;
 };
+// 判题加载中标志
+const isJudgeLoading = ref(false);
 const doSubmit = async () => {
-  loading.value = true;
   if (!question.value?.id) {
     return;
   }
@@ -604,6 +867,8 @@ const doSubmit = async () => {
   });
   if (res.code === 0) {
     message.success("提交成功");
+    isJudgeLoading.value = true;
+    timer(res.data);
   } else {
     message.error("提交失败 请稍后重试：" + res.message);
   }
@@ -629,13 +894,14 @@ const timer = (sumbitId: number) => {
       // 条件满足，清除定时器
       clearInterval(intervalId);
       const data = JSON.parse(res.data);
-      resultData[0].value = `${data.time} MS`;
-      resultData[1].value = `${(data.memory / (1024 * 1024)).toFixed(2)} MB`;
-      resultData[2].value = data.message;
-      resultData[3].value = (data.acceptedRate * 100).toFixed(2) + "%";
+      resultData.value[0].value = `${data.time} MS`;
+      resultData.value[1].value = `${(data.memory / (1024 * 1024)).toFixed(
+        2
+      )} MB`;
+      resultData.value[2].value = data.message;
+      resultData.value[3].value = (data.acceptedRate * 100).toFixed(2) + "%";
       exceedPercent = data.exceedPercent;
-      loading.value = false;
-      visible.value = true;
+      isJudgeLoading.value = false;
     }
   }, 1000); // 每秒执行一次，间隔时间为 1000 毫秒
 };
@@ -664,17 +930,83 @@ const timer = (sumbitId: number) => {
 // ]);
 </script>
 
-<style>
+<style lang="scss">
 #ViewQuestionView {
-  max-width: 1280px;
+  //max-width: 1280px;
   width: 100vw;
   box-sizing: border-box;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 1);
   /*padding-right: 10px;*/
   /*padding-left: 10px;*/
-  padding: 20px 20px;
+  //padding: 20px 20px;
   flex: 1;
+
+  .arco-tabs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: initial !important;
+  }
+
+  .arco-tabs-nav-type-card-gutter .arco-tabs-tab-active,
+  .arco-tabs-nav-type-card-gutter .arco-tabs-tab-active:hover {
+    //background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+    background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    color: black;
+  }
+
+  .arco-tabs-nav-type-card .arco-tabs-tab,
+  .arco-tabs-nav-type-card-gutter .arco-tabs-tab {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  .arco-tabs-nav-tab {
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+
+  .arco-tabs-content {
+    overflow: auto;
+    padding: 10px;
+    border: initial;
+  }
+
+  .arco-space-horizontal .arco-space-item {
+    margin-bottom: 0 !important;
+  }
+
+  .loading-container {
+    position: relative;
+  }
+
+  .is-loading {
+    background-color: rgba(109, 101, 101, 0.1) !important;
+  }
+
+  .exec-area-result {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+
+    #execResultDiv {
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .exceed-percent {
+        flex: 1;
+        text-align: center;
+      }
+    }
+  }
+
+  .arco-form {
+    padding-top: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
+  }
 }
 
 /*#ViewQuestionView .arco-list-wrapper {*/
@@ -682,58 +1014,58 @@ const timer = (sumbitId: number) => {
 /*  height: 30vw;*/
 /*}*/
 
-#ViewQuestionView .arco-space-horizontal .arco-space-item {
-  margin-bottom: 0 !important;
-}
-
-/*去除标签页边框*/
-#ViewQuestionView .arco-tabs-type-card-gutter > .arco-tabs-content {
-  border: 0;
-}
-
-.action {
-  display: inline-block;
-  padding: 0 4px;
-  color: var(--color-text-1);
-  line-height: 24px;
-  background: transparent;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.1s ease;
-}
-
-.action:hover {
-  background: var(--color-fill-3);
-}
-
-/*评论输入框*/
-#commentInput {
-  /*position: absolute;*/
-  bottom: 0;
-  width: 100%;
-  margin-top: 20px;
-}
-
-#execResultDiv {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-#questionFavourId {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  font-weight: bold;
-}
-
-#questionFavourId > .arco-icon {
-  color: #ff7300;
-}
-
-/*改变 加载中 图标位置*/
-#ViewQuestionView .arco-spin-mask-icon {
-  top: 50vh;
-}
+//#ViewQuestionView .arco-space-horizontal .arco-space-item {
+//  margin-bottom: 0 !important;
+//}
+//
+///*去除标签页边框*/
+//#ViewQuestionView .arco-tabs-type-card-gutter > .arco-tabs-content {
+//  border: 0;
+//}
+//
+//.action {
+//  display: inline-block;
+//  padding: 0 4px;
+//  color: var(--color-text-1);
+//  line-height: 24px;
+//  background: transparent;
+//  border-radius: 2px;
+//  cursor: pointer;
+//  transition: all 0.1s ease;
+//}
+//
+//.action:hover {
+//  background: var(--color-fill-3);
+//}
+//
+///*评论输入框*/
+//#commentInput {
+//  /*position: absolute;*/
+//  bottom: 0;
+//  width: 100%;
+//  margin-top: 20px;
+//}
+//
+//#execResultDiv {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  flex-direction: column;
+//}
+//
+//#questionFavourId {
+//  display: flex;
+//  align-items: center;
+//  justify-content: right;
+//  font-weight: bold;
+//}
+//
+//#questionFavourId > .arco-icon {
+//  color: #ff7300;
+//}
+//
+///*改变 加载中 图标位置*/
+//#ViewQuestionView .arco-spin-mask-icon {
+//  top: 50vh;
+//}
 </style>

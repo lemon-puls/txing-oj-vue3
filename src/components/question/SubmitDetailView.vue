@@ -10,7 +10,7 @@
     </a-descriptions-item>
   </a-descriptions>
   <a-divider />
-  <a-card :style="{ width: '90vh' }" :title="props.questionSubmitDatail.title">
+  <a-card :style="{ width: '100%' }" :title="props.questionSubmitDatail.title">
     <template #extra>
       <a-link>
         {{ props.questionSubmitDatail.createTime }}

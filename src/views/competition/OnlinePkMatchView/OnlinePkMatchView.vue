@@ -193,6 +193,7 @@
                       @click="doSubmit(false)"
                       type="outline"
                       status="success"
+                      shape="round"
                       >提交并保存
                     </a-button>
                   </div>

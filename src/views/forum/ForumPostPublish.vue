@@ -23,14 +23,21 @@
     <div class="picture">
       <h3>配图</h3>
       <a-upload
+        :limit="9"
         list-type="picture-card"
         action="/"
         :file-list="fileList"
         image-preview
         :custom-request="uploadTopicImg"
-        @change="onChange"
+        :on-before-upload="onBeforeUpload"
         :on-before-remove="onRemoveImg"
       />
+      <div style="text-align: right">
+        <span
+          >你还可以上传
+          <span style="color: red">{{ restCount }}</span> 张图片</span
+        >
+      </div>
     </div>
     <div class="submit">
       <a-button type="primary" shape="round" @click="submitTopic"
@@ -61,6 +68,8 @@ onMounted(() => {
     loadOldTopicData();
   }
 });
+// 上传图片剩余数
+const restCount = ref(9);
 // 标题
 const title = ref("");
 // 内容
@@ -92,9 +101,23 @@ const {
   fileInfo,
   onChange: uploadOnChange,
   onProgressChange,
+  parseFile,
 } = useUpload();
 let isFirst = true;
+const onBeforeUpload = async (file: File) => {
+  const info = await parseFile(file);
+  // 限制文件大小
+  if (info.size > 10 * 1024 * 1024) {
+    message.error(`文件大小不能超过${10}MB` + info.size);
+    return false;
+  }
+  return true;
+};
 const uploadTopicImg = (option: RequestOption) => {
+  // if (fileList.value.length > 0) {
+  //   message.warning("最多只能上传9张图片");
+  //   return;
+  // }
   const { onProgress, onSuccess, onError } = option;
   if (option.fileItem.file) {
     compressImage(option.fileItem.file).then((compressedFile: File) => {
@@ -111,6 +134,7 @@ const uploadTopicImg = (option: RequestOption) => {
         // 不能直接用下面这种写法 这样存进数组中的都是同一个对象 url也都是同一个
         // fileList.value.push(option.fileItem);
         fileList.value.push(clonedObject);
+        restCount.value = 9 - fileList.value.length;
       } else if (val == "fail") {
         onError("上传失败");
       }
@@ -128,6 +152,7 @@ const onRemoveImg = (fileItem: FileItem) => {
     console.log(item.url, fileItem.url, item.url != fileItem.url);
     return item.url != fileItem.url;
   });
+  restCount.value++;
 };
 
 // 提交

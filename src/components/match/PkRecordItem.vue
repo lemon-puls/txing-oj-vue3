@@ -33,8 +33,9 @@
       </div>
     </div>
     <div class="right">
-      <SvgIcon v-if="isWinner" icon="win" :size="60" />
-      <SvgIcon v-else icon="fail" :size="60" />
+      <SvgIcon v-if="winStatus == 1" icon="win" :size="60" />
+      <SvgIcon v-else-if="winStatus == -1" icon="fail" :size="60" />
+      <SvgIcon v-else icon="draw" :size="60" />
     </div>
   </div>
 </template>
@@ -50,9 +51,11 @@ const props = defineProps(["record"]);
 const resultVO = ref(props.record.resultVO);
 const userStore = useUserStore();
 const duration = ref();
-const isWinner = ref(false);
+const winStatus = ref(0);
 if (userStore.loginUser.id == resultVO.value.winnerId) {
-  isWinner.value = true;
+  winStatus.value = 1;
+} else if (resultVO.value.winnerId != 0) {
+  winStatus.value = -1;
 }
 if (userStore.loginUser.id == resultVO.value.userId1) {
   duration.value = formatSecondsToTime(resultVO.value.useSeconds1);

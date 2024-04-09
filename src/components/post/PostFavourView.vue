@@ -163,6 +163,10 @@ const cancelPostFavour = async (id: any) => {
 <style lang="scss">
 #postFavourViewId {
   margin-bottom: 30px;
+
+  .arco-list-wrapper {
+    width: 100%;
+  }
 }
 
 .list-demo-action-layout .image-area {

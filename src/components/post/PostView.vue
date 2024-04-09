@@ -184,6 +184,10 @@ const handlePostOps = async (id: any, key: any) => {
 <style lang="scss">
 #postViewId {
   margin-bottom: 30px;
+
+  .arco-list-wrapper {
+    width: 100%;
+  }
 }
 
 .list-demo-action-layout .image-area {

@@ -27,6 +27,7 @@
           :custom-request="uploadCourseCover"
           :image-preview="true"
           :draggable="true"
+          list-type="picture-card"
         >
           <template #upload-button>
             <div
@@ -176,6 +177,7 @@ import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
 import { compressImage, getFileByImgUrl } from "@/utils/FileUtils";
 import { flatten } from "lodash";
+import { isBlob } from "../../../../generated/core/request";
 
 const router = useRouter();
 const route = useRoute();
@@ -247,6 +249,7 @@ const {
   onStart,
   onChange: uploadOnChange,
   onProgressChange,
+  parseFile,
 } = useUpload();
 // onStart.on(onStartFunction);
 let isFirst = true;
@@ -606,6 +609,21 @@ const customUpload = (option: RequestOption) => {
       // }
     });
   }
+};
+// 视频上传前校验
+const onBeforeUpload = async (file: File) => {
+  const info = await parseFile(file);
+  const videoSuffixs = ["mp4"];
+  if (!videoSuffixs.includes(info.suffix)) {
+    message.error("仅支持MP4视频文件");
+    return false;
+  }
+  // 限制文件大小
+  if (info.size > 50 * 1024 * 1024) {
+    message.error(`文件大小不能超过${50}MB` + info.size);
+    return false;
+  }
+  return true;
 };
 </script>
 

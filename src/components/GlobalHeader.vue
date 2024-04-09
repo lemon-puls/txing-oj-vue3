@@ -24,36 +24,44 @@
             v-for="item in visibleRoutes"
             :key="item.path"
             style="font-size: 15px"
-            >{{ item.name }}
+          >
+            <div style="display: flex; align-items: center; column-gap: 5px">
+              <SvgIcon
+                v-if="item.meta?.icon"
+                :icon="item.meta.icon"
+                :size="20"
+              />
+              <span>{{ item.name }}</span>
+            </div>
           </a-menu-item>
-          <!--          <a-menu-item-->
-          <!--            key="adminCenter"-->
-          <!--            v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"-->
-          <!--          >-->
-          <!--            <a-dropdown-->
-          <!--              @select="doMenuClick"-->
-          <!--              :popup-max-height="false"-->
-          <!--              style="z-index: 10000"-->
-          <!--            >-->
-          <!--              <a-button style="font-size: 15px"-->
-          <!--                >管理中心-->
-          <!--                <icon-down />-->
-          <!--              </a-button>-->
-          <!--              <template #content>-->
-          <!--                <div>-->
-          <!--                  <a-doption style="font-size: 15px">-->
-          <!--                    <a-button type="primary">创建题目</a-button>-->
-          <!--                  </a-doption>-->
-          <!--                  <a-divider-->
-          <!--                    style="margin: 5px 0; padding: 0px; width: 100%"-->
-          <!--                  ></a-divider>-->
-          <!--                  <a-doption style="font-size: 15px">-->
-          <!--                    <a-button type="primary">管理题目</a-button>-->
-          <!--                  </a-doption>-->
-          <!--                </div>-->
-          <!--              </template>-->
-          <!--            </a-dropdown>-->
-          <!--          </a-menu-item>-->
+          <a-menu-item
+            key="adminCenter"
+            v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"
+          >
+            <a-dropdown
+              @select="doMenuClick"
+              :popup-max-height="false"
+              style="z-index: 10000"
+            >
+              <a-button style="font-size: 15px"
+                >管理中心
+                <icon-down />
+              </a-button>
+              <template #content>
+                <div>
+                  <a-doption style="font-size: 15px">
+                    <a-button type="primary">创建题目</a-button>
+                  </a-doption>
+                  <a-divider
+                    style="margin: 5px 0; padding: 0px; width: 100%"
+                  ></a-divider>
+                  <a-doption style="font-size: 15px">
+                    <a-button type="primary">管理题目</a-button>
+                  </a-doption>
+                </div>
+              </template>
+            </a-dropdown>
+          </a-menu-item>
           <a-menu-item
             key="weekMatch"
             v-if="checkAccess(userStore.loginUser, AccessEnum.NOT_LOGIN)"
@@ -63,8 +71,13 @@
               :popup-max-height="false"
               style="z-index: 10000; width: 100px"
             >
-              <a-button style="font-size: 15px"
-                >竞赛中心
+              <a-button style="font-size: 15px">
+                <div
+                  style="display: flex; align-items: center; column-gap: 5px"
+                >
+                  <SvgIcon icon="trophy1" :size="20" />
+                  <span>竞赛中心</span>
+                </div>
                 <icon-down />
               </a-button>
               <template #content>
@@ -104,7 +117,7 @@
           </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col flex="500px" style="text-align: right">
+      <a-col flex="300px" style="text-align: right">
         <div
           style="
             font-size: 15px;

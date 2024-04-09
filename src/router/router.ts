@@ -68,6 +68,9 @@ export const routes: Array<RouteRecordRaw> = [
     // meta: {
     //   hideInMenu: true,
     // },
+    meta: {
+      icon: "question1",
+    },
   },
   // {
   //   path: "/",
@@ -81,6 +84,9 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/txing/post/search",
     name: "技术文章",
     component: PostSearchView,
+    meta: {
+      icon: "article1",
+    },
   },
   {
     path: "/txing/view/question/:id",
@@ -229,11 +235,17 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/txing/course/search",
     name: "在线课程",
     component: CourseSearchView,
+    meta: {
+      icon: "video",
+    },
   },
   {
     path: "/txing/forum/search",
     name: "论坛中心",
     component: ForumSearchView,
+    meta: {
+      icon: "forum1",
+    },
   },
   {
     path: "/txing/course/video/play/:courseId",
@@ -276,6 +288,7 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       // hideInMenu: true,
       access: ACCESS_ENUM.USER,
+      icon: "myself",
     },
   },
   {

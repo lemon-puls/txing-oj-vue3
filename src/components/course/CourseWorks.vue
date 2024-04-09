@@ -46,9 +46,10 @@ import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import CourseItem from "@/components/course/CourseItem.vue";
 import SvgIcon from "@/icons/SvgIcon";
+import { useUserStore } from "@/store/user";
 
 const router = useRouter();
-
+const userStore = useUserStore();
 // 总页数
 const total = ref(0);
 const courseData = ref([]);
@@ -58,6 +59,11 @@ const pageParams = ref({
       fieldName: "name",
       queryType: "like",
       value: "",
+    },
+    {
+      fieldName: "userId",
+      queryType: "eq",
+      value: userStore.loginUser.id,
     },
   ],
   page: {

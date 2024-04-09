@@ -178,7 +178,7 @@ const onFavour = async () => {
   .post-content {
     height: 100%;
     overflow: auto;
-    width: 60%;
+    width: 80%;
     max-width: 1080px;
     position: absolute;
     top: 50%;
@@ -230,7 +230,7 @@ const onFavour = async () => {
     }
 
     .imgs {
-      width: 65%;
+      width: 90%;
       margin: 0 auto;
       display: flex;
       justify-content: left;
@@ -240,8 +240,9 @@ const onFavour = async () => {
       row-gap: 15px;
 
       .img {
-        height: 210px;
-        width: 210px;
+        height: 180px;
+        width: 180px;
+        border-radius: 20px;
       }
     }
 

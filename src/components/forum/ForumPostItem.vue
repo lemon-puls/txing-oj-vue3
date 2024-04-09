@@ -22,8 +22,8 @@
     </div>
     <div class="pictures">
       <img
-        v-for="img in props.topic.imgs"
-        :key="img"
+        v-for="(img, index) in imgs"
+        :key="index"
         style="width: 138px; height: 138px; border-radius: 10px"
         :src="img"
         @click="onPreviewImg(img)"
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, withDefaults, defineEmits } from "vue";
+import { defineProps, withDefaults, defineEmits, computed } from "vue";
 import SvgIcon from "@/icons/SvgIcon";
 import { useForumStore } from "@/store/forum";
 import { useImgPreviewStore } from "@/store/preview";
@@ -87,6 +87,14 @@ const props = withDefaults(defineProps<Props>(), {
   isRemove: () => false,
 });
 const $emit = defineEmits(["loadData"]);
+
+const imgs = computed(() => {
+  if (props.topic.imgs == null || props.topic.imgs.length == 0) {
+    return [];
+  } else {
+    return props.topic.imgs.slice(0, 6);
+  }
+});
 
 const onPreviewImg = (imgUrl: string) => {
   previewStore.show([imgUrl], 0);

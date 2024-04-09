@@ -145,6 +145,7 @@ export const useUpload = () => {
     onStart,
     onChange,
     onProgressChange,
+    parseFile,
   };
 };
 

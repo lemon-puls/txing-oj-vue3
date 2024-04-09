@@ -65,7 +65,9 @@
     >
       <template #optional="{ record }">
         <a-space>
-          <a-button type="primary" @click="toQuestionPage(record)">GO</a-button>
+          <a-button shape="round" type="primary" @click="toQuestionPage(record)"
+            >GO</a-button
+          >
         </a-space>
       </template>
 
