@@ -9,6 +9,7 @@
         style="width: 150px !important; border-radius: 10px"
       >
         <CourseItem
+          :is-show-overlay="true"
           :course="course"
           @click="onClickCourse(course.id)"
         ></CourseItem>

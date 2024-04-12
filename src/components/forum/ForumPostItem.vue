@@ -1,15 +1,21 @@
 <template>
   <div id="forumPostItemId">
     <div class="header">
-      <img
-        class="avatar"
-        src="https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/dkC8kEgl-aa1bba1647682475dcf210ac0633505.png"
-      />
-      <div class="user-info">
-        <span>{{ props.topic.userShowVO.userName }}</span>
-        <span style="font-size: 12px; color: rgba(18, 16, 16, 0.65)">{{
-          props.topic.createTime
-        }}</span>
+      <div class="left">
+        <img
+          class="avatar"
+          src="https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/dkC8kEgl-aa1bba1647682475dcf210ac0633505.png"
+        />
+        <div class="user-info">
+          <span>{{ props.topic.userShowVO.userName }}</span>
+          <span style="font-size: 12px; color: rgba(18, 16, 16, 0.65)">{{
+            props.topic.createTime
+          }}</span>
+        </div>
+      </div>
+      <div class="right">
+        <span v-if="isShowStatus">状态：</span>
+        <span v-if="isShowStatus" style="color: red">审核中</span>
       </div>
     </div>
     <div class="title" @click="forumStore.open(props.topic.id)">
@@ -79,12 +85,14 @@ interface Props {
   isEdit: boolean;
   isRemove: boolean;
   topic: any;
+  isShowStatus: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isDelete: () => false,
   isEdit: () => false,
   isRemove: () => false,
+  isShowStatus: () => false,
 });
 const $emit = defineEmits(["loadData"]);
 
@@ -141,20 +149,26 @@ const onEdit = () => {
 
   .header {
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
 
-    .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-    }
-
-    .user-info {
-      margin-left: 10px;
+    .left {
       display: flex;
-      flex-direction: column;
-      align-items: start;
+      justify-content: left;
+      align-items: center;
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+
+      .user-info {
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+      }
     }
   }
 

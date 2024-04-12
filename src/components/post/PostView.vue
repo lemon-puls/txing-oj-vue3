@@ -58,12 +58,18 @@
             </div>
           </template>
           <template #extra>
-            <div className="image-area">
-              <img
-                v-if="item.coverImg"
-                alt="arco-design"
-                :src="item.coverImg"
-              />
+            <div class="image-area">
+              <div class="content">
+                <img
+                  class="img"
+                  v-if="item.coverImg"
+                  alt="arco-design"
+                  :src="item.coverImg"
+                />
+                <div class="overlay" v-if="true">
+                  <div class="overlay-content">审核中...</div>
+                </div>
+              </div>
             </div>
           </template>
           <a-list-item-meta style="margin-right: 20px">
@@ -187,6 +193,40 @@ const handlePostOps = async (id: any, key: any) => {
 
   .arco-list-wrapper {
     width: 100%;
+  }
+
+  .image-area {
+    .content {
+      position: relative;
+
+      .img {
+        width: 183px;
+        height: 119px;
+      }
+
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        //border-radius: 10px;
+
+        .overlay-content {
+          color: white; /* 文字颜色 */
+          font-size: 12px; /* 文字大小 */
+          text-align: center; /* 文字居中 */
+          padding: 5px; /* 内边距 */
+          border-radius: 5px; /* 圆角 */
+          background-color: rgba(0, 0, 0, 0.7); /* 遮罩层背景 */
+        }
+      }
+    }
   }
 }
 

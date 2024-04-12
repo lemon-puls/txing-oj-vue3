@@ -13,9 +13,18 @@
         showTotal: true,
       }"
       @pageChange="onPageChange"
+      :scroll="{
+        x: 780,
+      }"
     >
       <template #exceedPercent="{ record }">
-        {{ `${(record.exceedPercent * 100).toFixed(2)} %` }}
+        {{
+          `${
+            record.exceedPercent > 0
+              ? (record.exceedPercent * 100).toFixed(2)
+              : 0
+          } % `
+        }}
       </template>
     </a-table>
   </div>
@@ -81,7 +90,11 @@ const columns = [
     title: "题目",
     dataIndex: "title",
     // ellipsis: true,
-    // width: 150,
+    width: 150,
+  },
+  {
+    title: "作答语言",
+    dataIndex: "language",
   },
   {
     title: "判题状态",
@@ -92,10 +105,12 @@ const columns = [
   {
     title: "判题结果",
     dataIndex: "result",
+    width: 120,
   },
   {
-    title: "排行",
+    title: "超越用户比例",
     slotName: "exceedPercent",
+    width: 120,
   },
   {
     title: "提交时间",

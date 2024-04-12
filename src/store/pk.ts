@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/user";
 import moment, { now } from "moment/moment";
 import { RoomTypeEnum } from "@/enume";
 import { useRouter } from "vue-router";
+import CodeInitConstant from "@/service/constant/CodeInitConstant";
 
 export const usePkStore = defineStore(
   "pk",
@@ -24,24 +25,7 @@ export const usePkStore = defineStore(
       if (oldPkSubmit == null || oldPkSubmit === "") {
         pkSubmit.value = {
           language: "java",
-          code:
-            "import java.util.*;\n" +
-            "/**\n" +
-            " * @author " +
-            useUserStore().loginUser.userName +
-            "\n" +
-            " * @date " +
-            moment(now()).format("YYYY-MM-DD HH:mm:ss") +
-            "\n" +
-            " */\n" +
-            "public class Main {\n" +
-            "\n" +
-            "    public static void main(String[] args) {\n" +
-            "        // 请开始您的作答\n" +
-            "        Scanner scanner = new Scanner(System.in);\n" +
-            "    \n" +
-            "    }\n" +
-            "}",
+          code: CodeInitConstant.JAVA,
           questionId: questionId,
         };
       }

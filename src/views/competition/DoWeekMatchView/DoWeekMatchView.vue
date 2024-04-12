@@ -200,16 +200,18 @@
                         v-model="language"
                         :style="{ width: '320px' }"
                         placeholder="选择语言"
-                        @change="onlanguagechange"
+                        @change="languageChange"
                       >
                         <a-option>java</a-option>
-                        <a-option>cpp</a-option>
-                        <a-option>go</a-option>
+                        <a-option>c</a-option>
+                        <!--                      <a-option>go</a-option>-->
+                        <a-option>python</a-option>
+                        <a-option>javascript</a-option>
                       </a-select>
                     </a-form-item>
                   </a-form>
                   <CodeEditor
-                    :key="questionNo"
+                    :key="codeEditorKey"
                     ref="codeEditorRef"
                     :value="code"
                     :language="language"
@@ -250,6 +252,7 @@
                         :disabled="questionNo === 5"
                         type="outline"
                         status="success"
+                        shape="round"
                         @click="onSelectQuestion(questionNo + 1)"
                         >下一题
                       </a-button>
@@ -347,6 +350,7 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import { useWeekMatchStore } from "@/store/weekmatch";
 import { useRoute, useRouter } from "vue-router";
+import CodeInitConstant from "@/service/constant/CodeInitConstant";
 
 const router = useRouter();
 const route = useRoute();
@@ -382,8 +386,9 @@ const loadMatchDetailData = async () => {
   isLoading.value = false;
 };
 
-onMounted(() => {
-  loadMatchDetailData();
+onMounted(async () => {
+  await loadMatchDetailData();
+  codeEditorKey.value = codeEditorKey.value + 1;
 });
 
 // 当前选中题号
@@ -391,6 +396,7 @@ const questionNo = ref<number>(-1);
 const onSelectQuestion = (i: number) => {
   questionNo.value = i;
   question.value = matchDetailData.value.questions[i - 1];
+  codeEditorKey.value = codeEditorKey.value + 1;
 };
 
 const question = ref<QuestionVO>();
@@ -422,12 +428,6 @@ const questionId = computed({
   },
 });
 
-// 编程语言选项值发生改变
-const onlanguagechange = (value: string) => {
-  if (value !== "java") {
-    message.info("目前判题系统仅支持Java语言 对其他语言的支持正在开发中...");
-  }
-};
 const changeCode = (value: string) => {
   code.value = value;
 };
@@ -514,6 +514,21 @@ const resultData = ref<Map<number, any>>(new Map([]));
 
 // 判题加载中标志
 const isJudgeLoading = ref(false);
+const codeEditorKey = ref(1);
+// 编程语言发生改变
+const languageChange = (language: string) => {
+  if (
+    code.value == CodeInitConstant.JAVA ||
+    code.value == CodeInitConstant.JAVASCRIPT ||
+    code.value == CodeInitConstant.PYTHON ||
+    code.value == CodeInitConstant.C ||
+    code.value == ""
+  ) {
+    const codeInit = CodeInitConstant.getCodeInit(language);
+    code.value = codeInit;
+    codeEditorKey.value = codeEditorKey.value + 1;
+  }
+};
 
 /**
  * 交卷

@@ -30,8 +30,8 @@
             "
           >
             <div>
-              <svg-icon icon="back" size="18px" />
-              <span>放弃竞赛</span>
+              <!--              <svg-icon icon="back" size="18px" />-->
+              <!--              <span>放弃竞赛</span>-->
             </div>
           </div>
         </a-col>
@@ -151,20 +151,23 @@
                       v-model="language"
                       :style="{ width: '320px' }"
                       placeholder="选择语言"
-                      @change="onlanguagechange"
+                      @change="languageChange"
                     >
                       <a-option>java</a-option>
-                      <a-option>cpp</a-option>
-                      <a-option>go</a-option>
+                      <a-option>c</a-option>
+                      <!--                      <a-option>go</a-option>-->
+                      <a-option>python</a-option>
+                      <a-option>javascript</a-option>
                     </a-select>
                   </a-form-item>
                 </a-form>
                 <CodeEditor
-                  :key="questionId"
+                  :key="codeEditorKey"
                   :value="code"
                   language="java"
                   :handleChange="changeCode"
                   style="height: 100%"
+                  ref="codeEditorRef"
                 />
               </div>
             </template>
@@ -202,11 +205,68 @@
                 <div class="exec-area-result">
                   <div id="execResultDiv" v-if="resultData[0].value !== ''">
                     <!--                      resultData.get(questionNo)[0]?.value != ''-->
-                    <a-descriptions
-                      style="margin-top: 20px"
-                      :data="resultData"
-                      :column="1"
-                    />
+                    <div>
+                      <a-descriptions
+                        :data="
+                          resultData[2].value === '完全通过'
+                            ? resultData
+                            : resultData.slice(2)
+                        "
+                        :column="1"
+                      />
+                      <div v-if="lastExecCase" style="padding-bottom: 8px">
+                        <div
+                          style="
+                            font-size: 18px;
+                            color: red;
+                            font-weight: bold;
+                            padding-right: 20px;
+                          "
+                        >
+                          最后执行用例
+                        </div>
+                        <div
+                          style="
+                            background-color: rgba(230, 226, 226, 0.5);
+                            padding: 5px 10px;
+                            border-radius: 10px;
+                            width: 100%;
+                            margin-top: 10px;
+                          "
+                        >
+                          输入用例：{{ lastExecCase.input }}&nbsp;&nbsp;&nbsp;
+                          期望输出：{{ lastExecCase.output }}&nbsp;&nbsp;&nbsp;
+                          <span v-if="resultData[2].value != '运行错误'"
+                            >实际输出：{{
+                              lastExecCase.actualOutput
+                            }}&nbsp;&nbsp;&nbsp;</span
+                          >
+                        </div>
+                      </div>
+                      <div v-if="errorMsg" style="padding-bottom: 8px">
+                        <div
+                          style="
+                            font-size: 18px;
+                            color: red;
+                            font-weight: bold;
+                            padding-right: 20px;
+                          "
+                        >
+                          报错信息
+                        </div>
+                        <div
+                          style="
+                            background-color: rgba(230, 226, 226, 0.5);
+                            padding: 5px 10px;
+                            border-radius: 10px;
+                            width: 100%;
+                            margin-top: 10px;
+                          "
+                        >
+                          <pre>{{ errorMsg }}</pre>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -273,6 +333,7 @@ import { usePkStore } from "@/store/pk";
 import { useMatchStore } from "@/store/match";
 import { UserShowVO } from "@/service/types";
 import Message from "@arco-design/web-vue/es/message";
+import CodeInitConstant from "@/service/constant/CodeInitConstant";
 
 const router = useRouter();
 const matchStore = useMatchStore();
@@ -332,12 +393,6 @@ const questionId = computed({
     pkStore.pkSubmit.questionId = val;
   },
 });
-// 编程语言选项值发生改变
-const onlanguagechange = (value: string) => {
-  if (value !== "java") {
-    message.info("目前判题系统仅支持Java语言 对其他语言的支持正在开发中...");
-  }
-};
 const changeCode = (value: string) => {
   code.value = value;
 };
@@ -394,13 +449,13 @@ const timer = (sumbitId: number) => {
       clearInterval(intervalId);
       const data = JSON.parse(res.data);
       resultData.value[0].value = `${data.time} MS`;
-      resultData.value[1].value = `${(data.memory / (1024 * 1024)).toFixed(
-        2
-      )} MB`;
+      resultData.value[1].value = `${(data.memory / 1024).toFixed(2)} MB`;
       resultData.value[2].value = data.message;
       resultData.value[3].value = (data.acceptedRate * 100).toFixed(2) + "%";
       // loading.value = false;
       // visible.value = true;
+      errorMsg = data.errorMsg;
+      lastExecCase = data.lastExecCase;
       isJudgeLoading.value = false;
       message.success("代码已保存成功");
     }
@@ -426,6 +481,27 @@ const resultData = ref([
 ]);
 // 判题加载中标志
 const isJudgeLoading = ref(false);
+// 报错消息
+let errorMsg = "";
+let lastExecCase = "";
+
+const codeEditorRef = ref();
+const codeEditorKey = ref(1);
+// 编程语言发生改变
+const languageChange = (language: string) => {
+  // alert(language);
+  if (
+    code.value == CodeInitConstant.JAVA ||
+    code.value == CodeInitConstant.JAVASCRIPT ||
+    code.value == CodeInitConstant.PYTHON ||
+    code.value == CodeInitConstant.C ||
+    code.value == ""
+  ) {
+    const codeInit = CodeInitConstant.getCodeInit(language);
+    code.value = codeInit;
+    codeEditorKey.value = codeEditorKey.value + 1;
+  }
+};
 
 // 时间到处理 自动提交作答
 const handleTimeOut = () => {

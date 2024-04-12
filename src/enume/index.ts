@@ -44,3 +44,10 @@ export enum RoomStatusEnum {
   ACTIVE,
   FORBIDDEN,
 }
+
+// 作品审核状态
+export enum CheckStatusEnum {
+  WAITTING,
+  ACCEPTED,
+  REJECT,
+}

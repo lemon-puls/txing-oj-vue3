@@ -350,9 +350,15 @@ import {
 } from "../../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import SvgIcon from "@/icons/SvgIcon";
+import { useUserStore } from "@/store/user";
 
 const router = useRouter();
+const userStore = useUserStore();
 const onJoinMatch = () => {
+  if (!userStore.isSign) {
+    message.warning("请先登录！");
+    return;
+  }
   router.push({
     path: "/txing/match/week/do",
   });
@@ -429,6 +435,10 @@ onMounted(() => {
 
 // 去模拟
 const onSimulate = async (matchId: number) => {
+  if (!userStore.isSign) {
+    message.warning("请先登录！");
+    return;
+  }
   router.push({
     path: "/txing/match/week/simulate/" + matchId,
   });

@@ -421,7 +421,7 @@ const publishComment = async () => {
     message.info("请输入评论内容");
     return;
   }
-  const res = await PostCommentControllerService.saveUsingPost({
+  const res = await PostCommentControllerService.saveUsingPost3({
     content: commentText.value,
     postId: postInfo.value?.id,
   });

@@ -9,6 +9,7 @@
     >
       <template #item="{ index, item }">
         <ForumPostItem
+          :is-show-status="true"
           :is-delete="true"
           :is-edit="true"
           :topic="item"

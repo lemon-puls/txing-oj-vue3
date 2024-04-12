@@ -70,8 +70,9 @@ const props = withDefaults(defineProps<Props>(), {
 const uploadImage = async (files: any) => {
   const res = await FileControllerService.uploadFileUsingPost(
     props.biz,
-    props.postId,
-    files[0]
+    files[0],
+    undefined,
+    props.postId as any
   );
   if (res.code !== 0) {
     message.error(res.msg);

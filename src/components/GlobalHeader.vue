@@ -146,19 +146,6 @@
           <!--          </template>-->
           <!--        </a-popover>-->
 
-          <a-badge
-            :count="
-              globalStore.isNeedNotify.friendNotify ||
-              globalStore.isNeedNotify.messageNotify
-                ? 1
-                : 0
-            "
-            dot
-            :offset="[2, -2]"
-          >
-            <SvgIcon @click="openChatBox" icon="bell" :size="25" />
-          </a-badge>
-
           <!--          <a-button-->
           <!--            type="primary"-->
           <!--            size="large"-->
@@ -197,6 +184,18 @@
               </div>
             </template>
           </a-popover>
+          <a-badge
+            :count="
+              globalStore.isNeedNotify.friendNotify ||
+              globalStore.isNeedNotify.messageNotify
+                ? 1
+                : 0
+            "
+            dot
+            :offset="[2, -2]"
+          >
+            <SvgIcon @click="openChatBox" icon="bell" :size="25" />
+          </a-badge>
           <div
             @click="
               router.push({
@@ -266,6 +265,17 @@ const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
   if ("adminCenter" === key || "weekMatch" === key) {
     return;
+  }
+  if (
+    key == "/txing/post/add" ||
+    key == "/txing/course/publish" ||
+    key == "/txing/forum/post/publish" ||
+    "PK" == key
+  ) {
+    if (!userStore.isSign) {
+      message.warning("请先登录！");
+      return;
+    }
   }
   if ("创建题目" === key) {
     key = "/txing/add/question";

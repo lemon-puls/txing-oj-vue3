@@ -10,14 +10,24 @@
     </a-descriptions-item>
   </a-descriptions>
   <a-divider />
-  <a-card :style="{ width: '100%' }" :title="props.questionSubmitDatail.title">
+  <a-card
+    :style="{ width: '100%' }"
+    :title="`${props.questionSubmitDatail.title}`"
+  >
     <template #extra>
-      <a-link>
-        {{ props.questionSubmitDatail.createTime }}
-        <!--        {{-->
-        <!--          moment(props.questionSubmitDatail.createTime).format("YYYY-MM-DD")-->
-        <!--        }}-->
-      </a-link>
+      <div>
+        <a-space>
+          <span style="color: #7d7979">{{
+            props.questionSubmitDatail.language
+          }}</span>
+          <a-link>
+            {{ props.questionSubmitDatail.createTime }}
+            <!--        {{-->
+            <!--          moment(props.questionSubmitDatail.createTime).format("YYYY-MM-DD")-->
+            <!--        }}-->
+          </a-link>
+        </a-space>
+      </div>
     </template>
     <!--    <md-viewer :value="props.questionSubmitDatail.code" />-->
     <pre>{{ props.questionSubmitDatail.code }}</pre>
@@ -89,7 +99,7 @@ const data = [
   },
   {
     label: "占用内存",
-    value: `${(props.questionSubmitDatail.memory / 1024 / 1024).toFixed(2)} MB`,
+    value: `${(props.questionSubmitDatail.memory / 1024).toFixed(2)} MB`,
   },
   {
     label: "执行时间",
@@ -104,7 +114,7 @@ const data = [
     value: props.questionSubmitDatail.result,
   },
   {
-    label: "排行",
+    label: "超越用户比例",
     value: `${(props.questionSubmitDatail.exceedPercent == -1
       ? 0
       : props.questionSubmitDatail.exceedPercent * 100

@@ -108,7 +108,7 @@ const loadTopicData = async () => {
     forumStore.currentTopicId
   );
   if (res.code != 0) {
-    message.error(res.msg + ", 请尝试刷新！");
+    message.error(res.msg);
     return;
   }
   topicVO.value = res.data.topicVO;
@@ -128,7 +128,7 @@ const onReply = async () => {
   };
   const res = await TopicAppControllerService.commentTopicUsingPost(params);
   if (res.code != 0) {
-    message.error(res.msg + ", 请尝试刷新！");
+    message.error(res.msg);
     return;
   }
   // 重新加载评论数据
@@ -145,7 +145,7 @@ const onThumb = async () => {
     postId: forumStore.currentTopicId,
   });
   if (res.code != 0) {
-    message.error(res.msg + "，请稍后重试！");
+    message.error(res.msg);
     return;
   }
   topicVO.value.thumbNum += res.data;
@@ -157,7 +157,7 @@ const onFavour = async () => {
     postId: forumStore.currentTopicId,
   });
   if (res.code != 0) {
-    message.error(res.msg + "，请稍后重试！");
+    message.error(res.msg);
     return;
   }
   topicVO.value.favourNum += res.data;

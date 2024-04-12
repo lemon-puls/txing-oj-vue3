@@ -146,7 +146,7 @@ const onReply = async (replyId: number) => {
   };
   const res = await TopicAppControllerService.commentTopicUsingPost(params);
   if (res.code != 0) {
-    message.error(res.msg + ", 请尝试刷新！");
+    message.error(res.msg);
     return;
   }
   // 使父组件重新加载评论数据
@@ -163,7 +163,7 @@ const onCancelReply = (topicId: number) => {
 const onDelete = async (commentId: number) => {
   const res = await TopicAppControllerService.deleteCommentUsingPost(commentId);
   if (res.code != 0) {
-    message.error(res.msg + ", 请尝试重试！");
+    message.error(res.msg);
     return;
   }
   message.success("删除成功");

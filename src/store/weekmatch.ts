@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { QuestionSubmitDoRequest } from "../../generated";
 import { useUserStore } from "@/store/user";
 import moment, { now } from "moment";
+import CodeInitConstant from "@/service/constant/CodeInitConstant";
 
 export const useWeekMatchStore = defineStore(
   "weekmatch",
@@ -15,24 +16,7 @@ export const useWeekMatchStore = defineStore(
         for (let i = 0; i < questionIds.length; i++) {
           matchSubmits.value[i] = {
             language: "java",
-            code:
-              "import java.util.*;\n" +
-              "/**\n" +
-              " * @author " +
-              useUserStore().loginUser.userName +
-              "\n" +
-              " * @date " +
-              moment(now()).format("YYYY-MM-DD HH:mm:ss") +
-              "\n" +
-              " */\n" +
-              "public class Main {\n" +
-              "\n" +
-              "    public static void main(String[] args) {\n" +
-              "        // 请开始您的作答\n" +
-              "        Scanner scanner = new Scanner(System.in);\n" +
-              "    \n" +
-              "    }\n" +
-              "}",
+            code: CodeInitConstant.JAVA,
             questionId: questionIds[i],
           };
         }
@@ -52,24 +36,7 @@ export const useWeekMatchStore = defineStore(
       if (oldVal == null || oldVal === "") {
         pkSubmit.value = {
           language: "java",
-          code:
-            "import java.util.*;\n" +
-            "/**\n" +
-            " * @author " +
-            useUserStore().loginUser.userName +
-            "\n" +
-            " * @date " +
-            moment(now()).format("YYYY-MM-DD HH:mm:ss") +
-            "\n" +
-            " */\n" +
-            "public class Main {\n" +
-            "\n" +
-            "    public static void main(String[] args) {\n" +
-            "        // 请开始您的作答\n" +
-            "        Scanner scanner = new Scanner(System.in);\n" +
-            "    \n" +
-            "    }\n" +
-            "}",
+          code: CodeInitConstant.JAVA,
           questionId: questionId,
         };
       }
