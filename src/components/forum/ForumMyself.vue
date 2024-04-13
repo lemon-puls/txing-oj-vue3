@@ -59,6 +59,7 @@ const onClickMenu = (key: string) => {
     //width: 200px;
     //height: 48vh;
     //background-color: #e9d28a;
+    width: 15%;
 
     .arco-menu-light {
       background-color: rgba(255, 255, 255, 0);
@@ -75,6 +76,7 @@ const onClickMenu = (key: string) => {
   }
 
   .right {
+    width: 85%;
     flex: 1;
   }
 }

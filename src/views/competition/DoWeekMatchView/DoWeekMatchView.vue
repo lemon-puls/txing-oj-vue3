@@ -260,16 +260,103 @@
                   </div>
                   <hr />
                   <div class="exec-area-result">
+                    <!--                    <div-->
+                    <!--                      id="execResultDiv"-->
+                    <!--                      v-if="resultData.get(questionNo) !== undefined"-->
+                    <!--                    >-->
+                    <!--                      &lt;!&ndash;                      resultData.get(questionNo)[0]?.value != ''&ndash;&gt;-->
+                    <!--                      <a-descriptions-->
+                    <!--                        style="margin-top: 20px"-->
+                    <!--                        :data="resultData.get(questionNo)"-->
+                    <!--                        :column="1"-->
+                    <!--                      />-->
+                    <!--                    </div>-->
                     <div
                       id="execResultDiv"
                       v-if="resultData.get(questionNo) !== undefined"
                     >
                       <!--                      resultData.get(questionNo)[0]?.value != ''-->
-                      <a-descriptions
-                        style="margin-top: 20px"
-                        :data="resultData.get(questionNo)"
-                        :column="1"
-                      />
+                      <div>
+                        <a-descriptions
+                          :data="
+                            resultData.get(questionNo)[2].value == '完全通过'
+                              ? resultData.get(questionNo)
+                              : resultData.get(questionNo).slice(2)
+                          "
+                          :column="1"
+                        />
+                        <div
+                          v-if="resultDataOther.get(questionNo)?.lastExecCase"
+                          style="padding-bottom: 8px"
+                        >
+                          <div
+                            style="
+                              font-size: 18px;
+                              color: red;
+                              font-weight: bold;
+                              padding-right: 20px;
+                            "
+                          >
+                            最后执行用例
+                          </div>
+                          <div
+                            style="
+                              background-color: rgba(230, 226, 226, 0.5);
+                              padding: 5px 10px;
+                              border-radius: 10px;
+                              width: 100%;
+                              margin-top: 10px;
+                            "
+                          >
+                            输入用例：{{
+                              resultDataOther.get(questionNo)?.lastExecCase
+                                .input
+                            }}
+                            期望输出：{{
+                              resultDataOther.get(questionNo)?.lastExecCase
+                                .output
+                            }}&nbsp;&nbsp;&nbsp;
+                            <span
+                              v-if="
+                                resultData.get(questionNo)[2].value !=
+                                '运行错误'
+                              "
+                              >实际输出：{{
+                                resultDataOther.get(questionNo)?.lastExecCase
+                                  .actualOutput
+                              }}&nbsp;&nbsp;&nbsp;</span
+                            >
+                          </div>
+                        </div>
+                        <div
+                          v-if="resultDataOther.get(questionNo)?.errorMsg"
+                          style="padding-bottom: 8px"
+                        >
+                          <div
+                            style="
+                              font-size: 18px;
+                              color: red;
+                              font-weight: bold;
+                              padding-right: 20px;
+                            "
+                          >
+                            报错信息
+                          </div>
+                          <div
+                            style="
+                              background-color: rgba(230, 226, 226, 0.5);
+                              padding: 5px 10px;
+                              border-radius: 10px;
+                              width: 100%;
+                              margin-top: 10px;
+                            "
+                          >
+                            <pre>{{
+                              resultDataOther.get(questionNo)?.errorMsg
+                            }}</pre>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -473,10 +560,12 @@ const timer = (sumbitId: number) => {
       if (resultData.value.get(questionNo.value) === undefined) {
         resultData.value.set(questionNo.value, getResultColumn());
       }
+      if (resultDataOther.value.get(questionNo.value) === undefined) {
+        resultDataOther.value.set(questionNo.value, {});
+      }
       resultData.value.get(questionNo.value)[0].value = `${data.time} MS`;
       resultData.value.get(questionNo.value)[1].value = `${(
-        data.memory /
-        (1024 * 1024)
+        data.memory / 1024
       ).toFixed(2)} MB`;
       resultData.value.get(questionNo.value)[2].value = data.message;
       resultData.value.get(questionNo.value)[3].value =
@@ -484,6 +573,9 @@ const timer = (sumbitId: number) => {
       // loading.value = false;
       // visible.value = true;
       isJudgeLoading.value = false;
+      resultDataOther.value.get(questionNo.value)["errorMsg"] = data.errorMsg;
+      resultDataOther.value.get(questionNo.value)["lastExecCase"] =
+        data.lastExecCase;
       message.success("代码已保存成功");
     }
   }, 1000); // 每秒执行一次，间隔时间为 1000 毫秒
@@ -511,10 +603,15 @@ const getResultColumn = () => {
 };
 
 const resultData = ref<Map<number, any>>(new Map([]));
+const resultDataOther = ref<Map<number, any>>(new Map([]));
 
 // 判题加载中标志
 const isJudgeLoading = ref(false);
 const codeEditorKey = ref(1);
+// 报错消息
+let errorMsg = "";
+let lastExecCase = "";
+
 // 编程语言发生改变
 const languageChange = (language: string) => {
   if (
@@ -557,6 +654,7 @@ const submitAll = async () => {
 // 时间到自动交卷
 const handleTimeOut = () => {
   submitAll();
+  matchStore.resetMatchSubmits();
 };
 // 放弃比赛
 const onGiveUpMatch = async () => {
@@ -568,6 +666,7 @@ const onGiveUpMatch = async () => {
     return;
   }
   message.success("已成功放弃本场比赛");
+  matchStore.resetMatchSubmits();
   router.push({
     path: "/txing/match/center",
   });

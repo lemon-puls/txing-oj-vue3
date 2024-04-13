@@ -208,7 +208,7 @@ const clickPostHandle = (id: number) => {
 };
 </script>
 
-<style>
+<style lang="scss">
 #postSearchViewId {
   max-width: 1080px;
   width: 90vw;
@@ -218,22 +218,34 @@ const clickPostHandle = (id: number) => {
   /*padding-left: 10px;*/
   padding: 20px 20px;
   flex: 1;
+
+  .arco-input-wrapper {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+  }
+
+  .arco-btn-primary,
+  .arco-btn-primary[type="button"],
+  .arco-btn-primary[type="submit"] {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
 }
 
 #searchInputDivId {
-  width: 85%;
+  width: 50%;
   display: flex;
   margin: 0 auto;
 }
 
 #searchInputId {
   flex: 5;
-  height: 40px;
+  height: 35px;
 }
 
 #searchButtonId {
   flex: 1;
-  height: 40px;
+  height: 35px;
 }
 
 /*文章列表*/

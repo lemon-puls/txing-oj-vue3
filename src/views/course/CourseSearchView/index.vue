@@ -12,7 +12,7 @@
         <template #button-icon>
           <icon-search />
         </template>
-        <template #button-default> Search</template>
+        <template #button-default> 走你</template>
       </a-input-search>
     </div>
     <div class="course-list">
@@ -102,7 +102,7 @@ const onClickCourse = (courseId: number) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #courseSearchViewId {
   max-width: 1280px;
   width: 90vw;
@@ -137,6 +137,18 @@ const onClickCourse = (courseId: number) => {
     justify-content: center;
     align-items: center;
     margin-top: 50px;
+  }
+
+  .arco-input-wrapper {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+  }
+
+  .arco-btn-primary,
+  .arco-btn-primary[type="button"],
+  .arco-btn-primary[type="submit"] {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
   }
 }
 </style>

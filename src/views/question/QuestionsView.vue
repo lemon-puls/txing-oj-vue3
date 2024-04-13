@@ -23,18 +23,20 @@
         />
       </a-carousel-item>
     </a-carousel>
-    <a-form :model="searchForm" layout="inline">
+    <a-form :model="searchForm" layout="inline" style="font-size: initial">
       <a-form-item field="title" label="关键词" style="min-width: 240px">
         <a-input v-model="searchForm.title" placeholder="请输入检索关键词..." />
       </a-form-item>
       <a-form-item field="tags" label="标签" style="min-width: 240px">
         <a-input-tag
           v-model="searchForm.tags"
+          class="search-tag"
+          style="font-size: initial !important"
           placeholder="请输入检索标签..."
         />
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" @click="doSubmit">查询</a-button>
+        <a-button shape="round" type="primary" @click="doSubmit">查询</a-button>
       </a-form-item>
     </a-form>
     <a-divider :size="0" />
@@ -66,8 +68,8 @@
       <template #optional="{ record }">
         <a-space>
           <a-button shape="round" type="primary" @click="toQuestionPage(record)"
-            >GO</a-button
-          >
+            >GO
+          </a-button>
         </a-space>
       </template>
 
@@ -386,7 +388,7 @@ const clickQuestionTag = (item: any) => {
 };
 </script>
 
-<style>
+<style lang="scss">
 #questionsView {
   /*max-width: 1280px;*/
   max-width: 1280px;
@@ -397,12 +399,21 @@ const clickQuestionTag = (item: any) => {
   /*height: 100%;*/
   flex: 1;
   padding: 20px 20px;
-}
 
-.arco-tag-size-medium {
-  min-width: 90px;
-  justify-content: center;
-  border-radius: 20px !important;
-  height: 35px !important;
+  .search-tag {
+    .arco-tag-size-medium {
+      height: initial;
+      min-width: initial;
+      height: 25px !important;
+    }
+  }
+
+  .arco-tag-size-medium {
+    min-width: 90px;
+    justify-content: center;
+    border-radius: 20px !important;
+    height: 32px !important;
+    font-size: 14px;
+  }
 }
 </style>

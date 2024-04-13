@@ -12,6 +12,8 @@ export type Course = {
     isDelete?: number;
     name?: string;
     noduleCount?: number;
+    remark?: string;
+    status?: number;
     times?: number;
     updateTime?: string;
     userId?: number;

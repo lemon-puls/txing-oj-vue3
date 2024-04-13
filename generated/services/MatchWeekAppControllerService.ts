@@ -13,6 +13,40 @@ import { request as __request } from '../core/request';
 export class MatchWeekAppControllerService {
 
     /**
+     * cehsi
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static cehsiUsingGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/match/week/ceshi',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * createWeekMatch
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static createWeekMatchUsingGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/match/week/create',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * giveUpMatch
      * @param matchId matchId
      * @returns any OK
@@ -104,6 +138,29 @@ matchId: number,
     }
 
     /**
+     * isRepeatJoin
+     * @param matchId matchId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static isRepeatJoinUsingGet(
+matchId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/match/week/repeat/join/is',
+            query: {
+                'matchId': matchId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * startMatch
      * @param matchId matchId
      * @returns any OK
@@ -180,6 +237,27 @@ pageRequest: PageRequest,
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/match/week/user/record/get',
+            body: pageRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getWeekSimulateRecordByUserId
+     * @param pageRequest pageRequest
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getWeekSimulateRecordByUserIdUsingPost(
+pageRequest: PageRequest,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/match/week/user/simulate/record/get',
             body: pageRequest,
             errors: {
                 401: `Unauthorized`,

@@ -63,5 +63,10 @@ const props = withDefaults(defineProps<Props>(), {
 .medium-zoom-overlay {
   opacity: 0.6 !important;
   background: black !important;
+  z-index: 10000;
+}
+
+.medium-zoom-image {
+  z-index: 10001;
 }
 </style>

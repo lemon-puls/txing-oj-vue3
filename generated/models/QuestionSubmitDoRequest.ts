@@ -6,5 +6,5 @@
 export type QuestionSubmitDoRequest = {
     code?: string;
     language?: string;
-    questionId?: number|string;
+    questionId?: number;
 };

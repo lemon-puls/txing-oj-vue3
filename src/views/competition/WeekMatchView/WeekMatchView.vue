@@ -17,7 +17,7 @@
             {{ matchData?.endTime }}</span
           >
         </div>
-        <div class="latest-match-distance">
+        <div class="latest-match-distance" v-if="matchStatus == 0">
           <span
             >距离开始还有：
             <a-countdown
@@ -25,6 +25,18 @@
               :value="startTime"
               :now="now"
               format="D 天 H 时 m 分 s 秒"
+              @finish="handleStartMatch"
+          /></span>
+        </div>
+        <div class="latest-match-distance" v-else-if="matchStatus == 1">
+          <span
+            >距离结束还有：
+            <a-countdown
+              :value-style="{ color: 'white', fontSize: '18px' }"
+              :value="endTime"
+              :now="now"
+              format="D 天 H 时 m 分 s 秒"
+              @finish="handleEndMatch"
           /></span>
         </div>
       </div>
@@ -50,7 +62,10 @@
         <div class="match-rank-title">
           <span>本周排名（{{ lastWeekMatch?.name }}）</span>
         </div>
-        <div class="match-rank-content" v-if="weekRankData">
+        <div
+          class="match-rank-content"
+          v-if="weekRankData && weekRankData.length > 0"
+        >
           <div
             class="match-rank-content-item"
             v-for="item in weekRankData"
@@ -354,9 +369,20 @@ import { useUserStore } from "@/store/user";
 
 const router = useRouter();
 const userStore = useUserStore();
-const onJoinMatch = () => {
+const onJoinMatch = async () => {
   if (!userStore.isSign) {
     message.warning("请先登录！");
+    return;
+  }
+  const res = await MatchWeekAppControllerService.isRepeatJoinUsingGet(
+    matchData.value.id
+  );
+  if (res.code != 0) {
+    message.error(res.msg);
+    return;
+  }
+  if (res.data) {
+    message.warning("你已参加过本场比赛，不得重复参加！");
     return;
   }
   router.push({
@@ -373,6 +399,7 @@ const lastWeekMatch = ref();
 // 开始倒计时
 const now = Date.now();
 let startTime;
+let endTime;
 let matchStatus = ref(0);
 const loadMatchData = async () => {
   const res = await MatchWeekAppControllerService.getNextMatchUsingGet();
@@ -383,7 +410,7 @@ const loadMatchData = async () => {
   matchData.value = res.data;
   const nowDate = Date.now();
   startTime = Date.parse(matchData.value.startTime);
-  const endTime = Date.parse(matchData.value.endTime);
+  endTime = Date.parse(matchData.value.endTime);
   if (nowDate < startTime) {
     matchStatus.value = 0;
   } else if (nowDate < endTime) {
@@ -442,5 +469,14 @@ const onSimulate = async (matchId: number) => {
   router.push({
     path: "/txing/match/week/simulate/" + matchId,
   });
+};
+
+// 比赛开始
+const handleStartMatch = () => {
+  matchStatus.value = 1;
+};
+// 比赛结束
+const handleEndMatch = () => {
+  matchStatus.value = 2;
 };
 </script>

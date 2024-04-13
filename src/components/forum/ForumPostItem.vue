@@ -14,8 +14,37 @@
         </div>
       </div>
       <div class="right">
-        <span v-if="isShowStatus">状态：</span>
-        <span v-if="isShowStatus" style="color: red">审核中</span>
+        <div class="status" v-if="isShowStatus">
+          <span>状态：</span>
+          <span
+            v-if="props.topic.status == CheckStatusEnum.WAITTING"
+            style="color: #00c4ff"
+            >审核中</span
+          >
+          <span
+            v-else-if="props.topic.status == CheckStatusEnum.ACCEPTED"
+            style="color: #099525"
+            >审核通过</span
+          >
+          <span
+            v-else-if="props.topic.status == CheckStatusEnum.REJECT"
+            style="color: red"
+            >不通过</span
+          >
+        </div>
+        <div
+          :title="props.topic.remark"
+          class="remark"
+          v-if="isShowStatus && props.topic.remark"
+        >
+          <span
+            >备注：{{
+              props.topic.remark.length > 30
+                ? props.topic.remark.slice(0, 30) + "..."
+                : props.topic.remark
+            }}</span
+          >
+        </div>
       </div>
     </div>
     <div class="title" @click="forumStore.open(props.topic.id)">
@@ -75,6 +104,7 @@ import { TopicAppControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useUserStore } from "@/store/user";
 import { useRouter } from "vue-router";
+import { CheckStatusEnum } from "@/enume";
 
 const forumStore = useForumStore();
 const previewStore = useImgPreviewStore();
@@ -100,7 +130,8 @@ const imgs = computed(() => {
   if (props.topic.imgs == null || props.topic.imgs.length == 0) {
     return [];
   } else {
-    return props.topic.imgs.slice(0, 6);
+    // return props.topic.imgs.slice(0, 6);
+    return props.topic.imgs;
   }
 });
 
@@ -140,7 +171,7 @@ const onEdit = () => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #forumPostItemId {
   border-radius: 20px;
   border: 1px solid white;
@@ -169,6 +200,13 @@ const onEdit = () => {
         flex-direction: column;
         align-items: start;
       }
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
     }
   }
 
@@ -199,9 +237,35 @@ const onEdit = () => {
 
   .pictures {
     margin-top: 15px;
+    padding-bottom: 10px;
     display: flex;
     align-items: center;
     column-gap: 10px;
+    overflow-x: auto;
+
+    --sb-track-color: rgba(218, 216, 209, 0.99);
+    --sb-thumb-color: rgba(75, 187, 222, 0.98);
+    --sb-size: 8px;
+
+    &::-webkit-scrollbar {
+      height: var(--sb-size);
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--sb-track-color);
+      border-radius: 15px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--sb-thumb-color);
+      border-radius: 15px;
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+      & {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+      }
+    }
   }
 
   .footer-ops {

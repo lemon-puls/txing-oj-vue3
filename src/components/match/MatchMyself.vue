@@ -13,6 +13,15 @@
             <SvgIcon icon="weekmatch" :size="20" />
           </template>
         </a-menu-item>
+        <a-menu-item
+          style="border-radius: 10px"
+          key="simulateRecord"
+          data-obj="3"
+          >模拟记录
+          <template #icon>
+            <SvgIcon icon="simulate" :size="20" />
+          </template>
+        </a-menu-item>
         <a-menu-item style="border-radius: 10px" key="pkRecord" data-obj="2"
           >PK记录
           <template #icon>
@@ -24,6 +33,9 @@
     <div class="right">
       <MatchWeekRecordList v-if="selectedMenuKey === 'weekRecord'" />
       <PkRecordList v-else-if="selectedMenuKey === 'pkRecord'" />
+      <WeekSimulateRecordList
+        v-else-if="selectedMenuKey === 'simulateRecord'"
+      />
     </div>
   </div>
 </template>
@@ -34,6 +46,7 @@ import { useUserStore } from "@/store/user";
 import SvgIcon from "@/icons/SvgIcon";
 import PkRecordList from "@/components/match/PkRecordList.vue";
 import MatchWeekRecordList from "@/components/match/MatchWeekRecordList.vue";
+import WeekSimulateRecordList from "@/components/match/WeekSimulateRecordList.vue";
 
 const userStore = useUserStore();
 

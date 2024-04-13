@@ -12,6 +12,8 @@ export type CourseVideo = {
     isDelete?: number;
     name?: string;
     orderNo?: number;
+    remark?: string;
+    status?: number;
     times?: number;
     updateTime?: string;
     videoUrl?: string;

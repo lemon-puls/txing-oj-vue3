@@ -12,7 +12,7 @@
         <template #button-icon>
           <icon-search />
         </template>
-        <template #button-default> Search</template>
+        <template #button-default> 走你</template>
       </a-input-search>
     </div>
     <div class="post-list">
@@ -115,7 +115,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #forumSearchViewId {
   max-width: 1080px;
   width: 90vw;
@@ -140,6 +140,18 @@ onMounted(() => {
     align-items: center;
     color: #7d7979;
     margin-top: 40px;
+  }
+
+  .arco-input-wrapper {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+  }
+
+  .arco-btn-primary,
+  .arco-btn-primary[type="button"],
+  .arco-btn-primary[type="submit"] {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
   }
 }
 </style>

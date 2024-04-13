@@ -1,5 +1,5 @@
 <template>
-  <div id="MatchWeekRecordItemId">
+  <div id="WeekSimulateRecordItemId">
     <!--    场次 时间 作答用时 排名（1/1000） ac（1/5）-->
     <div class="item session" title="场次">
       <SvgIcon class="icon" icon="week" :size="25" />
@@ -15,21 +15,16 @@
     </div>
     <div class="item ac" title="AC题目比例">
       <SvgIcon class="icon" icon="ac" :size="25" />
-      <span v-if="props.record.hasResult">{{ props.record.acCount }} / 5</span>
-      <span v-else>等待中</span>
+      <span>{{ props.record.acCount }} / 5</span>
     </div>
-    <div class="item rank" title="乘积排行">
-      <SvgIcon class="icon" icon="rank" :size="25" />
-      <span v-if="props.record.hasResult"
-        >{{ props.record.gradeRank }} / {{ props.record.joinCount }}</span
-      >
-      <span v-else>等待中</span>
-    </div>
-    <div class="item score" title="本场获得积分">
-      <SvgIcon class="icon" icon="score" :size="25" />
-      <span v-if="props.record.hasResult">{{ props.record.score }}</span>
-      <span v-else>等待中</span>
-    </div>
+    <!--    <div class="item rank" title="乘积排行">-->
+    <!--      <SvgIcon class="icon" icon="rank" :size="25" />-->
+    <!--      <span>{{ props.record.gradeRank }} / {{ props.record.joinCount }}</span>-->
+    <!--    </div>-->
+    <!--    <div class="item score" title="本场获得积分">-->
+    <!--      <SvgIcon class="icon" icon="score" :size="25" />-->
+    <!--      <span>{{ props.record.score }}</span>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -42,7 +37,7 @@ const props = defineProps(["record"]);
 </script>
 
 <style scoped lang="scss">
-#MatchWeekRecordItemId {
+#WeekSimulateRecordItemId {
   border-radius: 20px;
   background-color: rgba(230, 226, 226, 0.5);
   padding: 10px 20px 10px 20px;

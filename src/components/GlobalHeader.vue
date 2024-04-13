@@ -117,14 +117,14 @@
           </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col flex="300px" style="text-align: right">
+      <a-col flex="350px" style="text-align: right">
         <div
           style="
             font-size: 15px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            column-gap: 20px;
+            column-gap: 15px;
             margin-right: 5px;
           "
         >
@@ -154,6 +154,9 @@
           <!--            >创作-->
           <!--            <icon-edit style="margin-left: 5px" />-->
           <!--          </a-button>-->
+          <div @click="handleClickChart">
+            <SvgIcon icon="chart" :size="30" />
+          </div>
           <a-popover position="bottom">
             <SvgIcon icon="create" :size="50" />
             <template #content>
@@ -235,6 +238,7 @@
       </a-col>
     </a-row>
   </div>
+  <ChartDrawer ref="chartDrawerRef" />
 </template>
 
 <script setup lang="ts">
@@ -255,6 +259,7 @@ import {
 import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
 import SvgIcon from "@/icons/SvgIcon";
+import ChartDrawer from "@/components/chart/ChartDrawer.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -375,6 +380,12 @@ setInterval(function () {
     boxElem.value?.classList.remove("animate__animated", "animate__bounce"); // 移除动画效果
   }, 1000); // 1 秒后移除动画效果
 }, 10000); // 每 10 秒触发一次添加动画效果的操作
+
+// 图表抽屉
+const chartDrawerRef = ref();
+const handleClickChart = () => {
+  chartDrawerRef.value.handleClickChart();
+};
 </script>
 
 <style lang="scss">

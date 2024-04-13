@@ -66,8 +66,30 @@
                   alt="arco-design"
                   :src="item.coverImg"
                 />
-                <div class="overlay" v-if="true">
-                  <div class="overlay-content">审核中...</div>
+                <div
+                  class="overlay"
+                  v-if="item.status != CheckStatusEnum.ACCEPTED"
+                >
+                  <div
+                    class="overlay-content"
+                    v-if="item.status == CheckStatusEnum.WAITTING"
+                  >
+                    审核中
+                  </div>
+                  <div
+                    class="overlay-content"
+                    v-else-if="item.status == CheckStatusEnum.REJECT"
+                    :title="item.remark"
+                  >
+                    <span style="color: red">不通过</span>
+                    <span class="remark"
+                      >备注：{{
+                        item.length > 30
+                          ? item.slice(0, 30) + "..."
+                          : item.remark
+                      }}</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -111,6 +133,7 @@ import {
 } from "@arco-design/web-vue/es/icon";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
+import { CheckStatusEnum } from "@/enume";
 
 const router = useRouter();
 
@@ -224,6 +247,24 @@ const handlePostOps = async (id: any, key: any) => {
           padding: 5px; /* 内边距 */
           border-radius: 5px; /* 圆角 */
           background-color: rgba(0, 0, 0, 0.7); /* 遮罩层背景 */
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          row-gap: 3px;
+
+          span {
+            position: initial;
+            bottom: initial;
+            right: initial;
+            margin-right: initial;
+            margin-bottom: initial;
+          }
+
+          .remark {
+            font-size: 10px;
+            color: #ffffff;
+          }
         }
       }
     }
