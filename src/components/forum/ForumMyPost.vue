@@ -12,6 +12,7 @@
           :is-show-status="true"
           :is-delete="true"
           :is-edit="true"
+          :is-remove="false"
           :topic="item"
           :key="index"
           @load-data="loadForumTopicData"

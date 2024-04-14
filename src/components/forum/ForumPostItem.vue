@@ -66,29 +66,29 @@
     </div>
     <div class="footer-ops">
       <div class="ops">
-        <SvgIcon class="icon" icon="thumb" :size="15" />
+        <SvgIcon class="icon" icon="thumb" size="15" />
         <span>{{ props.topic.thumbNum }}</span>
       </div>
       <div class="ops">
-        <SvgIcon class="icon" icon="favour2" :size="15" />
+        <SvgIcon class="icon" icon="favour2" size="15" />
         <span>{{ props.topic.favourNum }}</span>
       </div>
       <div class="ops">
-        <svg-icon class="icon" icon="comment" :size="15"></svg-icon>
+        <svg-icon class="icon" icon="comment" size="15"></svg-icon>
         <span>{{ props.topic.commentNum }}</span>
       </div>
       <div class="ops ops-icon" v-if="props.isEdit" @click="onEdit">
-        <svg-icon class="icon" icon="edit" :size="15"></svg-icon>
+        <svg-icon class="icon" icon="edit" size="15"></svg-icon>
         <span>编辑</span>
       </div>
       <a-popconfirm content="确认要删除该话题吗?" type="warning" @ok="onDelete">
         <div class="ops ops-icon" v-if="props.isDelete">
-          <svg-icon class="icon" icon="delete" :size="15"></svg-icon>
+          <svg-icon class="icon" icon="delete" size="15"></svg-icon>
           <span>删除</span>
         </div>
       </a-popconfirm>
       <div class="ops ops-icon" v-if="props.isRemove" @click="onCancelFavour">
-        <svg-icon class="icon" icon="remove1" :size="15"></svg-icon>
+        <svg-icon class="icon" icon="remove1" size="15"></svg-icon>
         <span>取消收藏</span>
       </div>
     </div>

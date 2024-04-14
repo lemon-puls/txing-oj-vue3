@@ -188,7 +188,7 @@
                 <div style="height: 100%">
                   <a-form
                     style="padding-left: 10px; box-sizing: border-box"
-                    :model="form"
+                    :model="{}"
                     layout="inline"
                   >
                     <a-form-item
@@ -459,7 +459,6 @@ const loadMatchDetailData = async () => {
     message.error("比赛数据加载失败：", res.msg);
     return;
   }
-  console.log(isSimulate, res.data.id, props.matchId);
   if (isSimulate && res.data.id != props.matchId) {
     message.warning("你的上一场模拟赛还未完成 现在继续完成！");
   }
@@ -644,11 +643,17 @@ const submitAll = async () => {
     return;
   }
   matchStore.resetMatchSubmits();
+  let path = "";
+  if (isSimulate) {
+    path = "/txing/match/simulate/result/" + res.data;
+  } else {
+    path = "/txing/match/submit/success";
+  }
   router.push({
-    path: "/txing/match/submit/success",
-    query: {
-      joinId: res.data,
-    },
+    path: path,
+    // query: {
+    //   joinId: res.data,
+    // },
   });
 };
 // 时间到自动交卷

@@ -35,7 +35,7 @@
         <div id="updateInfoIcon">
           <a-popover>
             <div id="updateInfoIconSub">
-              <icon-settings :size="25" />
+              <icon-settings size="25" />
               <span>设置</span>
             </div>
             <template #content>
@@ -73,7 +73,7 @@
         <a-tabs size="large" :lazy-load="true">
           <a-tab-pane key="3">
             <template #title>
-              <SvgIcon icon="article1" :size="20" />
+              <SvgIcon icon="article1" size="20" />
               <span style="font-size: 15px; margin-left: 10px">文章中心</span>
             </template>
             <!--            <PostView />-->
@@ -81,7 +81,7 @@
           </a-tab-pane>
           <a-tab-pane key="2">
             <template #title>
-              <SvgIcon icon="question" :size="20" />
+              <SvgIcon icon="question" size="20" />
               <span style="font-size: 15px; margin-left: 10px">做题中心</span>
             </template>
             <!--            <QuestionFavourRecordView />-->
@@ -89,7 +89,7 @@
           </a-tab-pane>
           <a-tab-pane key="1">
             <template #title>
-              <SvgIcon icon="trophy1" :size="20" />
+              <SvgIcon icon="trophy1" size="20" />
               <span style="font-size: 15px; margin-left: 10px">比赛中心</span>
             </template>
             <!--            <a-table-->
@@ -109,7 +109,7 @@
           </a-tab-pane>
           <a-tab-pane key="4">
             <template #title>
-              <SvgIcon icon="video1" :size="20" />
+              <SvgIcon icon="video1" size="20" />
               <span style="font-size: 15px; margin-left: 10px">视频中心</span>
             </template>
             <!--            <PostFavourView />-->
@@ -117,7 +117,7 @@
           </a-tab-pane>
           <a-tab-pane key="5">
             <template #title>
-              <SvgIcon icon="forum1" :size="20" />
+              <SvgIcon icon="forum1" size="20" />
               <span style="font-size: 15px; margin-left: 10px">论坛中心</span>
             </template>
             <ForumMyself />
@@ -500,6 +500,10 @@ const data = reactive([
   {
     label: "通过率",
     value: useUserStore().loginUser.acceptedRate,
+  },
+  {
+    label: "竞赛得分",
+    value: useUserStore().loginUser.matchScore,
   },
 ]);
 

@@ -137,7 +137,7 @@ onUnmounted(() => {
  * 接收matchId
  */
 interface Props {
-  matchId: number;
+  matchId: number | string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -173,7 +173,7 @@ const matchResult = ref();
 let intervalId: any;
 const getPkResult = async () => {
   const res = await MatchOnlinepkAppControllerService.getPkResultUsingGet(
-    props.matchId
+    Number(props.matchId)
   );
   if (res.code !== 0) {
     message.error("比赛数据加载失败：", res.msg);

@@ -229,7 +229,6 @@ const loadCourseData = async () => {
   }
   Object.assign(form, res.data);
   videos.value = res.data.videoVOS;
-  console.log("form:", form);
   file.value = {
     url: form.coverUrl,
   };
@@ -262,7 +261,7 @@ const uploadCourseCover = (option: RequestOption) => {
       // downloadLink.download = compressedFile.name;
       // downloadLink.click();
       // URL.revokeObjectURL(downloadLink.href);
-      console.log("课程封面图片完成压缩", compressedFile);
+      // console.log("课程封面图片完成压缩", compressedFile);
       uploadFile(compressedFile, "course");
     });
   }
@@ -271,17 +270,17 @@ const uploadCourseCover = (option: RequestOption) => {
       if (val == "success") {
         file.value.url = fileInfo.value?.downloadUrl;
         form.coverUrl = fileInfo.value?.downloadUrl ?? "";
-        console.log("课程封面图上传成功");
+        // console.log("课程封面图上传成功");
         file.value.status = "done";
         onSuccess("成功上传了");
       } else if (val == "fail") {
         file.value.status = "error";
         onError("上传失败");
-        console.log("课程封面图上传失败");
+        // console.log("课程封面图上传失败");
       }
     });
     onProgressChange((val: any) => {
-      console.log("进度改变：", val);
+      // console.log("进度改变：", val);
       onProgress(val);
     });
     isFirst = false;

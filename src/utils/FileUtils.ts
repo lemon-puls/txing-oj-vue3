@@ -52,12 +52,11 @@ export const handleImageCompression = (file: File) => {
   compressImage(file)
     .then((compressedFile: File) => {
       // 对压缩后的文件进行处理
-      console.log("压缩后的文件：", compressedFile);
-
+      // console.log("压缩后的文件：", compressedFile);
       // 在这里可以将压缩后的文件上传至服务器等操作
     })
     .catch((error) => {
-      console.error("压缩图片出错：", error);
+      // console.error("压缩图片出错：", error);
     });
 };
 

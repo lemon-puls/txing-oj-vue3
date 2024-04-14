@@ -17,7 +17,6 @@ export const usePkStore = defineStore(
     const currentMatchId = ref(-1);
     const initPkSubmit = (questionId: number) => {
       const oldVal = localStorage.getItem("pk");
-      console.log("执行了initPkSubmit", oldVal, questionId);
       let oldPkSubmit = null;
       if (oldVal !== null) {
         oldPkSubmit = JSON.parse(oldVal)?.pkSubmit;

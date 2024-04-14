@@ -7,7 +7,7 @@ export default defineComponent({
     id: { type: [String, Number] },
     class: { type: String },
     icon: { type: String, required: true },
-    size: { type: String },
+    size: { type: [String, Number] },
     color: { type: String },
   },
   setup(props) {

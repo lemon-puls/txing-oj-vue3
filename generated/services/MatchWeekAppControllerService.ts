@@ -161,6 +161,29 @@ matchId: number,
     }
 
     /**
+     * getSimulateResult
+     * @param joinId joinId
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getSimulateResultUsingGet(
+joinId: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/match/week/simulate/result/get',
+            query: {
+                'joinId': joinId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * startMatch
      * @param matchId matchId
      * @returns any OK

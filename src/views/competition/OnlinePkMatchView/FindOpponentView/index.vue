@@ -69,7 +69,7 @@ watch(isMatchSuccess, async (val, oldVal) => {
   }
 });
 onBeforeUnmount(() => {
-  console.log("用户离开匹配页");
+  // console.log("用户离开匹配页");
   cancelMatch();
   pkStore.resetPkSubmit();
 });

@@ -18,7 +18,7 @@
       @click="handleClickOutside"
       class="icon"
       icon="shutdown"
-      :size="40"
+      size="40"
     ></SvgIcon>
   </div>
 </template>

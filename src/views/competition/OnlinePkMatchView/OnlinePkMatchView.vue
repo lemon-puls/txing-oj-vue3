@@ -71,7 +71,6 @@
               ><span style="color: #ff7300">正在作答</span>
             </div>
             <a-countdown
-              v-if="!isLoading"
               :value="Date.parse(matchVO?.endTime)"
               :now="Date.now()"
               @finish="handleTimeOut"
@@ -139,7 +138,7 @@
               <div style="height: 100%">
                 <a-form
                   style="padding-left: 10px; box-sizing: border-box"
-                  :model="form"
+                  :model="{}"
                   layout="inline"
                 >
                   <a-form-item
@@ -345,7 +344,7 @@ onMounted(async () => {
 
 // 接受matchId
 interface Props {
-  id: number;
+  id: number | string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -509,11 +508,11 @@ const handleTimeOut = () => {
 };
 
 onMounted(() => {
-  console.log("用户进入了赛场");
+  // console.log("用户进入了赛场");
 });
 onBeforeUnmount(() => {
   // localStorage.removeItem("pk");
-  console.log("用户离开了赛场");
+  // console.log("用户离开了赛场");
   // 监听 window 的 blur 事件
   window.removeEventListener("blur", onUserLeaveDebounced);
   window.removeEventListener("focus", onUserBackDebounced);

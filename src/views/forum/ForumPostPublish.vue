@@ -149,7 +149,7 @@ const uploadTopicImg = (option: RequestOption) => {
 const onRemoveImg = (fileItem: FileItem) => {
   // 使用 filter 方法移除指定对象
   fileList.value = fileList.value.filter((item) => {
-    console.log(item.url, fileItem.url, item.url != fileItem.url);
+    // console.log(item.url, fileItem.url, item.url != fileItem.url);
     return item.url != fileItem.url;
   });
   restCount.value++;

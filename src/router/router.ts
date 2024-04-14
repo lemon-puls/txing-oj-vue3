@@ -29,6 +29,7 @@ import FindOpponentView from "@/views/competition/OnlinePkMatchView/FindOpponent
 import PkResultView from "@/views/competition/OnlinePkMatchView/PkResultView/index.vue";
 import ForumPostPublish from "@/views/forum/ForumPostPublish.vue";
 import ForumSearchView from "@/views/forum/ForumSearchView.vue";
+import SimulateResultView from "@/views/competition/WeekMatchView/SimulateResultView/index.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -222,6 +223,15 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/txing/match/submit/success",
     name: "交卷成功",
     component: SubmitSuccessView,
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/txing/match/simulate/result/:joinId",
+    name: "模拟周赛结果页",
+    component: SimulateResultView,
+    props: true,
     meta: {
       hideInMenu: true,
     },

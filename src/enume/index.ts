@@ -51,3 +51,12 @@ export enum CheckStatusEnum {
   ACCEPTED,
   REJECT,
 }
+
+// 判题结果
+export enum JudgeRsultEnum {
+  TIMEOUT = "超时",
+  OUT_OF_MEMORY = "内存溢出",
+  RUN_ERROR = "运行错误",
+  COMPILE_ERROR = "编译错误",
+  ACCEPTED = "完全通过",
+}

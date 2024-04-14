@@ -1,7 +1,7 @@
 <template>
   <div id="lineChartId">
     <div class="close-icon" @click="closeChart($parent)">
-      <SvgIcon icon="close" :size="35"></SvgIcon>
+      <SvgIcon icon="close" size="35"></SvgIcon>
     </div>
     <div>
       <!--      <h2>欢迎查看你的刷题统计表，继续加油哦！</h2>-->

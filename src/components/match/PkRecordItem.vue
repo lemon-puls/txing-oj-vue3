@@ -20,15 +20,15 @@
     </div>
     <div class="center">
       <div class="question">
-        <SvgIcon icon="question1" :size="25"></SvgIcon>
+        <SvgIcon icon="question1" size="25"></SvgIcon>
         <span style="margin-left: 10px">{{ props.record.questionName }}</span>
       </div>
       <div class="time">
-        <SvgIcon icon="clock" :size="25"></SvgIcon>
+        <SvgIcon icon="clock" size="25"></SvgIcon>
         <span style="margin-left: 10px">{{ props.record.startTime }}</span>
       </div>
       <div class="duration">
-        <SvgIcon icon="duration" :size="25"></SvgIcon>
+        <SvgIcon icon="duration" size="25"></SvgIcon>
         <span style="margin-left: 10px">{{ duration }}</span>
       </div>
     </div>

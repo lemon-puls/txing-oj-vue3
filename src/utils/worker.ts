@@ -30,7 +30,7 @@ const initWsConnection = () => {
     (token ? token : "") +
     "&userId=" +
     (userId ? userId : "");
-  console.log("ws路径：", path);
+  // console.log("ws路径：", path);
   connection = new WebSocket(path);
   // "ws://localhost:8090?token=123456&userId=1726766580186198017"
   // 消息监听器

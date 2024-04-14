@@ -20,6 +20,10 @@
         v-for="topic in forumTopicData"
         :topic="topic"
         :key="topic.id"
+        :is-delete="false"
+        :is-remove="false"
+        :is-show-status="false"
+        :is-edit="false"
       />
     </div>
     <div v-if="cursorPage.isLast" class="footer">

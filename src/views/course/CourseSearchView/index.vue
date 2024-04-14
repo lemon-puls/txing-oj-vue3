@@ -90,7 +90,7 @@ const loadCourseData = async () => {
   pageData.value.list.splice(0);
   pageData.value.total = res.data.total;
   pageData.value.list = res.data.list;
-  console.log("pageData", pageData.value);
+  // console.log("pageData", pageData.value);
 };
 watchEffect(() => {
   loadCourseData();

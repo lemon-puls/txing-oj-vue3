@@ -19,7 +19,7 @@ interface Props {
   value: string;
   handleChange: (v: string) => void;
   language?: string;
-  mystyle?: string;
+  mystyle?: string | object;
 }
 
 const props = withDefaults(defineProps<Props>(), {

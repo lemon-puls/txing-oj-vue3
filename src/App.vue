@@ -8,7 +8,8 @@
         route.path.startsWith('/txing/match/week/do') ||
         route.path.startsWith('/txing/match/pk') ||
         route.path.startsWith('/txing/match/submit/success') ||
-        route.path.startsWith('/txing/match/week/simulate/')
+        route.path.startsWith('/txing/match/week/simulate/') ||
+        route.path.startsWith('/txing/match/simulate/result/')
       "
     >
       <router-view />
@@ -35,6 +36,7 @@ const route = useRoute();
  */
 const doInit = () => {
   console.log("Txing, 与您同行！");
+  console.log("给我一个机会，我给你一个惊喜！");
 };
 
 onMounted(() => {

@@ -29,7 +29,7 @@
               <SvgIcon
                 v-if="item.meta?.icon"
                 :icon="item.meta.icon"
-                :size="20"
+                size="20"
               />
               <span>{{ item.name }}</span>
             </div>
@@ -75,7 +75,7 @@
                 <div
                   style="display: flex; align-items: center; column-gap: 5px"
                 >
-                  <SvgIcon icon="trophy1" :size="20" />
+                  <SvgIcon icon="trophy1" size="20" />
                   <span>竞赛中心</span>
                 </div>
                 <icon-down />
@@ -168,18 +168,18 @@
                 @mouseleave="removeAnimation($event, 'animate__heartBeat')"
                 class="animate__animated"
                 icon="chart"
-                :size="30"
+                size="30"
               />
             </div>
             <a-popover position="bottom">
-              <SvgIcon icon="create" :size="50" />
+              <SvgIcon icon="create" size="50" />
               <template #content>
                 <div class="create-center">
                   <div
                     class="create-center-item"
                     @click="doMenuClick('/txing/post/add')"
                   >
-                    <SvgIcon icon="write" :size="40" />
+                    <SvgIcon icon="write" size="40" />
                     <span>发表文章</span>
                   </div>
                   <a-divider direction="vertical" />
@@ -187,7 +187,7 @@
                     class="create-center-item"
                     @click="doMenuClick('/txing/course/publish')"
                   >
-                    <SvgIcon icon="createvideo" :size="40" />
+                    <SvgIcon icon="createvideo" size="40" />
                     <span>发布课程</span>
                   </div>
                   <a-divider direction="vertical" />
@@ -195,7 +195,7 @@
                     class="create-center-item"
                     @click="doMenuClick('/txing/forum/post/publish')"
                   >
-                    <SvgIcon icon="forum" :size="40" />
+                    <SvgIcon icon="forum" size="40" />
                     <span>发表帖子</span>
                   </div>
                 </div>
@@ -217,7 +217,7 @@
                 class="animate__animated"
                 @click="openChatBox"
                 icon="bell"
-                :size="25"
+                size="25"
               />
             </a-badge>
           </div>

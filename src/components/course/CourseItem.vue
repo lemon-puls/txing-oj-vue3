@@ -61,7 +61,7 @@ import { CheckStatusEnum } from "@/enume";
 // const props = defineProps(["course", "isShowOverlay"]);
 const props = withDefaults(
   defineProps<{
-    course: string;
+    course: object;
     isShowOverlay?: boolean;
   }>(),
   {

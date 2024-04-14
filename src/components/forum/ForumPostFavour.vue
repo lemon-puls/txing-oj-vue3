@@ -13,6 +13,9 @@
           :key="index"
           :topic="item"
           :is-remove="true"
+          :is-edit="false"
+          :is-show-status="false"
+          :is-delete="false"
         />
       </template>
     </a-list>
