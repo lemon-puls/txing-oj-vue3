@@ -105,3 +105,17 @@ export const formatTimeToDateStr = (time: any) => {
   }).format(date);
   return formattedDate;
 };
+
+/**
+ * "2024-04-05 00:00:00" 转换为 04-05
+ */
+export const convertTimeStrToDateStr = (dateStr: string) => {
+  // 将日期字符串转换为 Date 对象
+  const date = new Date(dateStr);
+  // 获取月份和日期
+  const month = date.getMonth() + 1; // 注意：getMonth() 返回的月份是从 0 开始计数的，所以需要加 1
+  const day = date.getDate();
+  // 构建输出字符串，月份和日期之间用小数点分隔
+  const formattedDate = `${month}.${day}`;
+  return formattedDate;
+};

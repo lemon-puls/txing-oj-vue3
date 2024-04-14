@@ -34,34 +34,34 @@
               <span>{{ item.name }}</span>
             </div>
           </a-menu-item>
-          <a-menu-item
-            key="adminCenter"
-            v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"
-          >
-            <a-dropdown
-              @select="doMenuClick"
-              :popup-max-height="false"
-              style="z-index: 10000"
-            >
-              <a-button style="font-size: 15px"
-                >管理中心
-                <icon-down />
-              </a-button>
-              <template #content>
-                <div>
-                  <a-doption style="font-size: 15px">
-                    <a-button type="primary">创建题目</a-button>
-                  </a-doption>
-                  <a-divider
-                    style="margin: 5px 0; padding: 0px; width: 100%"
-                  ></a-divider>
-                  <a-doption style="font-size: 15px">
-                    <a-button type="primary">管理题目</a-button>
-                  </a-doption>
-                </div>
-              </template>
-            </a-dropdown>
-          </a-menu-item>
+          <!--          <a-menu-item-->
+          <!--            key="adminCenter"-->
+          <!--            v-if="checkAccess(userStore.loginUser, AccessEnum.ADMIN)"-->
+          <!--          >-->
+          <!--            <a-dropdown-->
+          <!--              @select="doMenuClick"-->
+          <!--              :popup-max-height="false"-->
+          <!--              style="z-index: 10000"-->
+          <!--            >-->
+          <!--              <a-button style="font-size: 15px"-->
+          <!--                >管理中心-->
+          <!--                <icon-down />-->
+          <!--              </a-button>-->
+          <!--              <template #content>-->
+          <!--                <div>-->
+          <!--                  <a-doption style="font-size: 15px">-->
+          <!--                    <a-button type="primary">创建题目</a-button>-->
+          <!--                  </a-doption>-->
+          <!--                  <a-divider-->
+          <!--                    style="margin: 5px 0; padding: 0px; width: 100%"-->
+          <!--                  ></a-divider>-->
+          <!--                  <a-doption style="font-size: 15px">-->
+          <!--                    <a-button type="primary">管理题目</a-button>-->
+          <!--                  </a-doption>-->
+          <!--                </div>-->
+          <!--              </template>-->
+          <!--            </a-dropdown>-->
+          <!--          </a-menu-item>-->
           <a-menu-item
             key="weekMatch"
             v-if="checkAccess(userStore.loginUser, AccessEnum.NOT_LOGIN)"
@@ -117,12 +117,12 @@
           </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col flex="350px" style="text-align: right">
+      <a-col flex="320px" style="text-align: right">
         <div
           style="
             font-size: 15px;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             column-gap: 15px;
             margin-right: 5px;
@@ -154,51 +154,74 @@
           <!--            >创作-->
           <!--            <icon-edit style="margin-left: 5px" />-->
           <!--          </a-button>-->
-          <div @click="handleClickChart">
-            <SvgIcon icon="chart" :size="30" />
-          </div>
-          <a-popover position="bottom">
-            <SvgIcon icon="create" :size="50" />
-            <template #content>
-              <div class="create-center">
-                <div
-                  class="create-center-item"
-                  @click="doMenuClick('/txing/post/add')"
-                >
-                  <SvgIcon icon="write" :size="40" />
-                  <span>发表文章</span>
-                </div>
-                <a-divider direction="vertical" />
-                <div
-                  class="create-center-item"
-                  @click="doMenuClick('/txing/course/publish')"
-                >
-                  <SvgIcon icon="createvideo" :size="40" />
-                  <span>发布课程</span>
-                </div>
-                <a-divider direction="vertical" />
-                <div
-                  class="create-center-item"
-                  @click="doMenuClick('/txing/forum/post/publish')"
-                >
-                  <SvgIcon icon="forum" :size="40" />
-                  <span>发表帖子</span>
-                </div>
-              </div>
-            </template>
-          </a-popover>
-          <a-badge
-            :count="
-              globalStore.isNeedNotify.friendNotify ||
-              globalStore.isNeedNotify.messageNotify
-                ? 1
-                : 0
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              column-gap: 10px;
             "
-            dot
-            :offset="[2, -2]"
           >
-            <SvgIcon @click="openChatBox" icon="bell" :size="25" />
-          </a-badge>
+            <div @click="handleClickChart">
+              <SvgIcon
+                @mouseenter="addAnimation($event, 'animate__heartBeat')"
+                @mouseleave="removeAnimation($event, 'animate__heartBeat')"
+                class="animate__animated"
+                icon="chart"
+                :size="30"
+              />
+            </div>
+            <a-popover position="bottom">
+              <SvgIcon icon="create" :size="50" />
+              <template #content>
+                <div class="create-center">
+                  <div
+                    class="create-center-item"
+                    @click="doMenuClick('/txing/post/add')"
+                  >
+                    <SvgIcon icon="write" :size="40" />
+                    <span>发表文章</span>
+                  </div>
+                  <a-divider direction="vertical" />
+                  <div
+                    class="create-center-item"
+                    @click="doMenuClick('/txing/course/publish')"
+                  >
+                    <SvgIcon icon="createvideo" :size="40" />
+                    <span>发布课程</span>
+                  </div>
+                  <a-divider direction="vertical" />
+                  <div
+                    class="create-center-item"
+                    @click="doMenuClick('/txing/forum/post/publish')"
+                  >
+                    <SvgIcon icon="forum" :size="40" />
+                    <span>发表帖子</span>
+                  </div>
+                </div>
+              </template>
+            </a-popover>
+            <a-badge
+              :count="
+                globalStore.isNeedNotify.friendNotify ||
+                globalStore.isNeedNotify.messageNotify
+                  ? 1
+                  : 0
+              "
+              dot
+              :offset="[2, -2]"
+            >
+              <SvgIcon
+                @mouseenter="addAnimation($event, 'animate__swing')"
+                @mouseleave="removeAnimation($event, 'animate__swing')"
+                class="animate__animated"
+                @click="openChatBox"
+                icon="bell"
+                :size="25"
+              />
+            </a-badge>
+          </div>
+
           <div
             @click="
               router.push({
@@ -385,6 +408,15 @@ setInterval(function () {
 const chartDrawerRef = ref();
 const handleClickChart = () => {
   chartDrawerRef.value.handleClickChart();
+};
+
+// 鼠标移入 添加动画效果
+const addAnimation = (event: any, className: string) => {
+  event.target.classList.add(className);
+};
+// 鼠标移出 移除动画效果
+const removeAnimation = (event: any, className: string) => {
+  event.target.classList.remove(className);
 };
 </script>
 

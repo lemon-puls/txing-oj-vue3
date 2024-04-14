@@ -13,6 +13,23 @@ import { request as __request } from '../core/request';
 export class QuestionSubmitControllerService {
 
     /**
+     * getChartData
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getChartDataUsingPost(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/question/submit/chart/data/get',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
      * delete
      * @param ids ids
      * @returns any OK

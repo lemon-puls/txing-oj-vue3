@@ -59,4 +59,38 @@ postId?: number,
         });
     }
 
+    /**
+     * uploadFilePrivate
+     * @param biz 
+     * @param file 
+     * @param oldImg 
+     * @param postId 
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static uploadFilePrivateUsingPost(
+biz?: string,
+file?: Blob,
+oldImg?: string,
+postId?: number,
+): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/file/upload/12423534672436234',
+            query: {
+                'biz': biz,
+                'oldImg': oldImg,
+                'postId': postId,
+            },
+            formData: {
+                'file': file,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
 }

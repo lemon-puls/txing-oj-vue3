@@ -415,5 +415,13 @@ const clickQuestionTag = (item: any) => {
     height: 32px !important;
     font-size: 14px;
   }
+
+  .arco-carousel {
+    .arco-carousel-card {
+      & > div {
+        border-radius: 20px;
+      }
+    }
+  }
 }
 </style>

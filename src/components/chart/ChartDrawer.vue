@@ -2,7 +2,7 @@
   <div id="ChartDrawerId">
     <a-drawer
       :width="340"
-      :height="640"
+      :height="620"
       :visible="visible"
       :placement="position"
       @ok="handleOk"
@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 // 图标抽屉
-import { ref, withDefaults, defineProps, defineExpose } from "vue";
+import { ref, withDefaults, defineProps, defineExpose, provide } from "vue";
 import LineChart from "@/components/chart/lineChart/index.vue";
 // const props = withDefaults(defineProps<{ visible: boolean }>(), {
 //   visible: () => false,
@@ -44,6 +44,8 @@ const handleCancel = () => {
 defineExpose({
   handleClickChart,
 });
+
+provide("handleClose", handleCancel);
 </script>
 
 <style scoped lang="scss">
