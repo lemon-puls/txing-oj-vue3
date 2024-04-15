@@ -229,7 +229,7 @@
               })
             "
           >
-            <a-popover id="headDialogBox">
+            <a-popover position="br" id="headDialogBox">
               <a-avatar>
                 <img
                   alt="avatar"

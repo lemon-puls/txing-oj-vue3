@@ -92,7 +92,7 @@
 </style>
 
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { computed, defineProps, ref } from "vue";
 import AddFriendModal from "@/components/chat/AddFriendModal/AddFriendModal.vue";
 import message from "@arco-design/web-vue/es/message";
 import { useChatStore } from "@/store/chat";
@@ -189,5 +189,5 @@ const onRemoveMember = async () => {
 };
 
 // 选中的是否是当前用户自己
-const isCurrent = props.userId == userStore.loginUser.id;
+const isCurrent = computed(() => props.userId == userStore.loginUser.id);
 </script>

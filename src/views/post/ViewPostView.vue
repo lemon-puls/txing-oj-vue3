@@ -166,6 +166,7 @@ import {
   IconThumbUpFill,
 } from "@arco-design/web-vue/es/icon";
 import {
+  computed,
   defineProps,
   onBeforeMount,
   onMounted,
@@ -202,7 +203,6 @@ onMounted(async () => {
 //     userAvatar: string;
 //   };
 // };
-
 let postInfo = ref<any>({
   id: 0,
   title: "",
@@ -507,7 +507,7 @@ const onLikeChange = async (index: number) => {
 };
 </script>
 
-<style>
+<style lang="scss">
 #viewPostView {
   max-width: 1280px;
   width: 70vw;

@@ -9,7 +9,8 @@
         route.path.startsWith('/txing/match/pk') ||
         route.path.startsWith('/txing/match/submit/success') ||
         route.path.startsWith('/txing/match/week/simulate/') ||
-        route.path.startsWith('/txing/match/simulate/result/')
+        route.path.startsWith('/txing/match/simulate/result/') ||
+        route.path.startsWith('/txing/view/question/')
       "
     >
       <router-view />

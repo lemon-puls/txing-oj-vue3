@@ -3,7 +3,18 @@
     <div class="post-content" @click.stop>
       <div class="post-content-header">
         <div class="left">
-          <img class="avatar" :src="topicVO?.userShowVO.userAvatar" />
+          <AvatarPopover
+            :user-name="topicVO?.userShowVO?.userName"
+            :user-avatar="topicVO?.userShowVO?.userAvatar"
+            :sign="topicVO?.userShowVO?.personSign"
+            :is-friend="contactStore.isFriend(topicVO?.userShowVO.id)"
+            :user-id="Number(topicVO?.userShowVO?.id)"
+            trigger="hover"
+          >
+            <template #target>
+              <img class="avatar" :src="topicVO?.userShowVO.userAvatar" />
+            </template>
+          </AvatarPopover>
           <span>{{ topicVO?.userShowVO.userName }}</span>
         </div>
       </div>
@@ -89,11 +100,14 @@ import { TopicAppControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useUserStore } from "@/store/user";
 import { useImgPreviewStore } from "@/store/preview";
+import AvatarPopover from "@/components/user/AvatarPopover.vue";
+import { useContactStore } from "@/store/contact";
 
 const forumStore = useForumStore();
 const userStore = useUserStore();
 const commentVal = ref("");
 const previewStore = useImgPreviewStore();
+const contactStore = useContactStore();
 
 onMounted(() => {
   loadTopicData();

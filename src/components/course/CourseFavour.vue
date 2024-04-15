@@ -10,7 +10,7 @@
       >
         <CourseItem
           :course="course"
-          :is-show-overlay="true"
+          :is-show-overlay="false"
           @click="onClickCourse(course.id)"
         ></CourseItem>
         <template #content>

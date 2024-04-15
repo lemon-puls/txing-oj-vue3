@@ -38,13 +38,13 @@
           >
             <template #target>
               <div>
-                <img :src="courseData?.coverUrl" />
+                <img :src="courseData?.userShowVO?.userAvatar" />
               </div>
             </template>
           </AvatarPopover>
         </div>
         <div class="user-info-other">
-          <span class="name">{{ courseData?.name }}</span>
+          <span class="name">{{ courseData?.userShowVO?.userName }}</span>
           <span class="sign">{{ courseData?.intro }}</span>
         </div>
       </div>

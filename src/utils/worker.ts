@@ -24,8 +24,8 @@ const initWsConnection = () => {
   connection?.removeEventListener("error", onConnectError);
   // 建立连接
   const path =
-    // "ws://124.71.1.148:8090" +
-    "ws://localhost:8090" +
+    "ws://124.71.1.148:8090" +
+    // "ws://localhost:8090" +
     "?token=" +
     (token ? token : "") +
     "&userId=" +

@@ -339,6 +339,7 @@ const matchStore = useMatchStore();
 onMounted(async () => {
   await loadMatchData();
   pkStore.initPkSubmit(question.value.id);
+  codeEditorKey.value++;
   matchStore.setPkUserShowVO(userShowVO.value as UserShowVO);
 });
 

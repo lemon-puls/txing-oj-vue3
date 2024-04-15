@@ -1,11 +1,97 @@
 <template>
   <div id="ViewQuestionView">
+    <!--    头部区域-->
+    <div class="header">
+      <a-row
+        class="grid-demo"
+        :style="{
+          height: '40px',
+        }"
+      >
+        <a-col
+          flex="30%"
+          :style="{
+            height: '50px',
+          }"
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              height: 100%;
+              margin-left: 10px;
+              color: #979797;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                column-gap: 5px;
+                cursor: pointer;
+              "
+              @click="returnQuestionCenter"
+            >
+              <svg-icon icon="back1" size="25px" />
+              <span>返回题库</span>
+            </div>
+          </div>
+        </a-col>
+        <a-col flex="auto" style="height: 100%">
+          <div
+            style="
+              height: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 18px;
+              column-gap: 5px;
+            "
+          >
+            <span>{{ question.title }}</span>
+          </div>
+        </a-col>
+        <a-col flex="30%" style="height: 100%">
+          <div
+            style="
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+              height: 100%;
+              column-gap: 15px;
+              margin-right: 10px;
+            "
+          >
+            <!--            <div>-->
+            <!--              <span>对手状态：</span-->
+            <!--              ><span style="color: #ff7300">正在作答</span>-->
+            <!--            </div>-->
+            <!--            <a-countdown-->
+            <!--              :value="Date.parse(matchVO?.endTime)"-->
+            <!--              :now="Date.now()"-->
+            <!--              @finish="handleTimeOut"-->
+            <!--            />-->
+            <!--            <a-popconfirm-->
+            <!--              content="确认要交卷吗?"-->
+            <!--              type="success"-->
+            <!--              @ok="doSubmit(true)"-->
+            <!--              position="br"-->
+            <!--            >-->
+            <!--              <a-button type="outline" status="success" shape="round"-->
+            <!--                >完成作答-->
+            <!--              </a-button>-->
+            <!--            </a-popconfirm>-->
+          </div>
+        </a-col>
+      </a-row>
+    </div>
     <!--    答题区域-->
+    <!--    height: 'calc(100vh - 74px)',-->
     <a-split
       :style="{
         width: '100%',
         overflow: 'scroll',
-        height: 'calc(100vh - 74px)',
+        height: 'calc(100vh - 50px)',
         minWidth: '500px',
       }"
       :default-size="0.45"
@@ -168,10 +254,11 @@
       </template>
       <template #second>
         <div>
+          <!--          :style="{ height: 'calc(100vh - 90px)' }"-->
           <a-split
             direction="vertical"
             :default-size="0.7"
-            :style="{ height: 'calc(100vh - 90px)' }"
+            :style="{ height: 'calc(100vh - 70px)' }"
           >
             <template #first>
               <!--              display: flex; flex-direction: column-->
@@ -364,6 +451,9 @@ import _ from "lodash";
 import { useUserStore } from "@/store/user";
 import { useSubmitStore } from "@/store/submit";
 import CodeInitConstant from "@/service/constant/CodeInitConstant";
+import SvgIcon from "@/icons/SvgIcon";
+
+const router = useRouter();
 
 const submitStore = useSubmitStore();
 
@@ -787,6 +877,14 @@ const timer = (sumbitId: number) => {
   }, 1000); // 每秒执行一次，间隔时间为 1000 毫秒
 };
 
+// 返回题库中心
+const returnQuestionCenter = () => {
+  // submitStore.resetSubmit();
+  router.push({
+    path: "/txing",
+  });
+};
+
 // const scrollTo = (num: number) => {
 //   alert(num);
 //   console.log(num);
@@ -887,6 +985,13 @@ const timer = (sumbitId: number) => {
     padding-top: 10px;
     padding-left: 10px;
     box-sizing: border-box;
+  }
+
+  .header {
+    height: 40px;
+    background-color: white;
+    box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
   }
 }
 
