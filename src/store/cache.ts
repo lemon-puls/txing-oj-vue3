@@ -44,6 +44,7 @@ export const useCacheStore = defineStore("cache", () => {
         needRefresh: undefined,
         lastModifyTime: Date.now(),
       };
+      // alert("111");
       cachedUserList[item.id] = curUserItem;
     });
   };
@@ -56,5 +57,17 @@ export const useCacheStore = defineStore("cache", () => {
     return user;
   };
 
-  return { refreshCachedUserVOBatch, cachedUserList, getUserById };
+  const resetCacheStore = () => {
+    // cachedUserList = {};
+    Object.keys(cachedUserList).forEach((key) => {
+      delete cachedUserList[Number(key)];
+    });
+  };
+
+  return {
+    refreshCachedUserVOBatch,
+    cachedUserList,
+    getUserById,
+    resetCacheStore,
+  };
 });

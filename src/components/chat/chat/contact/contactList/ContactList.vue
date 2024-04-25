@@ -193,9 +193,10 @@ const handleOk = async () => {
   if (res.code !== 0) {
     message.error("创建失败：" + res.msg);
     return;
+  } else {
+    message.success('群聊"' + groupName.value + '"成功创建');
+    visible.value = false;
   }
-  message.success('群聊"' + groupName.value + '"成功创建');
-  visible.value = false;
 };
 const handleCancel = () => {
   selectedMemberIds.value.splice(0);

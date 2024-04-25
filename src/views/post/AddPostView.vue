@@ -191,8 +191,14 @@ const onProgress = (currentFile: any) => {
  * 提交
  */
 const doSubmit = async () => {
-  if (form.value.content.length > 10000) {
-    message.warning("文章长度过长，请控制在10000字以内！");
+  if (form.value.title.length <= 0) {
+    message.warning("文章标题不得为空");
+    return;
+  }
+  if (form.value.content.length > 10000 || form.value.content.length <= 0) {
+    message.warning(
+      "文章长度不合法，文章内容不得为空，且需控制在10000字以内！"
+    );
     return;
   }
   if (updatePage) {
@@ -211,7 +217,7 @@ const doSubmit = async () => {
         path: "/txing/post/view/" + route.query.id,
       });
     } else {
-      message.error("更新失败:" + res.message);
+      message.error("更新失败:" + res.msg);
     }
   } else {
     // 新建
@@ -225,7 +231,7 @@ const doSubmit = async () => {
         path: "/txing/post/view/" + res.data,
       });
     } else {
-      message.error("发表失败:" + res.message);
+      message.error("发表失败:" + res.msg);
     }
   }
 };

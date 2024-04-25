@@ -94,26 +94,28 @@
     </div>
     <a-divider />
     <div class="group-ops">
-      <span
-        class="group-ops-span"
+      <a-popconfirm
         v-if="
           !groupInfo.forbiddenOrNot &&
           isLeader &&
           Number(groupInfo.roomId) !== 1
         "
-        @click="onRemoveMember"
-        >解散群聊</span
+        content="确定要解散该群聊吗?"
+        @ok="onRemoveMember"
       >
-      <span
-        class="group-ops-span"
-        @click="onRemoveMember"
+        <span class="group-ops-span">解散群聊</span>
+      </a-popconfirm>
+      <a-popconfirm
         v-else-if="
           !groupInfo.forbiddenOrNot &&
           groupInfo.memberOrNot &&
           Number(groupInfo.roomId) !== 1
         "
-        >退出群聊</span
+        content="确定要推出该群聊吗?"
+        @ok="onRemoveMember"
       >
+        <span class="group-ops-span">退出群聊</span>
+      </a-popconfirm>
     </div>
   </div>
 
@@ -154,6 +156,8 @@
     margin-top: 30px;
     row-gap: 10px;
     column-gap: 20px;
+    max-height: 50vh;
+    overflow-y: auto;
 
     &-item {
       display: flex;

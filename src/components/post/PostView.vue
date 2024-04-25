@@ -154,17 +154,28 @@ const searchMyPostParams = ref<PostQueryRequest>({
   userId: useUserStore().loginUser.id,
 });
 const loadMyPostData = async () => {
-  const res = await PostControllerService.searchPostVoByPageUsingPost(
-    searchMyPostParams.value
-  );
-  if (res.code !== 0) {
-    message.error(res.msg);
+  // 重新三次 防止服务器由于太久没访问而出现第一次访问失败的情况
+  let retrys = 3;
+  let res;
+  while (retrys > 0) {
+    res = await PostControllerService.searchPostVoByPageUsingPost(
+      searchMyPostParams.value
+    );
+    if (res.code !== 0) {
+      retrys--;
+    } else {
+      break;
+    }
+  }
+  if (res?.code !== 0) {
+    message.error(res?.msg);
     return;
   }
   myPostData.value.splice(0);
   myPostData.value = myPostData.value.concat(res.data.list);
   paginationProps.total = res.data.total;
 };
+
 /**
  * 只要页号等变量发生改变时 就会触发loadData的调用 获取到当前页对应的数据
  */
@@ -221,6 +232,8 @@ const handlePostOps = async (id: any, key: any) => {
   .image-area {
     .content {
       position: relative;
+      width: 183px;
+      height: 119px;
 
       .img {
         width: 183px;

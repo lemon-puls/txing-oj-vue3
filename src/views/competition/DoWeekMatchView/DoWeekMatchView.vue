@@ -16,7 +16,7 @@
           }"
         >
           <a-col
-            flex="20%"
+            flex="25%"
             :style="{
               height: '50px',
             }"
@@ -45,7 +45,7 @@
                   "
                 >
                   <svg-icon icon="back1" size="25px" />
-                  <span>放弃竞赛</span>
+                  <span style="font-size: 0.8vw">放弃竞赛</span>
                 </div>
               </a-popconfirm>
               <div

@@ -48,7 +48,7 @@
               column-gap: 5px;
             "
           >
-            <span>{{ question.title }}</span>
+            <span>{{ question?.title }}</span>
           </div>
         </a-col>
         <a-col flex="30%" style="height: 100%">
@@ -113,7 +113,7 @@
             <a-card
               style="overflow-y: auto"
               v-if="question"
-              :title="question.title"
+              :title="question?.title"
               :bordered="false"
             >
               <a-descriptions
@@ -121,18 +121,18 @@
                 :column="{ xs: 1, md: 2, lg: 3 }"
               >
                 <a-descriptions-item label="时间限制">
-                  {{ question.judgeConfig.timeLimit ?? 0 }} ms
+                  {{ question?.judgeConfig?.timeLimit ?? 0 }} ms
                 </a-descriptions-item>
                 <a-descriptions-item label="内存限制">
                   {{
                     `${(
-                      question.judgeConfig.memoryLimit /
+                      question?.judgeConfig?.memoryLimit /
                       (1024 * 1024)
                     ).toFixed(2)} MB`
                   }}
                 </a-descriptions-item>
               </a-descriptions>
-              <MdViewer :value="question.content || ''" />
+              <MdViewer :value="question?.content || ''" />
               <div id="questionFavourId">
                 <icon-star-fill
                   v-if="isFavour"
@@ -145,7 +145,7 @@
               <template #extra>
                 <a-space wrap>
                   <a-tag
-                    v-for="(tag, index) of question.tags"
+                    v-for="(tag, index) of question?.tags"
                     :key="index"
                     color="green"
                     >{{ tag }}
@@ -223,8 +223,8 @@
             </div>
           </a-tab-pane>
           <a-tab-pane :closable="false" key="answer" title="答案">
-            <a-card v-if="question" :title="question.title" :bordered="false">
-              <MdViewer :value="question.answer || ''" />
+            <a-card v-if="question" :title="question?.title" :bordered="false">
+              <MdViewer :value="question?.answer || ''" />
             </a-card>
           </a-tab-pane>
           <a-tab-pane

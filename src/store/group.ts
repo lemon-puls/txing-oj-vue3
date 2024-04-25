@@ -7,17 +7,20 @@ import { Message } from "@arco-design/web-vue";
 import { uniqueUserList } from "@/utils/Unique";
 import { useCacheStore } from "@/store/cache";
 import { cloneDeep } from "lodash";
+import { useUserStore } from "@/store/user";
+import { OnlineEnum } from "@/enume";
 
-export const pageSize = 20;
+export const pageSize = 300;
 // 标识是否第一次请求
 // let isFirstInit = false;
 
 export const useGroupStore = defineStore("group", () => {
   const globalStore = useGlobalStore();
   const cacheStore = useCacheStore();
+  const userStore = useUserStore();
   // 群聊用户列表
   const userList = ref<UserItem[]>([]);
-  const userListPageOptions = reactive({
+  let userListPageOptions = reactive({
     isLast: false,
     loading: true,
     cursor: "",
@@ -34,6 +37,15 @@ export const useGroupStore = defineStore("group", () => {
     memberOrNot: false,
     forbiddenOrNot: false,
   });
+
+  const resetGroupStore = () => {
+    userList.value = [];
+    userListPageOptions = {
+      isLast: false,
+      loading: true,
+      cursor: "",
+    };
+  };
 
   // 获取群成员
   const getGroupMemberList = async (refresh = false) => {
@@ -57,7 +69,18 @@ export const useGroupStore = defineStore("group", () => {
     res.data.list.forEach((user: any) => {
       userIds.add(user.userId);
     });
-    cacheStore.refreshCachedUserVOBatch([...userIds]);
+    userList.value.forEach((item) => {
+      if (item.userId == userStore.loginUser.id) {
+        item.activeStatus = OnlineEnum.ONLINE;
+      }
+    });
+    await cacheStore.refreshCachedUserVOBatch([...userIds]);
+    // 获取最新的群聊成员的在线状态，以免用户刚登录上时获取到其的在线状态不是最新 临时使用这种方法 @TODO 有时间再考虑优化
+    // userList.value.forEach((item) => {
+    //   item.activeStatus = cacheStore.getUserById(item.userId as number)
+    //     .activeStatus as number;
+    // });
+    // console.log(userList.value, cacheStore.cachedUserList);
   };
 
   // 获取群聊信息
@@ -90,5 +113,6 @@ export const useGroupStore = defineStore("group", () => {
     updateUserStatusBatch,
     groupInfo,
     userList,
+    resetGroupStore,
   };
 });

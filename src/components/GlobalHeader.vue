@@ -283,11 +283,15 @@ import { useChatStore } from "@/store/chat";
 import { useGlobalStore } from "@/store/global";
 import SvgIcon from "@/icons/SvgIcon";
 import ChartDrawer from "@/components/chart/ChartDrawer.vue";
+import { useGroupStore } from "@/store/group";
+import { useCacheStore } from "@/store/cache";
 
 const router = useRouter();
 const userStore = useUserStore();
 const loginUser = useUserStore().loginUser;
 const globalStore = useGlobalStore();
+const groupStore = useGroupStore();
+const cacheStore = useCacheStore();
 // 默认主页
 const selectedKeys = ref(["/"]);
 const doMenuClick = (key: string) => {
@@ -368,6 +372,9 @@ const handleLogout = async () => {
   console.log("用户已退出登录 断开了ws连接");
   // 清楚pinia store数据
   // useChatStore().$reset();
+  groupStore.resetGroupStore();
+  cacheStore.resetCacheStore();
+  globalStore.currentSession.roomId = -1;
   // 重定向到登录页
   router.push({
     path: "/txing/user/login",

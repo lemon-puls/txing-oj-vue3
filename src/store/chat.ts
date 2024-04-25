@@ -132,7 +132,7 @@ export const useChatStore = defineStore("chat", () => {
 
   // 当选中会话变动时 作出调整
   watch(currentRoomId, async (val, oldVal) => {
-    if (oldVal !== undefined && val !== oldVal) {
+    if (oldVal !== undefined && val !== oldVal && val != -1) {
       groupStore.groupInfo.roomId = -1;
       chatListToBottomAction.value?.();
       if (!currentMessageMap.value || currentMessageMap.value.size === 0) {

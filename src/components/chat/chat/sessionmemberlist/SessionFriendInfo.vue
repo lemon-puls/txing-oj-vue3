@@ -148,7 +148,7 @@ const user = computed(() => {
 // 删除好友
 const onDeleteFriend = async () => {
   if (user.value?.id) {
-    const res = await UserFriendControllerService.deleteUsingGet2(
+    const res = await UserFriendControllerService.deleteUsingGet5(
       user.value.id
     );
     if (res.code === 10000) {

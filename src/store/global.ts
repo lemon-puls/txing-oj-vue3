@@ -36,11 +36,16 @@ export const useGlobalStore = defineStore("global", () => {
     messageNotify: false,
   });
 
+  const resetGlobalStore = () => {
+    currentSession.roomId = -1;
+  };
+
   return {
     currentSession,
     currentSelectedContact,
     unReadMark,
     ws,
     isNeedNotify,
+    resetGlobalStore,
   };
 });

@@ -76,6 +76,7 @@ const handleSubmit = async () => {
     // useUserStore().loginUser.token = res.data.token;
     // 建立websocket
     globalStore.ws = await new Ws();
+    globalStore.currentSession.roomId = 1;
     router.push({
       path: "/txing",
       replace: true,
