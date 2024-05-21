@@ -2,10 +2,7 @@
   <div id="forumPostItemId">
     <div class="header">
       <div class="left">
-        <img
-          class="avatar"
-          src="https://txing-oj-1311424669.cos.ap-guangzhou.myqcloud.com/post_cover/1/dkC8kEgl-aa1bba1647682475dcf210ac0633505.png"
-        />
+        <img class="avatar" :src="props.topic.userShowVO.userAvatar" />
         <div class="user-info">
           <span>{{ props.topic.userShowVO.userName }}</span>
           <span style="font-size: 12px; color: rgba(18, 16, 16, 0.65)">{{
