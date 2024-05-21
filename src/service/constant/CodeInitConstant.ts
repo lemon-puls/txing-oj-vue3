@@ -9,7 +9,7 @@ export const JAVA =
 export const PYTHON =
   "class Solution:\n" +
   "    def answer(self):\n" +
-  "        // 在这里输入你的代码";
+  "        # 在这里输入你的代码";
 
 export const C = "void answer() {\n" + "    // 在这里输入你的代码\n" + "}";
 

@@ -151,10 +151,7 @@
               </a-descriptions-item>
               <a-descriptions-item label="内存限制">
                 {{
-                  `${(
-                    question?.judgeConfig.memoryLimit /
-                    (1024 * 1024)
-                  ).toFixed(2)} MB`
+                  `${(question?.judgeConfig.memoryLimit / 1024).toFixed(2)} MB`
                 }}
               </a-descriptions-item>
             </a-descriptions>

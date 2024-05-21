@@ -66,10 +66,10 @@
               margin-right: 10px;
             "
           >
-            <div>
-              <span>对手状态：</span
-              ><span style="color: #ff7300">正在作答</span>
-            </div>
+            <!--            <div>-->
+            <!--              <span>对手状态：</span-->
+            <!--              ><span style="color: #ff7300">正在作答</span>-->
+            <!--            </div>-->
             <a-countdown
               :value="Date.parse(matchVO?.endTime)"
               :now="Date.now()"
@@ -107,9 +107,7 @@
             </a-descriptions-item>
             <a-descriptions-item label="内存限制">
               {{
-                `${(question?.judgeConfig.memoryLimit / (1024 * 1024)).toFixed(
-                  2
-                )} MB`
+                `${(question?.judgeConfig.memoryLimit / 1024).toFixed(2)} MB`
               }}
             </a-descriptions-item>
           </a-descriptions>
@@ -533,7 +531,7 @@ const onUserLeave = () => {
   // 判断焦点移出页面
   if (!document.hasFocus()) {
     // 执行你想要的操作
-    message.warning("你已离开了比赛界面，离开3次或时间过长将自动交卷！");
+    // message.warning("你已离开了比赛界面，离开3次或时间过长将自动交卷！");
   }
 };
 // 用户回到界面处理

@@ -44,11 +44,7 @@
             >{{ record.judgeConfig.timeLimit }} ms
           </a-tag>
           <a-tag bordered color="blue"
-            >{{
-              `${(record.judgeConfig.memoryLimit / (1024 * 1024)).toFixed(
-                2
-              )} MB`
-            }}
+            >{{ `${(record.judgeConfig.memoryLimit / 1024).toFixed(2)} MB` }}
           </a-tag>
         </a-space>
       </template>
