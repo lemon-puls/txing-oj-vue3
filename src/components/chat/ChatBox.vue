@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useChatStore } from "@/store/chat";
-import ToolBar from "@/components/chat/ toolbar/ToolBar";
+import ToolBar from "@/components/chat/toolbar/ToolBar";
 import ChatView from "@/components/chat/chat/ChatView.vue";
 import ContactView from "@/components/chat/chat/contact/ContactView.vue";
 // 聊天框显隐
