@@ -18,7 +18,7 @@
               <div id="publishDialogId">
                 <p>添加封面图</p>
                 <a-upload
-                  action="http://124.71.1.148:8121/api/file/upload"
+                  action="http://localhost:8121/api/file/upload"
                   :fileList="file ? [file] : []"
                   :show-file-list="false"
                   @change="onChange"

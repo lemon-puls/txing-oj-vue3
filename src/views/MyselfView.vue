@@ -9,7 +9,7 @@
     <!--    </a-avatar>-->
 
     <a-upload
-      action="http://124.71.1.148:8121/api/file/upload"
+      action="http://localhost:8121/api/file/upload"
       :data="appendData"
       :file-list="fileList"
       :show-file-list="false"
