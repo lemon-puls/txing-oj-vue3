@@ -30,8 +30,7 @@ onMounted(() => {
     // player-container-id 为播放器容器ID，必须与html中一致
     fileID: "xxx", // 请传入需要播放的视频fileID 必须
     appID: "xxx", // 请传入点播账号的子应用appID 必须
-    psign:
-      "xxx", // 请传入播放器签名psign 必须
+    psign: "xxx", // 请传入播放器签名psign 必须
     autoplay: false, // 是否自动播放
     // 其他参数请在开发文档中查看
     licenseUrl:
