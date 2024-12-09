@@ -84,17 +84,17 @@ onMounted(async () => {
     message.error("获取签名失败：", res.msg);
     return;
   }
+
   const sign = res.data;
   // player-container-id 为播放器容器 ID，必须与 html 中一致
   player = TCPlayer(props.tcPlayerId, {
     // player-container-id 为播放器容器ID，必须与html中一致
     fileID: props.fileId, // 请传入需要播放的视频fileID 必须
-    appID: "xxx", // 请传入点播账号的子应用appID 必须
+    appID: process.env.VUE_APP_VOD_APP_ID, // 请传入点播账号的子应用appID 必须
     psign: sign,
     autoplay: false, // 是否自动播放
     // 其他参数请在开发文档中查看
-    licenseUrl:
-      "https://license.vod2.myqcloud.com/license/v2/xxx/v_cube.license",
+    licenseUrl: process.env.VUE_APP_VOD_LICENSE_URL,
     bigPlayButton: false,
     // sources: [
     //   {

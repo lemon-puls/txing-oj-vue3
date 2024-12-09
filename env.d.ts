@@ -5,5 +5,7 @@ declare namespace NodeJS {
     VUE_APP_COS_BUCKET: string;
     VUE_APP_COS_REGION: string;
     VUE_APP_MAX_FILE_SIZE: string;
+    VUE_APP_VOD_APP_ID: string;
+    VUE_APP_VOD_LICENSE_URL: string;
   }
 }
