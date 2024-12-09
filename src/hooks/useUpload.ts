@@ -18,8 +18,17 @@ export type FileInfo = {
   thumbUrl?: string;
 };
 
-const Max = 100; // 单位M
-const MAX_FILE_SIZE = Max * 1024 * 1024;
+// 从环境变量获取配置
+const MAX_FILE_SIZE =
+  Number(process.env.VUE_APP_MAX_FILE_SIZE ?? 100) * 1024 * 1024;
+const COS_BUCKET = process.env.VUE_APP_COS_BUCKET ?? "";
+const COS_REGION = process.env.VUE_APP_COS_REGION ?? "";
+
+console.log("MAX_FILE_SIZE", MAX_FILE_SIZE, COS_REGION, COS_BUCKET);
+
+if (!COS_BUCKET || !COS_REGION) {
+  console.error("请在环境变量中配置 VUE_APP_COS_BUCKET 和 VUE_APP_COS_REGION");
+}
 
 export const useUpload = () => {
   // 是否正在上传中
@@ -42,8 +51,8 @@ export const useUpload = () => {
     const suffix = file.name.slice(file.name.lastIndexOf("."));
     cos.uploadFile(
       {
-        Bucket: "xxx" /* 填写自己的 bucket，必须字段 */,
-        Region: "xxx" /* 存储桶所在地域，必须字段 */,
+        Bucket: COS_BUCKET,
+        Region: COS_REGION,
         Key:
           bussiness +
           "/" +
@@ -129,7 +138,7 @@ export const useUpload = () => {
     const info = await parseFile(file, addParams);
     // 限制文件大小
     if (info.size > MAX_FILE_SIZE) {
-      message.error(`文件大小不能超过${Max}MB`);
+      message.error(`文件大小不能超过${process.env.VUE_APP_MAX_FILE_SIZE}MB`);
       return;
     }
     fileInfo.value = { ...info };
