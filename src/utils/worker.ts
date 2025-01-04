@@ -24,8 +24,7 @@ const initWsConnection = () => {
   connection?.removeEventListener("error", onConnectError);
   // 建立连接
   const path =
-    // "ws://124.71.1.148:8090" +
-    "ws://localhost:8090" +
+    (process.env.VUE_APP_WS_URL as string) +
     "?token=" +
     (token ? token : "") +
     "&userId=" +

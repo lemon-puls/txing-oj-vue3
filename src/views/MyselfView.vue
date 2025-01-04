@@ -9,7 +9,7 @@
     <!--    </a-avatar>-->
 
     <a-upload
-      action="http://localhost:8121/api/file/upload"
+      :action="`${process.env.VUE_APP_API_BASE_URL}/api/file/upload`"
       :data="appendData"
       :file-list="fileList"
       :show-file-list="false"

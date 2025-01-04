@@ -18,7 +18,7 @@
               <div id="publishDialogId">
                 <p>添加封面图</p>
                 <a-upload
-                  action="http://localhost:8121/api/file/upload"
+                  :action="`${process.env.VUE_APP_API_BASE_URL}/api/file/upload`"
                   :fileList="file ? [file] : []"
                   :show-file-list="false"
                   @change="onChange"
