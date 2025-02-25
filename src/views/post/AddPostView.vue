@@ -18,7 +18,7 @@
               <div id="publishDialogId">
                 <p>添加封面图</p>
                 <a-upload
-                  :action="`${process.env.VUE_APP_API_BASE_URL}/api/file/upload`"
+                  :action="`${apiBaseUrl}/api/file/upload`"
                   :fileList="file ? [file] : []"
                   :show-file-list="false"
                   @change="onChange"
@@ -117,6 +117,8 @@ import { IconEdit, IconPlus } from "@arco-design/web-vue/es/icon";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 /**
  * 更新时加载文章原数据

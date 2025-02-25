@@ -9,7 +9,7 @@
     <!--    </a-avatar>-->
 
     <a-upload
-      :action="`${process.env.VUE_APP_API_BASE_URL}/api/file/upload`"
+      :action="`${apiBaseUrl}/api/file/upload`"
       :data="appendData"
       :file-list="fileList"
       :show-file-list="false"
@@ -269,6 +269,8 @@ import SvgIcon from "@/icons/SvgIcon";
 import ForumMyself from "@/components/forum/ForumMyself.vue";
 
 const router = useRouter();
+
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 /**
  * 初始化工作
