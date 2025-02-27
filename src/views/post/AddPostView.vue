@@ -197,9 +197,9 @@ const doSubmit = async () => {
     message.warning("文章标题不得为空");
     return;
   }
-  if (form.value.content.length > 10000 || form.value.content.length <= 0) {
+  if (form.value.content.length > 500000 || form.value.content.length <= 0) {
     message.warning(
-      "文章长度不合法，文章内容不得为空，且需控制在10000字以内！"
+      "文章长度不合法，文章内容不得为空，且需控制在 500000 字以内！"
     );
     return;
   }
@@ -242,8 +242,8 @@ const doSubmit = async () => {
 // 文章内容
 const onContentChange = (value: string) => {
   form.value.content = value;
-  if (value.length > 10000) {
-    message.warning("文章已达到最大长度10000，请勿继续输入！");
+  if (value.length > 500000) {
+    message.warning("文章已达到最大长度 500000，请勿继续输入！");
   }
 };
 
