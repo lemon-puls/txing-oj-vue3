@@ -1,6 +1,6 @@
 <template>
   <div id="basicLayout">
-    <a-layout style="min-height: 100vh">
+    <a-layout class="layout-container">
       <a-layout-header :class="{ header: true, hide: shouldHide }">
         <GlobalHeader />
       </a-layout-header>
@@ -13,6 +13,7 @@
       <!--        </a>-->
       <!--      </a-layout-footer>-->
     </a-layout>
+    <StatementFooter />
     <chat-box></chat-box>
     <VideoPlayerDialog v-if="videoStore.visible" />
     <ForumDetail v-if="forumStore.isShowPostDialog" />
@@ -38,6 +39,7 @@ import VideoPlayerDialog from "@/components/course/VideoPlayerDialog.vue";
 import { useVideoStore } from "@/store/video";
 import ForumDetail from "@/components/forum/ForumDetail.vue";
 import { useForumStore } from "@/store/forum";
+import StatementFooter from "@/components/StatementFooter.vue";
 
 const userStore = useUserStore();
 const globalStore = useGlobalStore();
@@ -58,7 +60,7 @@ onMounted(async () => {
   // );
   nextTick(() => {
     if (userStore.isSign && globalStore.ws === undefined) {
-      console.log("用户刷新页面 重新建立websocket连接");
+      // console.log("用户刷新页面 重新建立websocket连接");
       if (globalStore.ws) {
         globalStore.ws.closeWsConnection();
       }
@@ -137,17 +139,11 @@ const previewImgList = computed(() => imgPreviewStore.previewUrls);
   display: flex;
   flex-direction: column;
   /*justify-content: center;*/
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
 }
 
-#basicLayout .footer {
-  background: #e9d28a;
-  padding: 16px;
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  text-align: center;
-  z-index: 9999;
+.layout-container {
+  min-height: 100vh;
 }
 </style>
